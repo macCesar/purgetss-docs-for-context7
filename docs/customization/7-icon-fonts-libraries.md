@@ -11,7 +11,7 @@ Previous versions of **PurgeTSS** included several icon font libraries such as B
 
 **As a result, we have decided to leave the following fonts as the official icon fonts for PurgeTSS:**
 
-- [Font Awesome 6 Free](https://fontawesome.com)
+- [Font Awesome 7 Free](https://fontawesome.com)
 - [Framework 7](https://framework7.io/icons/)
 - [Material Icons](https://fonts.google.com/icons?icon.set=Material+Icons)
 - [Material Symbols](https://fonts.google.com/icons?icon.set=Material+Symbols)

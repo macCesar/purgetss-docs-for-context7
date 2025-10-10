@@ -80,7 +80,7 @@ module.exports = {
 
 **PurgeTSS** looks for the file `./purgetss/config.cjs`, where each section is optional and can be customized. Missing sections will use the default configuration.
 
-To learn more and view some examples, refer to the **[Configuration Section](customization/1-configuring-guide)**.
+To learn more and view some examples, refer to the **[Configuration Section](customization/the-config-file)**.
 
 :::
 
@@ -202,9 +202,9 @@ The `icon-library` command simplifies the process of copying free font versions 
   - `-s, --styles` to copy the corresponding `tss` files into the `./purgetss/styles/` folder for your review
 
 ```bash title="./app/assets/fonts/"
-FontAwesome6Brands-Regular.ttf
-FontAwesome6Free-Regular.ttf
-FontAwesome6Free-Solid.ttf
+FontAwesome7Brands-Regular.ttf
+FontAwesome7Free-Regular.ttf
+FontAwesome7Free-Solid.ttf
 Framework7-Icons.ttf
 MaterialIcons-Regular.ttf
 MaterialIconsOutlined-Regular.otf
@@ -272,14 +272,14 @@ To generate a new `purgetss/styles/fontawesome.tss` file, execute `purgetss buil
 
 **Note: Titanium cannot use FontAwesome's duotone icons because they have two separate glyphs for each individual icon.**
 
-### Font Awesome 6 Beta
+### Font Awesome 7 Beta
 
-Generate a customized `fontawesome.tss` file from **[Font Awesome 6 Beta](https://fontawesome.com/download)** as follows:
+Generate a customized `fontawesome.tss` file from **[Font Awesome 7 Beta](https://fontawesome.com/download)** as follows:
 
-Move the `css` and `webfonts` folders from `fontawesome-pro-6.0.0-beta3-web/`:
+Move the `css` and `webfonts` folders from `fontawesome-pro-7.0.0-beta3-web/`:
 
 ```bash
-fontawesome-pro-6.0.0-beta3-web
+fontawesome-pro-7.0.0-beta3-web
 └─ css
 └─ webfonts
 ```
@@ -370,7 +370,7 @@ To use this file, follow these steps:
 '.w-10': { width: 40 }
 
 /* Default Font Awesome */
-'.fa': { font: { fontFamily: 'FontAwesome6Free-Solid' } }
+'.fa': { font: { fontFamily: 'FontAwesome7Free-Solid' } }
 '.fa-home': { text: '\uf015', title: '\uf015' }
 
 /* Material Icons */
@@ -972,7 +972,7 @@ The `module` command installs the `purgetss.ui.js` module in the `lib` folder.
 
 :::tip To learn more
 
-**Refer to the [Animation Module](animation-module/1-introduction) documentation for more details.**
+**Refer to the [Animation Module](animation-module/introduction) documentation for more details.**
 
 :::
 

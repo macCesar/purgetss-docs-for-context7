@@ -329,7 +329,7 @@ You can use any supported units depending on the property you are generating. Yo
 
 /* Default Font Awesome */
 '.fa-apple': { text: '\uf179', title: '\uf179' }
-'.fab': { font: { fontFamily: 'FontAwesome6Brands-Regular' } }
+'.fab': { font: { fontFamily: 'FontAwesome7Brands-Regular' } }
 ```
 
 ![arbitrary-values](../images/arbitrary-values.png)
@@ -431,7 +431,7 @@ Try this example on an iPad or tablet.
 
 // Default Font Awesome
 '.fa-cloud': { text: '\uf0c2', title: '\uf0c2' }
-'.fas': { font: { fontFamily: 'FontAwesome6Free-Solid' } }
+'.fas': { font: { fontFamily: 'FontAwesome7Free-Solid' } }
 ```
 
 ![zultys](../images/zultys.png)

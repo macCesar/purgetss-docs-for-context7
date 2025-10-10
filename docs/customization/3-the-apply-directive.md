@@ -76,7 +76,7 @@ theme: {
 
 ## Use Arbitrary Values
 
-You can use [**Arbitrary Values**](5-arbitrary-values) to define your custom classes.
+You can use [**Arbitrary Values**](arbitrary-values) to define your custom classes.
 
 ```javascript title="./purgetss/config.cjs"
 // ...

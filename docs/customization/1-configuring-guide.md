@@ -379,7 +379,7 @@ This will generate classes like `bg-regal-blue` in addition to all of Tailwind's
 :::info
 You can use the `shades` command to generate a range of shades for a given color, automatically adding them to your `config.cjs` file.
 
-**For more info see the** [**shades command**](commands.md#shades-command).
+**For more info see the** [**shades command**](/docs/commands#shades-command).
 :::
 
 ## Customizing Spacing
@@ -642,4 +642,4 @@ You can customize any of the following properties individually by adding them in
 - zoomScale
 
 ### Custom Rules & Ti Elements
-- Create your own custom rules and include ANY Ti Element with ANY number of attributes or conditional statements. See the [**Custom Rules section**](2-custom-rules) for more information.
+- Create your own custom rules and include ANY Ti Element with ANY number of attributes or conditional statements. See the [**Custom Rules section**](2-custom-rules.md) for more information.

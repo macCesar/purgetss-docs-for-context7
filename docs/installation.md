@@ -48,7 +48,7 @@ purgetss
 
 - **`config.cjs` File**
 
-  This is where you can customize or create new classes with your preferred spacing, colors, margin values, and more. For further details, refer to the **[Customization Section](customization/1-configuring-guide)**.
+  This is where you can customize or create new classes with your preferred spacing, colors, margin values, and more. For further details, refer to the **[Customization Section](customization/the-config-file)**.
 
 - **`styles` Folder**
 
@@ -74,7 +74,7 @@ Upon the initial execution of **PurgeTSS**, your `app.tss` file is backed up to 
 
 From this point forward, you have the option to add, delete, or update your custom classes in `_app.tss`.
 
-Alternatively, a better approach is to include your custom values in `config.cjs`. Further information is available in the [Configuration Section](customization/1-configuring-guide).
+Alternatively, a better approach is to include your custom values in `config.cjs`. Further information is available in the [Configuration Section](customization/the-config-file).
 :::
 
 ## Example Files
@@ -176,8 +176,8 @@ Every time `purgetss` runs, it will copy the content of `_app.tss` to `app.tss`.
 /* Default Font Awesome */
 '.fa-envelope': { text: '\uf0e0', title: '\uf0e0' }
 '.fa-phone-alt': { text: '\uf879', title: '\uf879' }
-'.far': { font: { fontFamily: 'FontAwesome6Free-Regular' } }
-'.fas': { font: { fontFamily: 'FontAwesome6Free-Solid' } }
+'.far': { font: { fontFamily: 'FontAwesome7Free-Regular' } }
+'.fas': { font: { fontFamily: 'FontAwesome7Free-Solid' } }
 ```
 
 ![iOS Screen - Example](images/sample-fixed.png)
