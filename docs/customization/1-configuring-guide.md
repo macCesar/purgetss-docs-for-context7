@@ -3,31 +3,29 @@ sidebar_position: 1
 slug: the-config-file
 ---
 
-# The Config File
+# The `config` file
 
-:::info What's New in v7.1.0
+:::info What's new in v7.2.x
+The configuration file is now named `config.cjs` (it used to be `config.js`). The structure is the same.
 
-**Configuration File Change**: The configuration file has been renamed from `config.js` to `config.cjs` for better CommonJS compatibility. The content structure remains exactly the same.
-
-**Legacy Mode Removed**: Legacy mode has been completely removed from PurgeTSS v7.1.0. All legacy-related options have been eliminated for a cleaner, modern codebase.
-
+Legacy mode was removed in PurgeTSS v7.2.x along with its related options.
 :::
 
-By default, **PurgeTSS** will look for a `./purgetss/config.cjs` file where you can define customizations.
+By default, **PurgeTSS** looks for `./purgetss/config.cjs`, where you can define customizations.
 
-## Creating the `config.cjs` file
+## Create the `config.cjs` file
 
 :::info
-`config.cjs` is created automatically when you run `purgetss` for the first time inside your project.
+`config.cjs` is created automatically the first time you run `purgetss` in a project.
 :::
 
-If you need to start with a fresh `config.cjs` file, you can delete the existing one and run:
+If you want a clean `config.cjs`, delete the existing one and run:
 
 ```bash
 > purgetss init
 ```
 
-This will create a minimal `./purgetss/config.cjs` file:
+This creates a minimal `./purgetss/config.cjs` file:
 
 ```javascript title="./purgetss/config.cjs"
 module.exports = {
@@ -49,13 +47,13 @@ module.exports = {
 };
 ```
 
-Every section of the config file is optional, so you only need to specify what you'd like to change. Any missing sections will fall back to the default configuration.
+Every section is optional. Only add what you want to change. Anything missing falls back to the defaults.
 
 ## Structure
-The config file consists of two main sections: `purge` and `theme`.
+The config file has two main sections: `purge` and `theme`.
 
 ### `purge` section
-The `purge` section controls how **PurgeTSS** will remove unused classes or keep the ones you want.
+The `purge` section controls how PurgeTSS removes unused classes or keeps the ones you want.
 
 ```javascript title="The purge section"
 module.exports = {
@@ -76,37 +74,37 @@ module.exports = {
 
 - **`mode.all`**
 
-  By default, **PurgeTSS** will look everywhere inside the XML files, including comments, attributes, classes, IDs, and Ti Elements.
+  By default, PurgeTSS searches XML files everywhere: comments, attributes, classes, IDs, and Ti Elements.
 
-  **This mode is necessary if you want **PurgeTSS** to parse any Ti Elements that you've styled in `config.cjs`**.
+  Use this mode if you want PurgeTSS to parse Ti Elements you style in `config.cjs`.
 
 - **`mode.method`**
 
-  The `method` setting determines how the **auto-purge** task will be executed: `sync` (default) or `async`.
+  The `method` setting controls how the auto-purge task runs: `sync` (default) or `async`.
 
-  **If you don't see any changes reflected when changing and rebuilding a project with TiKit Components and LiveView, set the compile method to `async`.**
+  If changes are not showing up when rebuilding a project with TiKit Components and LiveView, set the method to `async`.
 
 - **`mode.class`**
 
-  Use `class` to search only in classes and ID attributes in XML files.
+  Use `class` to search only class and ID attributes in XML files.
 
 - **`options.missing`**
 
-  Set `missing` to `true` if you want to get a list of any missing or misspelled classes at the end of the `app.tss` file.
+  Set `missing` to `true` if you want a list of missing or misspelled classes at the end of `app.tss`.
 
   :::info
-  This is very useful if you want to check if you forgot to add a class definition or if you forgot to remove non-existing classes from your views, especially if you have upgraded from **PurgeTSS** v5 to v6.
+  Helpful when you want to confirm you did not forget class definitions or when you are upgrading from PurgeTSS v5 to v6.
   :::
 
 - **`options.widgets`**
 
-  Set `widgets` to `true` to also parse all the XML files found in the **Widgets** folder.
+  Set `widgets` to `true` to also parse all XML files under the Widgets folder.
 
 - **`options.safelist`**
 
-  The `safelist` is a list of classes and Ti Elements that you want to keep regardless of the purge mode or whether or not they are included in the XML files.
+  The `safelist` is a list of classes and Ti Elements you want to keep no matter the purge mode or whether they appear in XML.
 
-  If you need to keep a large list of classes and elements, you can create a CommonJS module with an array of all the styles and require it in `config.cjs` like this:
+  If the list is large, put it in a CommonJS module and require it in `config.cjs`:
 
   ```javascript title="External safelist"
   module.exports = {
@@ -118,7 +116,7 @@ module.exports = {
   }
   ```
 
-  You should put the safelist inside the `purgetss` folder to keep everything organized:
+  Keep the safelist inside the `purgetss` folder:
 
   ```javascript title="./purgetss/safelist.js"
   // ./purgetss/safelist.js
@@ -144,7 +142,8 @@ module.exports = {
   ```
 
 - **`options.plugins`**
-  The `plugins` option lets you completely disable classes that **PurgeTSS** would normally generate by default.
+
+  The `plugins` option lets you disable classes PurgeTSS would normally generate.
 
   To disable specific classes, provide an array of properties (or plugins) to disable:
 
@@ -163,7 +162,7 @@ module.exports = {
 
 ### `theme` section
 
-The `theme` section in `config.cjs` is where you define and extend your project's color palette, type scale, font stacks, border radius values, and many more properties.
+The `theme` section in `config.cjs` is where you define and extend your project's color palette, type scale, font stacks, border radius values, and other properties.
 
 ```javascript title="The theme section"
 module.exports = {
@@ -193,9 +192,9 @@ module.exports = {
 
 ## Overriding and extending properties
 
-Out of the box, your project will automatically inherit the values from the default theme configuration. If you want to customize it, you have two options depending on your goals.
+By default, your project inherits values from the default theme. You have two options depending on your goal.
 
-### Overriding properties
+### Override properties
 
 To override a default property, add it directly in the `theme` section.
 
@@ -216,12 +215,12 @@ module.exports = {
 This will completely replace the original default `opacity` values with the new ones.
 
 :::info
-Note that any keys you do not provide will be inherited from the default theme, so in the above example, the default theme configuration for things like colors, spacing, border radius, background position, etc. will be preserved.
+Keys you do not provide are inherited from the default theme. In the example above, colors, spacing, border radius, background position, and other defaults remain.
 :::
 
-### Extending properties
+### Extend properties
 
-If you want to preserve the default values for a theme option but also add new values, add your extensions under the `theme.extend` key.
+If you want to keep the defaults and add new values, place them under `theme.extend`.
 
 For example, if you want to add an extra color but preserve the existing ones, you could extend the `colors` section:
 
@@ -238,7 +237,7 @@ module.exports = {
 }
 ```
 
-You can, of course, override some parts of the default theme and extend others within the same configuration:
+You can override some parts of the default theme and extend others within the same configuration:
 
 ```javascript
 module.exports = {
@@ -258,11 +257,9 @@ module.exports = {
 }
 ```
 
-## Customizing Colors
+## Customize colors
 
-Customize the default color palette for your project.
-
-**PurgeTSS** includes Tailwind's default color palette, but you can customize it by configuring your colors under the `colors` key in the `theme` section of your `config.cjs` file:
+PurgeTSS includes Tailwind's default color palette. Customize it under the `colors` key in the `theme` section of your `config.cjs` file:
 
 ```javascript title="Customizing Colors"
 module.exports = {
@@ -274,9 +271,9 @@ module.exports = {
 }
 ```
 
-### Using custom colors
+### Use custom colors
 
-To completely replace the default color palette with your own custom colors, add them directly under the `theme.colors` section of your configuration file:
+To replace the default color palette, add your colors directly under `theme.colors`:
 
 ```javascript title="Using custom colors"
 module.exports = {
@@ -296,11 +293,11 @@ module.exports = {
 }
 ```
 
-By default, these colors will be available everywhere in the framework where you use colors, such as the text color, border color, background color utilities, and more.
+These colors will be available across utilities like text, border, and background colors.
 
 ### Color object syntax
 
-Colors can be defined as a simple list of key-value pairs or as nested objects. The nested keys are added to the base color name as modifiers.
+Colors can be defined as a simple list of key-value pairs or as nested objects. Nested keys are added to the base color name as modifiers.
 
 ```javascript title="Color object syntax"
 module.exports = {
@@ -328,11 +325,11 @@ module.exports = {
 };
 ```
 
-The nested keys will be combined with the parent key to form class names like `bg-tahiti-400` or `text-tahiti-400`.
+The nested keys are combined with the parent key to form class names like `bg-tahiti-400` or `text-tahiti-400`.
 
-### Overriding a default color
+### Override a default color
 
-If you want to override one of the default colors but preserve the rest, simply provide the new values in the `theme.extend.colors` section of your `config.cjs` file.
+If you want to override one of the default colors but keep the rest, provide the new values in `theme.extend.colors`.
 
 For example, here we've replaced the default cool grays with a neutral gray palette:
 
@@ -359,8 +356,8 @@ module.exports = {
 }
 ```
 
-### Extending the default palette
-If you want to extend the default color palette, you can do so using the `theme.extend.colors` section of your `config.cjs` file.
+### Extend the default palette
+If you want to extend the default color palette, use `theme.extend.colors`.
 
 ```javascript title="Extending the default palette"
 module.exports = {
@@ -377,15 +374,14 @@ module.exports = {
 This will generate classes like `bg-regal-blue` in addition to all of Tailwind's default colors.
 
 :::info
-You can use the `shades` command to generate a range of shades for a given color, automatically adding them to your `config.cjs` file.
+You can use the `shades` command to generate a range of shades for a color and add them to `config.cjs`.
 
-**For more info see the** [**shades command**](/docs/commands#shades-command).
+**For details, see the** [**shades command**](/docs/commands#shades-command).
 :::
 
-## Customizing Spacing
-Customize the default spacing and sizing scale for your project.
+## Customize spacing
 
-The `spacing` section allows you to customize the global spacing and sizing scale values.
+The `spacing` section controls the global spacing and sizing scale values.
 
 ```javascript title="Customizing Spacing"
 module.exports = {
@@ -407,7 +403,7 @@ By default, the spacing scale is inherited by the padding, margin, width, height
 ### Shared spacing
 The `spacing` section is shared by the `padding`, `margin`, `width`, and `height` properties.
 
-> **When you include the `spacing` section, PurgeTSS will automatically generate all spacing-related properties and merge them with any other spacing-related properties present in the configuration file.**
+> When you include the `spacing` section, PurgeTSS will automatically generate all spacing-related properties and merge them with any other spacing-related properties present in the configuration file.
 
 ```javascript title="Shared spacing"
 module.exports = {
@@ -456,8 +452,8 @@ module.exports = {
 /* Rest of inherited properties */
 ```
 
-### Overriding the default spacing scale
-If you want to override the default spacing scale, you can do so using the `theme.spacing` section of your `config.cjs` file:
+### Override the default spacing scale
+If you want to override the default spacing scale, use `theme.spacing` in `config.cjs`:
 
 ```javascript title="Overriding the default spacing scale"
 module.exports = {
@@ -472,10 +468,10 @@ module.exports = {
 }
 ```
 
-This will disable the default spacing scale and generate classes like `p-sm` for padding, `m-md` for margin, `w-lg` for width, and `h-xl` for height instead.
+This disables the default spacing scale and generates classes like `p-sm` for padding, `m-md` for margin, `w-lg` for width, and `h-xl` for height.
 
-### Extending the Default Spacing Scale
-If you want to extend the default spacing scale, you can do so using the `theme.extend.spacing` section of your `config.cjs` file:
+### Extend the default spacing scale
+If you want to extend the default spacing scale, use `theme.extend.spacing`:
 
 ```javascript title="Extending the default spacing scale"
 module.exports = {
@@ -491,13 +487,13 @@ module.exports = {
 }
 ```
 
-This will generate classes like `p-72`, `m-84`, and `h-96` in addition to all of the default spacing/sizing utilities.
+This will generate classes like `p-72`, `m-84`, and `h-96` in addition to all of the default spacing and sizing utilities.
 
-## List of Customizable Properties
+## List of customizable properties
 
 ### Global Properties
-- All color properties will inherit from the `theme.colors` property.
-- All spacing properties will inherit from the `theme.spacing` property.
+- All color properties inherit from the `theme.colors` property.
+- All spacing properties inherit from the `theme.spacing` property.
 
 You can customize any of the following properties individually by adding them in the `theme` section of your `config.cjs` file, or by extending them in the `theme.extend` section.
 
@@ -641,5 +637,5 @@ You can customize any of the following properties individually by adding them in
 - zIndex
 - zoomScale
 
-### Custom Rules & Ti Elements
-- Create your own custom rules and include ANY Ti Element with ANY number of attributes or conditional statements. See the [**Custom Rules section**](2-custom-rules.md) for more information.
+### Custom rules and Ti Elements
+- Create your own custom rules and include Ti Elements with any number of attributes or conditional statements. See the [**Custom rules section**](2-custom-rules.md) for details.

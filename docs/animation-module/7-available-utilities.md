@@ -5,12 +5,12 @@ slug: available-utilities
 
 # Available Utilities
 
-Along with the regular utilities like color, widths, and heights, you can set the following utilities on your animations:
+Along with regular utilities like colors, widths, and heights, you can use the following animation-specific utilities.
 
 ## anchorPoint
-Coordinate of the view about which to pivot an animation.
+Coordinate of the View about which to pivot an animation.
 
-This is specified as a dictionary object with x and y properties, where `{x: 0.5, y: 0.5}` represents the center of whatever is being rotated.
+This is a dictionary with `x` and `y` properties, where `{x: 0.5, y: 0.5}` represents the center of the View.
 
 **Default:** `(0.5, 0.5)`
 
@@ -40,7 +40,7 @@ This is specified as a dictionary object with x and y properties, where `{x: 0.5
 ```
 
 ## autoreverse
-Specifies if the animation should be replayed in reverse upon completion.
+Specifies whether the animation should replay in reverse after completion.
 
 **Default:** `false`
 
@@ -53,7 +53,7 @@ Specifies if the animation should be replayed in reverse upon completion.
 ```
 
 ## curve
-Animation curve or easing function to apply to the animation.
+Animation curve or easing function.
 
 This API can be assigned the following constants:
 
@@ -68,7 +68,7 @@ This API can be assigned the following constants:
 ```
 
 ## delay
-Delay, in milliseconds before starting the animation
+Delay, in milliseconds, before starting the animation.
 
 ```css
 /* Property: delay */
@@ -129,9 +129,9 @@ Duration of the animation, in milliseconds.
 ```
 
 ## repeat
-Number of times the animation should be performed.
+Number of times the animation should run.
 
-If `autoreverse` is true, then one repeat of the animation consists of the animation being played once forward and once backward.
+If `autoreverse` is true, one repeat means the animation plays forward and backward once.
 
 ```css
 /* Property: repeat */
@@ -152,9 +152,7 @@ If `autoreverse` is true, then one repeat of the animation consists of the anima
 ```
 
 ## rotate
-Utility to specify the amount of rotation.
-
-This is specified as the rotation angle in degrees. See the rotate method for more information on rotating views.
+Rotation in degrees. See the rotate method for more detail.
 
 **Default:** `No rotation.`
 
@@ -185,7 +183,7 @@ This is specified as the rotation angle in degrees. See the rotate method for mo
 ```
 
 ## scale
-Scales the matrix by the specified scaling factor. The same scaling factor is used for both horizontal and vertical scaling.
+Scales the matrix by the specified factor. The same factor is used for both horizontal and vertical scaling.
 
 **Default:** `1`
 
@@ -209,7 +207,7 @@ Scales the matrix by the specified scaling factor. The same scaling factor is us
 ```
 
 ## drag-apply, drag-animate
-To control how `drag:` and `drop:` modifiers are applied, you can use either the `drag-animate` (*default*) or `drag-apply` class. The `drag-animate` class will animate the properties, while the `drag-apply` class will apply them immediately.
+Use `drag-animate` (default) or `drag-apply` to control how `drag:` and `drop:` modifiers are applied. `drag-animate` animates the properties, `drag-apply` applies them immediately.
 
 ```css
 /* Property(ies): draggingType */
@@ -218,8 +216,8 @@ To control how `drag:` and `drop:` modifiers are applied, you can use either the
 '.drag-animate': { draggingType: 'animate' }
 ```
 
-## opacity-to-\*, toggle-visible
-A special utility to automatically animate the opacity of a view and toggle its visibility.
+## opacity-to-*, toggle-visible
+Utility to automatically animate opacity and toggle visibility.
 
 ```css
 /* Property(ies): toggle - For the Animation module */
@@ -229,13 +227,13 @@ A special utility to automatically animate the opacity of a view and toggle its 
 '.toggle-visible': { animationProperties: { open: { visible: true }, close: { visible: false } } }
 ```
 
-## zoom-in-\*, zoom-out-\*
-A special utility to automatically animate the zoom-in and zoom-out of a view.
+## zoom-in-*, zoom-out-*
+Utility to animate zoom in and zoom out.
 
-It will initially set the view's scale to the specified value and then animate it to 1.
+It sets the View's scale to the specified value and then animates it to 1.
 
 ```css
-/* Property(ies): animationProperties - scales the view (in or out) and resets it to 100% when the animation completes */
+/* Property(ies): animationProperties - scales the View (in or out) and resets it to 100% when the animation completes */
 /* Component(s): Animation */
 '.zoom-in-0': { animationProperties: { open: { scale: 0 }, complete: { scale: 1 } } }
 '.zoom-in-1': { animationProperties: { open: { scale: 0.01 }, complete: { scale: 1 } } }

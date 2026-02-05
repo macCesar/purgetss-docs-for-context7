@@ -5,14 +5,15 @@ slug: the-apply-method
 
 # The `apply` Method
 
-- Use the `apply` method when you need to immediately apply the properties and transformations to a view without any animation.
+Use `apply` when you want to set properties immediately without animation.
 
 ```javascript title="index.js"
 $.myAnimation.apply($.myView)
 ```
 
-### Apply Example
-The `apply` method sets the properties instantly. In this example, the `ScrollableView` is rotated 90 degrees, and its content is counter-rotated -90 degrees to simulate a **TikTok-like** interface.
+### Apply example
+
+`apply` sets properties instantly. In this example, the `ScrollableView` is rotated 90 degrees and its content is counter-rotated -90 degrees to mimic a **TikTok-style** layout.
 
 ```xml title="index.xml"
 <Alloy>
@@ -45,6 +46,8 @@ $.counterRotate.apply($.scrollableView.views)
 $.index.open()
 ```
 
+<div align="center">
 ![TikTok Like Animations](../images/tiktok-like.gif)
+</div>
 
-***\* low framerate gif***
+*Low framerate gif.*

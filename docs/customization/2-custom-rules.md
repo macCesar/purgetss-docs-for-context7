@@ -5,26 +5,26 @@ slug: custom-rules
 
 # Custom Rules
 
-Custom rules in **PurgeTSS** allow developers to style **Titanium elements**, **IDs**, and **classes** with flexibility and precision. These rules can be configured in the `config.cjs` file. Additionally, you can target specific platforms, devices, or conditional blocks using global variables.
+Custom rules in **PurgeTSS** let you style **Titanium elements**, **IDs**, and **classes** in `config.cjs`. You can also target specific platforms, devices, or conditional blocks using global variables.
 
-This feature is particularly useful for meeting visual and design requirements in mobile projects that span multiple platforms, such as iOS and Android. By leveraging custom rules, you ensure that every element in your application can be tailored to deliver the best possible user experience.
+This is handy when a project spans iOS and Android and you want to keep styles in one place.
 
-## Classes, IDs and Ti Elements
+## Classes, IDs, and Ti Elements
 
-You can style any **Ti Element**, **IDs** or your own **classes** with as many attributes as needed. You can also optionally target specific platforms, devices, or add conditional blocks with global variables.
+You can style any Ti Element, IDs, or your own classes with as many attributes as needed. You can also target specific platforms, devices, or add conditional blocks with global variables.
 
-Whether you want to style a Ti Element (also known as a markup element), a custom id prefixed with a hash (#), or a custom class prefixed with a period (.), the structure is as follows:
+Whether you want to style a Ti Element (also known as a markup element), a custom ID prefixed with a hash (#), or a custom class prefixed with a period (.), the structure is the same.
 
-### Modifier Key
-- For **Titanium Elements**, use the exact name of the element, such as `Label`, `Button`, or `ScrollView`.
-- For **IDs**, we recommend sticking with the **camelCase** naming convention to follow the same convention that JavaScript uses.
-- For **classes**, use the **kebab-case** naming convention to ensure compatibility with **PurgeTSS v6.x and above**. For example, use `.my-custom-class-name` instead of `.myCustomClassName`.
+### Modifier key
+- For Titanium Elements, use the exact name of the element, such as `Label`, `Button`, or `ScrollView`.
+- For IDs, use `camelCase` to match the JavaScript convention.
+- For classes, use `kebab-case` to stay compatible with PurgeTSS v6.x and above. For example, use `.my-custom-class-name` instead of `.myCustomClassName`.
 
 :::caution PurgeTSS v5 or earlier projects
-For projects created with **PurgeTSS** v5 or earlier that are now using version 7.x.x or above, please set `purge.options.missing` to true in `config.cjs` to get a report ( at the end of `app.tss` ) of any missing classes so you can update them to the new naming convention.
+If your project started on **PurgeTSS** v5 or earlier and you now use 7.x.x or later, set `purge.options.missing` to true in `config.cjs`. It will report missing classes at the end of `app.tss` so you can update them to the new naming convention.
 :::
 
-### Default, Platform, Device, or Conditional Blocks
+### Default, Platform, Device, or Conditional blocks
 
 - To generate a global style, use either the lowercase `default` or the uppercase `DEFAULT` keyword.
 - To target a specific platform, use the `ios` or `android` keywords.
@@ -34,13 +34,13 @@ For projects created with **PurgeTSS** v5 or earlier that are now using version 
 ### Property Values
 
 - For `Titanium` constants, `Alloy Configuration Values`, or `Global Variables`, always enclose them in quotes.
-- For `color` values, you can use `hex`, `8-digit hex`, `rgb(R,G,B)`, `rgba(R,G,B,A)`, `transparent`, or any of the standard color names. It is recommended to use hex values for colors to avoid any possible issues with the opacity modifier.
+- For `color` values, you can use `hex`, `8-digit hex`, `rgb(R,G,B)`, `rgba(R,G,B,A)`, `transparent`, or any of the standard color names. Use hex values if you want to avoid issues with the opacity modifier.
 - For `spacing` values, you can use different types of units: `em`, `rem`, `%`, `px`, `dp`, `cm`, or `in`.
-  - `%`, `px`, `cm`, or `in` - These values are passed without any conversion.
-  - `em` or `rem` - Values in em or rem will be converted with this little formula: `value * 16`.
-  - `dp` - For these values, the unit type will be removed and the value will remain intact.
+  - `%`, `px`, `cm`, or `in` are passed through without conversion.
+  - `em` or `rem` values are converted with this formula: `value * 16`.
+  - `dp` removes the unit and keeps the value as-is.
 
-## 'config.cjs' file example
+## `config.cjs` file example
 
 ```javascript title="./purgetss/config.cjs"
 module.exports = {
@@ -89,7 +89,7 @@ module.exports = {
 };
 ```
 
-```css title="Custom ‘./purgetss/styles/tailwind.tss’ file"
+```css title="Custom './purgetss/styles/utilities.tss' file"
 /* Property: TextField */
 /* Description: A single line text field. */
 'TextField': { top: 10, left: 20, right: 20, bottom: 0 }

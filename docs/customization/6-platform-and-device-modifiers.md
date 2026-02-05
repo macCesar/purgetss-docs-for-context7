@@ -3,9 +3,9 @@ sidebar_position: 6
 slug: platform-and-device-modifiers
 ---
 
-# Platform and Device Modifiers
+# Platform and device modifiers
 
-Platform and Device modifiers (also called variants or prefixes) allow you to specify different styles for an element depending on the platform (iOS or Android) and device (tablet or handheld) that the app is running on:
+Platform and device modifiers (also called variants or prefixes) let you specify different styles depending on the platform (iOS or Android) and device (tablet or handheld) the app runs on:
 
 - Platform modifiers:
   - `ios:`
@@ -15,7 +15,7 @@ Platform and Device modifiers (also called variants or prefixes) allow you to sp
   - `tablet:`
   - `handheld:`
 
-For example, if you want to have different background colors and font sizes depending on the platform and device your app is running on, you can target them separately, and even combine them with arbitrary values. For example: `ios:bg-(#53606b)`, `ios:text-(20px)`, `android:bg-(#8fb63e)`, and `android:text-(24px)`.
+For example, you can set different background colors and font sizes per platform and device, and combine them with arbitrary values. Examples: `ios:bg-(#53606b)`, `ios:text-(20px)`, `android:bg-(#8fb63e)`, and `android:text-(24px)`.
 
 ```xml title="index.xml"
 <Alloy>
@@ -28,7 +28,7 @@ For example, if you want to have different background colors and font sizes depe
 ```
 
 ```css title="app.tss"
-/* PurgeTSS v7.1.0 */
+/* PurgeTSS v7.2.7 */
 /* Created by César Estrada */
 /* https://github.com/macCesar/purgeTSS */
 

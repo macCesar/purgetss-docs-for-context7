@@ -5,15 +5,11 @@ slug: the-open-and-close-methods
 
 # The `open` and `close` Methods
 
-The `open` and `close` methods provide a clear and straightforward way to manage the opening and closing animations of your views, utilizing the predefined classes with the `open` and `close` modifiers.
-
-By using these methods, you can ensure consistent and manageable animation behavior across your application, as opposed to using the `play` or `toggle` methods, which alternate between the `open` and `close` states based on the current state of the view.
-
-This explicit control helps in scenarios where the exact state of the view is crucial for the desired user experience or application logic.
+Use `open` and `close` to run opening and closing animations based on the `open:` and `close:` modifiers. They do not toggle based on current view state, so you get explicit control.
 
 ## `open` Method
 
-The `open` method triggers the opening animation for the specified views. It uses the properties defined under the classes with the `open` modifier.
+`open` triggers the opening animation for the specified views and uses properties defined under the `open` modifier.
 
 ### Usage
 
@@ -21,8 +17,8 @@ The `open` method triggers the opening animation for the specified views. It use
 $.myAnimation.open(views, callback);
 ```
 
-- `views`: The view or array of views to apply the opening animation to.
-- `callback`: An optional callback function that gets called when the animation completes.
+- `views`: The view or array of views to animate.
+- `callback`: Optional function called when the animation completes.
 
 ### Example
 
@@ -42,11 +38,11 @@ $.myAnimation.open($.myView, () => {
 });
 ```
 
-In this example, the `myView` element will apply the animation properties defined in the classes with the `open` modifier when the `open` method is called, making the view fully opaque.
+In this example, `myView` uses the properties under `open`, making it fully opaque.
 
 ## `close` Method
 
-The `close` method triggers the closing animation for the specified views. It uses the properties defined under the classes with the `close` modifier.
+`close` triggers the closing animation for the specified views and uses properties defined under the `close` modifier.
 
 ### Usage
 
@@ -54,8 +50,8 @@ The `close` method triggers the closing animation for the specified views. It us
 $.myAnimation.close(views, callback);
 ```
 
-- `views`: The view or array of views to apply the closing animation to.
-- `callback`: An optional callback function that gets called when the animation completes.
+- `views`: The view or array of views to animate.
+- `callback`: Optional function called when the animation completes.
 
 ### Example
 
@@ -75,4 +71,4 @@ $.myAnimation.close($.myView, () => {
 });
 ```
 
-In this example, the `myView` element will apply the animation properties defined in the classes with the `close` modifier when the `close` method is called, making the view fully transparent.
+In this example, `myView` uses the properties under `close`, making it fully transparent.

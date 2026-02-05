@@ -5,49 +5,49 @@ slug: commands
 
 # Commands
 
-:::info What's New in v7.1.0
+:::info What's new in v7.2.x
 
-**Major Refactoring & ESM Migration**: PurgeTSS v7.1 has been completely refactored with improved code organization, better ESM compatibility, enhanced error handling, and a more intuitive CLI experience.
+**PurgeTSS** v7.2 adds full support for **Font Awesome 7**, including the CSS custom properties format. It also reduces install size and refactors internals for performance and maintainability.
 
-**Key Changes:**
-- **Node.js 16+** required (ESM support)
-- **Configuration file**: `config.js` → `config.cjs` (same content, different extension)
-- **Removed deprecated commands**: `copy-fonts` and `build-legacy`
-- **Complete legacy mode removal**: Legacy mode no longer supported
-- **Enhanced CLI error handling**: Better error messages with command suggestions
-- **Simplified font generation**: `build-fonts` options streamlined
+**Key changes**:
+- **Node.js 20+** required (due to the "inquirer" v13 upgrade).
+- **Font Awesome 7** support, including the CSS custom properties format.
+- **Titanium SDK 13.1.x** support, with new properties from 13.1.0.GA.
+- **Removed deprecated commands**: `copy-fonts` and `build-legacy`.
+- **Install size reduced** by about 45MB by moving non-essential assets to dev dependencies.
+- **Improved Unicode extraction** for more formats and direct character mappings.
 
 :::
 
-The following is a description of the various commands that can be used with **PurgeTSS**:
+This page lists the commands available in PurgeTSS.
 
-## Setup Commands
+## Setup commands
 - `init`: Initializes PurgeTSS on an existing Alloy project.
 - `create`: Creates a new Alloy project with PurgeTSS already set up.
 
-## Development Commands
-- `build`: Generates the `tailwind.tss` file based on the configuration in `config.cjs`.
-- `watch`: Runs `purgetss` automatically every time the project is compiled (defaults to `--on`).
+## Development commands
+- `build`: Generates `utilities.tss` from `config.cjs`.
+- `watch`: Runs `purgetss` automatically on each project compile (defaults to `--on`).
 
-## Asset Commands
-- `icon-library`: Copies the official icon fonts for PurgeTSS into the `./app/assets/fonts` folder.
-- `build-fonts`: Generates a `./purgetss/styles/fonts.tss` file with class definitions and fontFamily selectors for custom fonts.
+## Asset commands
+- `icon-library`: Copies the official icon fonts into `./app/assets/fonts`.
+- `build-fonts`: Generates `./purgetss/styles/fonts.tss` with class definitions and `fontFamily` selectors for custom fonts.
 
-## Utility Commands
-- `shades`: Generates shades and tints for a given color and outputs the corresponding color palette in `config.cjs`.
-- `color-module`: Creates a `./app/lib/purgetss.colors.js` file, which contains all the colors defined in `config.cjs`.
-- `module`: Installs the `purgetss.ui.js` module in the `lib` folder.
+## Utility commands
+- `shades`: Generates shades and tints for a color and writes the palette to `config.cjs`.
+- `color-module`: Creates `./app/lib/purgetss.colors.js` with the colors defined in `config.cjs`.
+- `module`: Installs `purgetss.ui.js` in the `lib` folder.
 
-## Maintenance Commands
+## Maintenance commands
 - `update`: Updates PurgeTSS to the latest version.
-- `sudo-update`: Updates PurgeTSS to the latest version, using sudo to install **NPM** modules if necessary.
+- `sudo-update`: Updates PurgeTSS using `sudo` to install npm modules if needed.
 
 
-## `init` Command
+## `init` command
 
-The `init` command sets up **PurgeTSS** by creating a `./purgetss/config.cjs` file at the root of an existing Alloy project.
+The `init` command sets up PurgeTSS by creating `./purgetss/config.cjs` at the root of an existing Alloy project.
 
-No arguments or options are needed. The command will create the file inside the `./purgetss/` folder.
+No arguments or options are needed. The command creates the file inside `./purgetss/`.
 
 ```bash
 > purgetss init
@@ -78,25 +78,25 @@ module.exports = {
 
 :::tip To learn more
 
-**PurgeTSS** looks for the file `./purgetss/config.cjs`, where each section is optional and can be customized. Missing sections will use the default configuration.
+PurgeTSS looks for `./purgetss/config.cjs`. Each section is optional and can be customized. Missing sections use the default configuration.
 
-To learn more and view some examples, refer to the **[Configuration Section](customization/the-config-file)**.
+For examples, see the [Configuration section](customization/the-config-file).
 
 :::
 
 
-## `create` Command
+## `create` command
 
-The `create` command generates a new Alloy project with **PurgeTSS** already set up.
+The `create` command generates a new Alloy project with PurgeTSS already set up.
 
 ### Arguments
 
-- Enclose `Project's Name` in single or double quotes. *This argument is required.*
+- Enclose the project name in single or double quotes. Required.
 
 ### Options
 - Use `-f, --force` to overwrite an existing project.
-- Use `-d, --dependencies` to install **ESLint** and **Tailwind CSS** in your project.
-- Use `-v, --vendor [fa,mi,ms,f7]` to copy the selected fonts into your project, including the CommonJS module into the `./app/lib/` folder. Refer to the **[`icon-library` command](#icon-library-command)** for available fonts!
+- Use `-d, --dependencies` to install ESLint and Tailwind CSS.
+- Use `-v, --vendor [fa,mi,ms,f7]` to copy the selected fonts into your project and add the CommonJS module in `./app/lib/`. See the [`icon-library` command](#icon-library-command) for available fonts.
 
 If a project with the same name already exists, the command will prompt you to confirm whether you want to overwrite it.
 
@@ -109,7 +109,7 @@ If a project with the same name already exists, the command will prompt you to c
 
 ### Requirements
 
-Ensure that the `app.idprefix` and `app.workspace` properties are configured in Titanium’s `config.json` file.
+Ensure that `app.idprefix` and `app.workspace` are configured in Titanium's `config.json`.
 
 ```bash
 # A name in reverse domain name format.
@@ -120,16 +120,16 @@ app.workspace = "/<full-path-to>/<workspace>/<folder>"
 # ...
 ```
 
-Use the `ti config` command to set up both the `app.idprefix` and `app.workspace` settings:
+Use `ti config` to set up both settings:
 
 ```bash
 ti config app.idprefix 'com.yourdomain'
 ti config app.workspace 'the-full-path/to-the-workspace-folder'
 ```
 
-### Installing Dev Dependencies
+### Installing dev dependencies
 
-Installing these dependencies offers a profound enhancement to the setup process for projects using **PurgeTSS**.
+Installing these dependencies adds linting and editor support for projects using PurgeTSS.
 
 ```bash
 > purgetss create 'Name of the Project' [--dependencies]
@@ -138,37 +138,37 @@ Installing these dependencies offers a profound enhancement to the setup process
 > purgetss c 'Name of the Project' [-d]
 ```
 
-This option not only installs essential tools like **ESLint** for code quality and **Tailwind CSS** for efficient UI development but also ensures seamless integration with the **Visual Studio Code** (VSCode) environment.
+This option installs ESLint for code quality, Tailwind CSS for utility classes, and setup files for Visual Studio Code (VSCode).
 
-Here's a closer look at the recommended VSCode extensions and their roles:
+Recommended VSCode extensions:
 
-- **[XML Tools](https://marketplace.visualstudio.com/items?itemName=DotJoshJohnson.xml)**: For XML formatting.
-- **[ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)**: To ensure consistent code quality, enforcing coding standards and identifying issues in real-time.
-- **[Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)**: Intelligent **PurgeTSS** class support.
-- **[Tailwind RAW Reorder](https://marketplace.visualstudio.com/items?itemName=Trapfether.tailwind-raw-reorder)**: An opinionated class sorter that optimizes the arrangement of **PurgeTSS** classes for better readability and maintenance. It works on XML and JS files.
-- **[Intellisense for CSS class names in HTML](https://marketplace.visualstudio.com/items?itemName=Zignd.html-css-class-completion)**: **PurgeTSS** class name completion based on definitions within your workspace (`purgetss/config.cjs`), for example, all available classes in the `fonts.tss` and `tailwind.tss` files.
+- [XML Tools](https://marketplace.visualstudio.com/items?itemName=DotJoshJohnson.xml): XML formatting.
+- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint): Linting and coding standards.
+- [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss): PurgeTSS class support.
+- [Tailwind Raw Reorder (v4)](https://marketplace.visualstudio.com/items?itemName=KevinYouu.tailwind-raw-reorder-tw4): Class sorting for XML and JS files.
+- [Intellisense for CSS class names in HTML](https://marketplace.visualstudio.com/items?itemName=Zignd.html-css-class-completion): Class completion based on your `purgetss/config.cjs`, including `fonts.tss` and `utilities.tss`.
 
-### List of Commands Used
+### List of commands used
 
-When you run `purgetss create "Name of the Project" [--dependencies --vendor=fa,mi,ms,f7]`, the following commands will be executed:
+Running `purgetss create "Name of the Project" [--dependencies --vendor=fa,mi,ms,f7]` executes:
 
 - `ti config app.idprefix && ti config app.workspace` - retrieves the related values.
-- `ti create -t app -p all -n "Name of the Project" --no-prompt --id "the-prefix-id-and-the-name-of-the-project"` - creates an App project with the specified name and its id set automatically.
-- `cd app.workspace/"Name of the Project"` - changes to the newly created folder.
-- `alloy new` - converts it to an Alloy Project.
-- `purgetss w` - autoruns purgetss every time you compile your project.
-- `purgetss b` - builds a new `./purgetss/styles/tailwind.tss` file.
-- `[--vendor=fa,mi,ms,f7]` - sets the `--vendor` argument to copy the selected fonts into your project, including the CommonJS module into `./app/lib/` folder.
-- `[--dependencies]` - installs the following dependencies and configuration files:
-  - `npm i -D tailwindcss && npx tailwindcss init` - installs Tailwind CSS.
-  - `npm i -D eslint eslint-config-axway eslint-plugin-alloy` - installs ESLint and Titanium specific plugins.
-  - `.editorconfig`, `.eslintrc.js`, `tailwind.config.js`, `.vscode/extensions.json` and `.vscode/settings.json` - copies the configuration files.
-- `code .`, `subl .`, or `open .` - uses either `code`, `subl`, or `open` to open VS Code, Sublime Text, or the project’s folder.
+- `ti create -t app -p all -n "Name of the Project" --no-prompt --id "the-prefix-id-and-the-name-of-the-project"` - creates the app project and id.
+- `cd app.workspace/"Name of the Project"` - changes to the new folder.
+- `alloy new` - converts it to an Alloy project.
+- `purgetss w` - runs PurgeTSS on compile.
+- `purgetss b` - builds `./purgetss/styles/utilities.tss`.
+- `[--vendor=fa,mi,ms,f7]` - copies the selected fonts and the CommonJS module into `./app/lib/`.
+- `[--dependencies]` - installs:
+  - `npm i -D tailwindcss && npx tailwindcss init` - Tailwind CSS.
+  - `npm i -D eslint eslint-config-axway eslint-plugin-alloy` - ESLint and Titanium plugins.
+  - `.editorconfig`, `eslint.config.js`, `tailwind.config.js`, `.vscode/extensions.json`, `.vscode/settings.json` - config files.
+- `code .`, `subl .`, or `open .` - opens the project in VS Code, Sublime Text, or Finder.
 
 
-## `install-dependencies` Command
+## `install-dependencies` command
 
-This command simplifies the enhancement of your development workflow in existing projects already using **PurgeTSS**. It automates the installation of dev dependencies and configuration files into your project, ensuring seamless integration with the **Visual Studio Code** (VSCode) environment.
+This command installs dev dependencies and configuration files in existing PurgeTSS projects, and sets up Visual Studio Code (VSCode) support.
 
 ```bash
 > purgetss install-dependencies
@@ -177,16 +177,16 @@ This command simplifies the enhancement of your development workflow in existing
 > purgetss id
 ```
 
-:::caution IMPORTANT NOTICE!!!
+:::caution Important
 
-**Please note that this command will overwrite any existing `extensions.json` and `settings.json` files, so it's advisable to create a backup if you wish to preserve them.**
+This command overwrites any existing `extensions.json` and `settings.json` files. Back them up if you want to keep your current versions.
 
 :::
 
 
-## `icon-library` Command
+## `icon-library` command
 
-The `icon-library` command simplifies the process of copying free font versions of [**Font Awesome**](https://github.com/FortAwesome/Font-Awesome/tree/master/js-packages/%40fortawesome/fontawesome-free/webfonts), [**Material Icons**](https://fonts.google.com/icons?icon.set=Material+Icons), [**Material Symbols**](https://fonts.google.com/icons?icon.set=Material+Symbols), and/or [**Framework7 Icons**](https://framework7.io/icons/), to the `./app/assets/fonts` folder. This eliminates the need for manual downloading or copying to the correct folder within your project.
+The `icon-library` command copies the free font files for Font Awesome, Material Icons, Material Symbols, and/or Framework7 Icons into `./app/assets/fonts`. It avoids manual downloading and placement.
 
 ```bash
 > purgetss icon-library [--vendor=fa,mi,ms,f7] [--module] [--styles]
@@ -198,7 +198,7 @@ The `icon-library` command simplifies the process of copying free font versions 
 ### Options and Flags
 
   - `-v, --vendor [fa,mi,ms,f7]` to copy specific font vendors
-  - `-m, --module` to copy the corresponding **CommonJS** module into the `./app/lib/` folder
+  - `-m, --module` to copy the corresponding CommonJS module into the `./app/lib/` folder
   - `-s, --styles` to copy the corresponding `tss` files into the `./purgetss/styles/` folder for your review
 
 ```bash title="./app/assets/fonts/"
@@ -216,16 +216,16 @@ MaterialSymbolsRounded-Regular.ttf
 MaterialSymbolsSharp-Regular.ttf
 ```
 
-After copying the desired fonts, you can use them in `Buttons` and `Labels`. For example, to use **FontAwesome**, set the font family to `fa` (for Solid icons) and input the desired icon, such as `fa-home`.
+After copying the fonts, you can use them in Buttons and Labels. For example, for Font Awesome, set the font family to `fa` (Solid icons) and use a class like `fa-home`.
 
-### Available Font Classes
+### Available font classes
 
-- [**fontawesome.tss**](https://github.com/macCesar/purgeTSS/blob/master/dist/fontawesome.tss)
-- [**materialicons.tss**](https://github.com/macCesar/purgeTSS/blob/master/dist/materialicons.tss)
-- [**materialsymbols.tss**](https://github.com/macCesar/purgeTSS/blob/master/dist/materialsymbols.tss)
-- [**framework7icons.tss**](https://github.com/macCesar/purgeTSS/blob/master/dist/framework7icons.tss)
+- [fontawesome.tss](https://github.com/macCesar/purgeTSS/blob/master/dist/fontawesome.tss)
+- [materialicons.tss](https://github.com/macCesar/purgeTSS/blob/master/dist/materialicons.tss)
+- [materialsymbols.tss](https://github.com/macCesar/purgeTSS/blob/master/dist/materialsymbols.tss)
+- [framework7icons.tss](https://github.com/macCesar/purgeTSS/blob/master/dist/framework7icons.tss)
 
-### Copying Specific Font Vendors
+### Copying specific font vendors
 
 To copy specific font vendors, use any of the following arguments:
 
@@ -242,7 +242,7 @@ Available names and aliases:
 - ms, materialsymbol = Material Symbols
 - f7, framework7 = Framework7 Icons
 
-### CommonJS Module
+### CommonJS module
 
 You can use the `--module` option to copy the corresponding CommonJS module into the `./app/lib/` folder.
 
@@ -253,30 +253,30 @@ You can use the `--module` option to copy the corresponding CommonJS module into
 > purgetss il -m [-v=fa,mi,ms,f7]
 ```
 
-Each library includes a CommonJS module that exposes Unicode strings for Font Awesome, Material Icons, Material Symbols, and Framework7-Icons fonts.
+Each library includes a CommonJS module that exposes Unicode strings for the icon fonts.
 
 All prefixes are stripped from their class names and camel-cased. For example:
 
-- **Font Awesome**: `fa-flag` becomes `flag`
-- **Material Icons**: `mi-flag` becomes `flag`
-- **Material Symbols**: `ms-flag` becomes `flag`
-- **Framework7 Icons**: `f7-alarm_fill` becomes `alarmFill` or `f7-clock_fill` becomes `clockFill`.
+- Font Awesome: `fa-flag` becomes `flag`.
+- Material Icons: `mi-flag` becomes `flag`.
+- Material Symbols: `ms-flag` becomes `flag`.
+- Framework7 Icons: `f7-alarm_fill` becomes `alarmFill` and `f7-clock_fill` becomes `clockFill`.
 
 ### Font Awesome Pro
 
-If you have a **[Font Awesome Pro Account](https://fontawesome.com/pro)**, you can generate a customized `./purgetss/styles/fontawesome.tss` file containing all the extra classes that the Pro version provides ***(except duotone icons; see note below)***.
+If you have a [Font Awesome Pro account](https://fontawesome.com/pro), you can generate a custom `./purgetss/styles/fontawesome.tss` file with the Pro-only classes (except duotone icons; see note below).
 
-After setting the **[@fortawesome scope](https://fontawesome.com/how-to-use/on-the-web/setup/using-package-managers#installing-pro)** with your token, install it in your project's root folder using `npm init` and `npm install --save-dev @fortawesome/fontawesome-pro` (current version 6.4.2).
+After setting the [@fortawesome scope](https://fontawesome.com/how-to-use/on-the-web/setup/using-package-managers#installing-pro) with your token, install it in your project's root folder using `npm init` and `npm install --save-dev @fortawesome/fontawesome-pro` (current version 7.1.0).
 
-To generate a new `purgetss/styles/fontawesome.tss` file, execute `purgetss build`. It will also automatically copy the Pro font files into `./app/assets/fonts` if necessary.
+To generate a new `purgetss/styles/fontawesome.tss`, run `purgetss build`. It also copies the Pro font files into `./app/assets/fonts` if needed.
 
-**Note: Titanium cannot use FontAwesome's duotone icons because they have two separate glyphs for each individual icon.**
+Note: Titanium cannot use Font Awesome duotone icons because each icon uses two glyphs.
 
 ### Font Awesome 7 Beta
 
-Generate a customized `fontawesome.tss` file from **[Font Awesome 7 Beta](https://fontawesome.com/download)** as follows:
+To generate a custom `fontawesome.tss` file from [Font Awesome 7 Beta](https://fontawesome.com/download):
 
-Move the `css` and `webfonts` folders from `fontawesome-pro-7.0.0-beta3-web/`:
+Move the "css" and "webfonts" folders from "fontawesome-pro-7.0.0-beta3-web/":
 
 ```bash
 fontawesome-pro-7.0.0-beta3-web
@@ -293,49 +293,49 @@ purgetss
    └─ webfonts
 ```
 
-Then, just like with the Pro version, run `purgetss build` to generate your customized `fontawesome.tss` file and beta-test your new icons!
+Then run `purgetss build` to generate your custom `fontawesome.tss` file and test the new icons.
 
-### Font Example File
+### Font example file
 
 To use this file, follow these steps:
 
-- Copy the content of `index.xml` into a new Alloy project
-- Install the official icon font files using `purgetss icon-library`
-  - Without specifying a `--vendor`, **purgetss will copy all official icon fonts**: Font Awesome, Material Icons, Material Symbols, Framework7 Icons
-- **Run `purgetss` once to generate the necessary files**
+- Copy the content of `index.xml` into a new Alloy project.
+- Install the official icon font files using `purgetss icon-library`.
+  - Without `--vendor`, PurgeTSS copies all official icon fonts.
+- Run `purgetss` once to generate the required files.
 - Compile your app as usual.
-- **We recommend using `liveview` to speed up testing and development time**
+- Use `liveview` if you want faster testing.
 
 ```xml title="index.xml"
 <Alloy>
   <Window>
     <View class="grid">
-      <View class="grid-cols-2 mx-auto gap-y-2 vertical">
+      <View class="vertical mx-auto grid-cols-2 gap-y-2">
         <!-- FontAwesome -->
         <Label class="mt-2 text-gray-700" text="FontAwesome" />
-        <Button class="w-10 h-10 my-1 text-xl text-blue-500 fa fa-home" />
-        <Button class="w-10 h-10 my-1 text-xl text-white bg-blue-500 rounded fa fa-home" />
+        <Button class="fa fa-home my-1 h-10 w-10 text-xl text-blue-500" />
+        <Button class="fa fa-home my-1 h-10 w-10 rounded bg-blue-500 text-xl text-white" />
       </View>
 
-      <View class="grid-cols-2 mx-auto gap-y-2 vertical">
+      <View class="vertical mx-auto grid-cols-2 gap-y-2">
         <!-- Material Icons -->
         <Label class="mt-2 text-gray-700" text="Material Icons" />
-        <Button class="w-10 h-10 my-1 text-xl text-blue-500 mi mi-home" />
-        <Button class="w-10 h-10 my-1 text-xl text-white bg-blue-500 rounded mi mi-home" />
+        <Button class="mi mi-home my-1 h-10 w-10 text-xl text-blue-500" />
+        <Button class="mi mi-home my-1 h-10 w-10 rounded bg-blue-500 text-xl text-white" />
       </View>
 
-      <View class="grid-cols-2 mx-auto gap-y-2 vertical">
+      <View class="vertical mx-auto grid-cols-2 gap-y-2">
         <!-- Material Symbol -->
         <Label class="mt-2 text-gray-700" text="Material Symbol" />
-        <Button class="w-10 h-10 my-1 text-xl text-blue-500 ms ms-home" />
-        <Button class="w-10 h-10 my-1 text-xl text-white bg-blue-500 rounded ms ms-home" />
+        <Button class="ms ms-home my-1 h-10 w-10 text-xl text-blue-500" />
+        <Button class="ms ms-home my-1 h-10 w-10 rounded bg-blue-500 text-xl text-white" />
       </View>
 
-      <View class="grid-cols-2 mx-auto gap-y-2 vertical">
+      <View class="vertical mx-auto grid-cols-2 gap-y-2">
         <!-- Framework7-Icons -->
         <Label class="mt-2 text-gray-700" text="Framework7-Icons" />
-        <Button class="w-10 h-10 my-1 text-xl text-blue-500 f7 f7-house" />
-        <Button class="w-10 h-10 my-1 text-xl text-white bg-blue-500 rounded f7 f7-house" />
+        <Button class="f7 f7-house my-1 h-10 w-10 text-xl text-blue-500" />
+        <Button class="f7 f7-house my-1 h-10 w-10 rounded bg-blue-500 text-xl text-white" />
       </View>
     </View>
   </Window>
@@ -343,7 +343,7 @@ To use this file, follow these steps:
 ```
 
 ```css title="app.tss"
-/* PurgeTSS v7.1.0
+/* PurgeTSS v7.2.7
  * Created by César Estrada
  * https://github.com/macCesar/purgeTSS
 */
@@ -386,14 +386,15 @@ To use this file, follow these steps:
 '.f7-house': { text: 'house', title: 'house' }
 ```
 
+<div align="center">
 ![iOS Screen - Icon Fonts](images/font-example-file-material-symbols.png)
+</div>
 
+## `build-fonts` command
 
-## `build-fonts` Command
+The `build-fonts` command generates a `fonts.tss` file with class definitions and `fontFamily` selectors for serif, sans-serif, cursive, fantasy, or monospace fonts.
 
-The `build-fonts` command generates a `fonts.tss` file with class definitions and **fontFamily** selectors for any serif, sans-serif, cursive, fantasy, or monospace font families.
-
-To use it, first place all of the `.ttf` or `.otf` files that you want to use in `./purgetss/fonts/`, and then run the command. You can also use the `--module` option to generate a CommonJS module in `./app/lib/`.
+To use it, place all `.ttf` or `.otf` files in `./purgetss/fonts/`, then run the command. You can also use `--module` to generate a CommonJS module in `./app/lib/`.
 
 ```bash
 > purgetss build-fonts
@@ -404,11 +405,11 @@ To use it, first place all of the `.ttf` or `.otf` files that you want to use in
 
 1. This will create the `./purgetss/styles/fonts.tss` file with all class definitions and `fontFamily` selectors.
 2. It will also copy the font files into the `./app/assets/fonts` folder.
-3. **PurgeTSS will rename the font files to match their corresponding PostScript names to ensure proper functionality on both iOS and Android platforms**.
+3. PurgeTSS renames the font files to match their PostScript names so they work on both iOS and Android.
 
-In this example, we are using the [**Bevan and Dancing Script**](https://fonts.google.com/share?selection.family=Bevan:ital@0;1%7CDancing%20Script:wght@400;500;600;700) fonts from Google Fonts.
+In this example, we use [Bevan and Dancing Script](https://fonts.google.com/share?selection.family=Bevan:ital@0;1%7CDancing%20Script:wght@400;500;600;700) from Google Fonts.
 
-First, place the `ttf` font files into `./purgetss/fonts/` folder:
+First, place the "ttf" font files into `./purgetss/fonts/` folder:
 
 ```bash title="./purgetss/fonts/"
 purgetss
@@ -437,7 +438,7 @@ After running `> purgetss build-fonts` you will have the following classes:
 '.dancingscript-semibold': { font: { fontFamily: 'DancingScript-SemiBold' } }
 ```
 
-**Now you can use any of those fonts in your project.**
+You can now use these fonts in your project.
 
 ### Organizing the Fonts Folder
 
@@ -456,11 +457,11 @@ purgetss
       └─ DancingScript-SemiBold.ttf
 ```
 
-By organizing the fonts folder in this way, you will get the same `fonts.tss` file as in the previous example, but with a much more organized `fonts` folder.
+By organizing the fonts folder in this way, you will get the same `fonts.tss` file as in the previous example, but with a much more organized "fonts" folder.
 
-:::tip PRO TIP
+:::tip Tip
 
-### Renaming `fontFamily` Classes
+### Renaming `fontFamily` classes
 
 If you want to use a shorter or different name for any of the font classes, simply rename the font file to your desired name.
 
@@ -487,11 +488,11 @@ Running `build-fonts` will adjust the class name accordingly:
 
 :::
 
-### Icon Font Libraries
+### Icon font libraries
 
-You can add **any icon font library** that has either a `.ttf` or `.otf` font file and a `.css` file with Unicode characters.
+You can add any icon font library that includes a `.ttf` or `.otf` file and a `.css` file with Unicode characters.
 
-In this example, we are using the [**map-icons**](http://map-icons.com) and [**microns**](https://www.s-ings.com/projects/microns-icon-font/) icon font libraries.
+In this example, we use the [map-icons](http://map-icons.com) and [microns](https://www.s-ings.com/projects/microns-icon-font/) libraries.
 
 ```bash title="./purgetss/fonts/"
 purgetss
@@ -508,7 +509,7 @@ purgetss
 
 :::info
 
-After running `purgetss build-fonts`, you will have all the `fontFamily` class definitions and Unicode characters in `fonts.tss`.
+After running `purgetss build-fonts`, `fonts.tss` will include the `fontFamily` class definitions and Unicode characters.
 
 :::
 
@@ -539,8 +540,9 @@ After running `purgetss build-fonts`, you will have all the `fontFamily` class d
 /* ... */
 ```
 
+<div align="center">
 ![Microns Icon Font](images/mapicon-font.png)
-
+</div>
 
 ### Options
 
@@ -551,7 +553,7 @@ After running `purgetss build-fonts`, you will have all the `fontFamily` class d
 
 You can use the `--module` option to generate a CommonJS module called `purgetss-fonts.js` in `./app/lib/`.
 
-To avoid conflicts with other icon libraries that you may be using, **PurgeTSS will keep each icon's prefix**.
+To avoid conflicts with other icon libraries, PurgeTSS keeps each icon's prefix.
 
 ```bash
 > purgetss build-fonts --module
@@ -590,9 +592,9 @@ const families = {
 exports.families = families;
 ```
 
-:::tip PRO TIP
+:::tip Tip
 
-### Using Filenames for Class Names and Icon Prefixes
+### Using filenames for class names and icon prefixes
 
 Use the `--filename` option to apply the style's filename as both the font class name and the prefix for icon class names in `fonts.tss` and property names in `purgetss.fonts.js`.
 
@@ -608,7 +610,7 @@ purgetss
 ```
 
 ```css title="./purgetss/styles/fonts.tss"
-/* `fontFamily` classes use the font's filename */
+/* "fontFamily" classes use the font's filename */
 '.map': { font: { fontFamily: 'map-icons' } }
 '.mic': { font: { fontFamily: 'microns' } }
 
@@ -659,14 +661,14 @@ const families = {
 exports.families = families;
 ```
 
-**Make sure that the new prefix remains unique and avoid conflicts with other class prefixes.**
+Make sure the new prefix is unique and does not conflict with other class prefixes.
 
 :::
 
 
-## `shades` Command
+## `shades` command
 
-The `shades` command generates shades and tints for a given color and outputs the corresponding color palette in the `config.cjs` file. This functionality simplifies the process of creating a consistent color scheme for your app.
+The `shades` command generates shades and tints for a given color and writes the palette to `config.cjs`.
 
 ```bash
 > purgetss shades [hexcode] [name]
@@ -692,7 +694,7 @@ The `shades` command generates shades and tints for a given color and outputs th
 
 :::info
 
-More than 66% of all `tailwind.tss` classes are related to color properties, making a tool like `shades` a valuable addition to **PurgeTSS** for extending color choices!
+More than 66% of `utilities.tss` classes are related to color properties, so `shades` is a practical way to extend color choices.
 
 :::
 
@@ -707,7 +709,7 @@ Basic usage:
 ::PurgeTSS:: "Primary" (#53606b) saved in config.cjs
 ```
 
-The generated color shades will be added to your `config.cjs` file, which will subsequently generate the `tailwind.tss` file with the newly added colors.
+The generated color shades will be added to your `config.cjs` file, which will subsequently generate the `utilities.tss` file with the newly added colors.
 
 ```js title="./purgetss/config.cjs"
 module.exports = {
@@ -815,39 +817,42 @@ To generate a random color value, use the `--random` option. Here, the `--log` o
 }
 ```
 
-To log a Titanium's `config.json` compatible structure to the console, use the `--json` option:
+To log a Titanium `config.json` compatible structure to the console, use `--json`:
 
 ```bash
 > purgetss shades '#65e92c' -j
 
+# alias:
+> purgetss s '#65e92c' -j
+
 ::PurgeTSS:: "Lima" (#65e92c)
 {
-  "global": {
-    "colors": {
-      "lima": "#65e92c",
-      "lima-50": "#f0fee7",
-      "lima-100": "#dcfdca",
-      "lima-200": "#bbfb9b",
-      "lima-300": "#90f561",
-      "lima-400": "#65e92c",
-      "lima-500": "#48d012",
-      "lima-600": "#34a60a",
-      "lima-700": "#297e0d",
-      "lima-800": "#246410",
-      "lima-900": "#215413"
+  global: {
+    colors: {
+      lima: #65e92c,
+      lima-50: #f0fee7,
+      lima-100: #dcfdca,
+      lima-200: #bbfb9b,
+      lima-300: #90f561,
+      lima-400: #65e92c,
+      lima-500: #48d012,
+      lima-600: #34a60a,
+      lima-700: #297e0d,
+      lima-800: #246410,
+      lima-900: #215413
     }
   }
 }
 ```
 
 :::info
-The `shades` command is the first one that writes to the `config.cjs` file. If you experience any issues, please report them so we can promptly address them!
+The `shades` command is the first one that writes to `config.cjs`. If you run into issues, please report them.
 :::
 
 
-## `color-module` Command
+## `color-module` command
 
-This command creates a file named `purgetss.colors.js` in the `lib` folder, which includes all the colors defined in the `config.cjs` file.
+This command creates `purgetss.colors.js` in the `lib` folder with all colors defined in `config.cjs`.
 
 ```bash
 > purgetss color-module
@@ -900,12 +905,12 @@ module.exports = {
 }
 ```
 
-This feature proves useful if you wish to use these colors within your app's code. By importing the `purgetss.colors.js` file, you can avoid hardcoding colors across multiple locations.
+This is handy if you want to use these colors in code and avoid hardcoding values in multiple places.
 
 
-## `build` Command
+## `build` command
 
-The `build` command generates the `tailwind.tss` file based on the configuration in `config.cjs`. This command is useful if you've made changes to the `config.cjs` file and want to update the `tailwind.tss` file to reflect those changes.
+The `build` command generates `utilities.tss` from `config.cjs`. Run it after you change `config.cjs`.
 
 ```bash
 > purgetss build
@@ -914,12 +919,12 @@ The `build` command generates the `tailwind.tss` file based on the configuration
 > purgetss b
 ```
 
-When `purgetss` runs, either manually or automatically (as explained in the `purgetss watch` section below), it checks for any changes made to the `config.cjs` file and regenerates the `tailwind.tss` when necessary.
+When `purgetss` runs (manually or via `watch`), it checks for changes in `config.cjs` and regenerates `utilities.tss` when needed.
 
 
-## `watch` Command
+## `watch` command
 
-The `watch` command automatically runs PurgeTSS every time the project is compiled. You won't need to manually execute the `build` command each time you make changes; PurgeTSS will handle this for you.
+The `watch` command runs PurgeTSS on each project compile. You do not need to run `build` manually after each change.
 
 ```bash
 > purgetss watch
@@ -928,9 +933,7 @@ The `watch` command automatically runs PurgeTSS every time the project is compil
 > purgetss w
 ```
 
-This functionality is particularly valuable when used with `LiveView`, as it automatically purges your project whenever you make changes, such as adding or deleting styles in views.
-
-**This provides immediate feedback on any modifications you make, significantly speeding up your prototyping process.**
+This works well with LiveView since it re-runs on changes such as adding or removing styles in views.
 
 The command will install a task in the `alloy.jmk` file to enable this behavior:
 
@@ -942,11 +945,11 @@ task('pre:compile', function(event, logger) {
 
 :::info About the `watch` command
 
-Please note that this feature is exclusively compatible with regular Alloy projects that are compiled using the `ti build` command. It hasn't been tested with other project types like those built using Webpack or Vue.
+This feature works with standard Alloy projects compiled using `ti build`. It has not been tested with project types built using Webpack or Vue.
 
 :::
 
-**To deactivate it, use the `--off` option.**
+To deactivate it, use `--off`.
 ```bash
 > purgetss watch --off
 
@@ -955,9 +958,9 @@ Please note that this feature is exclusively compatible with regular Alloy proje
 ```
 
 
-## `module` Command
+## `module` command
 
-The `module` command installs the `purgetss.ui.js` module in the `lib` folder.
+The `module` command installs `purgetss.ui.js` in the `lib` folder.
 
 ```bash
 > purgetss module
@@ -966,20 +969,20 @@ The `module` command installs the `purgetss.ui.js` module in the `lib` folder.
 > purgetss m
 ```
 
-**The PurgeTSS module contains:**
+The PurgeTSS module includes:
 
-- **Animation**: Offers methods for `playing` or `applying` basic animations and transformations to Alloy objects.
+- Animation: Methods for playing or applying basic animations and transformations to Alloy objects.
 
 :::tip To learn more
 
-**Refer to the [Animation Module](animation-module/introduction) documentation for more details.**
+See the [Animation Module](animation-module/introduction) documentation for details.
 
 :::
 
 
-## `update` Command
+## `update` command
 
-The `update` command allows you to upgrade **PurgeTSS** to the most recent version. Use it to get the latest features and bug fixes that have been released.
+The `update` command upgrades PurgeTSS to the latest version.
 
 ```bash
 > purgetss update
@@ -988,12 +991,12 @@ The `update` command allows you to upgrade **PurgeTSS** to the most recent versi
 > purgetss u
 ```
 
-We constantly update **PurgeTSS** to add new features, include the latest versions of Tailwind, FontAwesome, etc., and fix bugs.
+PurgeTSS updates include new features, updated dependencies, and bug fixes.
 
 
-## `sudo-update` Command
+## `sudo-update` command
 
-The `sudo-update` command is similar to the update command, but it's intended to be used when `sudo` is required to install **NPM** modules.
+The `sudo-update` command is the same as `update`, but uses `sudo` to install npm modules when needed.
 
 ```bash
 > purgetss sudo-update

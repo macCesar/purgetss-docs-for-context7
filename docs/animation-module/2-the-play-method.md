@@ -5,15 +5,14 @@ slug: the-play-method
 
 # The `play` Method
 
-- The `play` method is used to reproduce the animation for a single view or an array of views.
-- You can chain multiple Animation objects with callback functions to create a sequence of animations.
+The `play` method runs the animation for a single view or an array of views. You can also chain multiple Animation objects with callbacks to build sequences.
 
 ```javascript
 $.myAnimation.play($.myView)
 ```
 
-### Play Example 1
-Create an Animation element and the view you want to animate, and set the desired properties.
+### Play example 1
+Create an Animation element and the view you want to animate, then set the properties.
 
 ```xml title="index.xml"
 <Alloy>
@@ -25,7 +24,7 @@ Create an Animation element and the view you want to animate, and set the desire
 </Alloy>
 ```
 
-In the controller, pass the element that you want to animate - in this case, the `square` view.
+In the controller, pass the element you want to animate. In this case, it is the `square` view.
 
 ```javascript title="index.js"
 $.index.open()
@@ -33,17 +32,19 @@ $.index.open()
 $.myAnimation.play($.square)
 ```
 
-When the `play` method is called, the blue square will go from size 64x64 to 128x128 and change its color to green.
+When `play` runs, the blue square goes from 64x64 to 128x128 and changes to green.
 
+<div align="center">
 ![Basic Animation](../images/basic-animation.gif)
+</div>
 
-***\* low framerate gif***
+*Low framerate gif.*
 
 ## `open` and `close` Modifiers
 
-You can create more complex animations by combining properties for different `states`, such as when `opening` or `closing` an animation. The `open` and `close` modifiers allow you to specify these different states.
+Use `open` and `close` to define different states, such as opening and closing behaviors.
 
-### Play Example 2
+### Play example 2
 
 ```xml title="index.xml"
 <Alloy>
@@ -104,17 +105,19 @@ function retweetFn() {
 $.index.open()
 ```
 
+<div align="center">
 ![Complex Animations](../images/complex-animations.gif)
+</div>
 
-***\* low framerate gif***
+*Low framerate gif.*
 
-## `complete` Modifier
+## `complete` modifier
 
-To apply additional properties after an `open` animation is finished, use the `complete` modifier.
+Use `complete` to apply additional properties after an `open` animation finishes.
 
-### Complete Example 1
+### Complete example 1
 
-For example, in the following code, the `open` animation reduces the children of the `letters` view to a size of 1%. After completion, the `complete` modifier will set the background color to green and the scaling back to 100%.
+In this example, the `open` animation scales the children of the `letters` view down to 1%. When it completes, `complete` sets the background color to green and scales back to 100%.
 
 ```xml title="index.xml"
 <Alloy>
@@ -153,4 +156,6 @@ function doReset() {
 }
 ```
 
+<div align="center">
 ![complete example 1](../images/complete-attribute.gif)
+</div>

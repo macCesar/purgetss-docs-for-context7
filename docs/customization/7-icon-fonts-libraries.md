@@ -3,25 +3,24 @@ sidebar_position: 7
 slug: icon-fonts-libraries
 ---
 
-# Icon Fonts Libraries
+# Icon font libraries
 
-:::info Official Icon Fonts for **PurgeTSS**
+:::info Official icon fonts for PurgeTSS
+Previous versions of PurgeTSS included several icon font libraries such as Bootstrap Icons, Boxicons, LineIcons, and Tabler Icons. We reduced the list to keep maintenance manageable.
 
-Previous versions of **PurgeTSS** included several icon font libraries such as Bootstrap Icons, Boxicons, LineIcons, and Tabler Icons. **However, adding more icon fonts was getting out of control**.
+These are the official icon fonts supported by PurgeTSS:
 
-**As a result, we have decided to leave the following fonts as the official icon fonts for PurgeTSS:**
-
-- [Font Awesome 7 Free](https://fontawesome.com)
+- [Font Awesome 7 Free (upgrade with `purgetss il -v=fa`)](https://fontawesome.com)
 - [Framework 7](https://framework7.io/icons/)
 - [Material Icons](https://fonts.google.com/icons?icon.set=Material+Icons)
 - [Material Symbols](https://fonts.google.com/icons?icon.set=Material+Symbols)
 
 :::
 
-## Recreating the Deleted Libraries
-The good news is that you can recreate them using the `build-fonts` command:
+## Recreate removed libraries
+You can recreate them using the `build-fonts` command:
 
-### 1. Download the Libraries
+### 1. Download the libraries
 Start by downloading the libraries from their official websites:
 
 - [Bootstrap Icons](https://icons.getbootstrap.com)
@@ -29,11 +28,11 @@ Start by downloading the libraries from their official websites:
 - [LineIcons](https://lineicons.com/icons/?type=free)
 - [Tabler Icons](https://tabler-icons.io)
 
-### 2. The `fonts` Folder
+### 2. The `fonts` folder
 Put the desired libraries in the `./purgetss/fonts` folder.
 
 :::info
-You just need to copy the **TrueType** or **OpenType** font files and the `.css` file.
+Copy the TrueType or OpenType font files and the `.css` file.
 :::
 
 ```bash title="./purgetss/fonts/"
@@ -47,7 +46,7 @@ purgetss
       └─ lineicons.ttf
 ```
 
-### 3. The `build-fonts` Command
+### 3. The `build-fonts` command
 Run the `build-fonts` command to create a custom `fonts.tss` file.
 
 ```bash
@@ -57,8 +56,8 @@ $ purgetss build-fonts [--modules]
 $ purgetss bf [-m]
 ```
 
-#### The `fonts.tss` File
-The `build-fonts` command will generate a custom `./purgetss/styles/fonts.tss` file with all the Unicode characters and style rules.
+#### The `fonts.tss` file
+The `build-fonts` command generates `./purgetss/styles/fonts.tss` with Unicode characters and style rules.
 
 ```css title="./purgetss/styles/fonts.tss"
 '.boxicons': { font: { fontFamily: 'boxicons' } }
@@ -80,8 +79,8 @@ The `build-fonts` command will generate a custom `./purgetss/styles/fonts.tss` f
 /* ... */
 ```
 
-#### Renaming the Style Rule Name
-**PurgeTSS** will use the font's file name as the style rule name. **You can change it by renaming the font file**.
+#### Rename the style rule name
+PurgeTSS uses the font file name as the style rule name. You can change it by renaming the font file.
 
 ```bash title="./purgetss/fonts/"
 # Root of the project
@@ -97,8 +96,8 @@ New style rule name: `'.bx'`
 '.bx': { font: { fontFamily: 'boxicons' } }
 ```
 
-#### The `assets/fonts` Folder
-The `build-fonts` command will copy the font files to `./app/assets/fonts` folder and rename them to their corresponding **PostScript** name to work on both iOS and Android apps.
+#### The `assets/fonts` folder
+The `build-fonts` command copies the font files to `./app/assets/fonts` and renames them to their PostScript names so they work on both iOS and Android.
 
 ```bash title="./app/assets/fonts/"
 app
@@ -108,8 +107,8 @@ app
       └─ LineIcons.ttf
 ```
 
-#### The `--modules` Option
-When using the `--modules` option, it will generate a `./app/lib/purgetss.fonts.js` CommonJS module file.
+#### The `--modules` option
+When you use the `--modules` option, it generates a `./app/lib/purgetss.fonts.js` CommonJS module file.
 
 ```javascript title="./app/lib/purgetss.fonts.js"
 const icons = {
@@ -131,9 +130,9 @@ const icons = {
 exports.icons = icons;
 ```
 
-#### The `--prefix` Option
+#### The `--prefix` option
 
-**PurgeTSS** automatically determines the group's prefix for each icon family and class name. However, you can use the `--prefix` option to apply the style's filename as the prefix for class names in `fonts.tss` and property names in `purgetss.fonts.js`.
+PurgeTSS determines the group's prefix for each icon family and class name. Use `--prefix` to apply the style's filename as the prefix for class names in `fonts.tss` and property names in `purgetss.fonts.js`.
 
 ```bash title="./purgetss/fonts/"
 purgetss
@@ -142,7 +141,7 @@ purgetss
       └─ li.css
 ```
 
-**New group prefix: `li`**
+New group prefix: `li`
 
 ```css title="./purgetss/styles/fonts.tss"
 /* lineicons/li.css */
@@ -163,6 +162,6 @@ const icons = {
 exports.icons = icons;
 ```
 
-:::danger WARNING
-**Make sure that the new prefix remains unique to avoid conflicts with other class prefixes.**
+:::danger Warning
+Make sure the new prefix remains unique to avoid conflicts with other class prefixes.
 :::

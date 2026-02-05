@@ -3,17 +3,17 @@ sidebar_position: 6
 slug: complex-ui-elements
 ---
 
-# Complex UI Elements
+# Complex UI elements
 
-Here is an example of the Animation module with a more complex UI.
+This example shows the Animation module in a more complex UI.
 
-To use this example, you'll need to install the FontAwesome fonts in your project by running:
+To run it, install the FontAwesome fonts in your project:
 
 ```bash
 > purgetss icon-library -v=fa
 ```
 
-And copy the following code:
+Then copy the following code:
 
 ```xml title="index.xml"
 <Alloy>
@@ -169,6 +169,8 @@ function doAction(event) {
 }
 ```
 
+<div align="center">
 ![Complex UI with Animations](../images/complex-UI.gif)
+</div>
 
-***\* low framerate gif***
+*Low framerate gif.*

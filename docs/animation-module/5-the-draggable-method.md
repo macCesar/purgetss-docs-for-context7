@@ -5,10 +5,10 @@ slug: the-draggable-method
 
 # The `draggable` Method
 
-- The `draggable` method allows you to convert any view or an array of views into draggable elements.
-- You can set **basic animations** when dragging or dropping elements using the `drag:` and `drop:` modifiers.
-- You can `apply` or `animate` the properties either globally or locally using the `drag-apply` or `drag-animate` classes.
-- You can also constrain any view using the `horizontal-constraint` or `vertical-constraint` classes.
+- The `draggable` method converts a view or an array of views into draggable elements.
+- Use `drag:` and `drop:` modifiers for basic drag/drop animations.
+- Use `drag-apply` or `drag-animate` to apply properties instantly or animate them while dragging.
+- Use `horizontal-constraint` or `vertical-constraint` to constrain movement.
 
 ```javascript
 // Calling a draggable method
@@ -16,12 +16,12 @@ $.draggableAnimation.draggable('A View or an array of Views')
 ```
 
 :::info
-**You can create a blank `Animation` object or use an existing one to call the `draggable` method to convert a view or array of views into 'draggable' objects.**
+You can create a blank Animation object or reuse an existing one to call `draggable` on a view or array of views.
 
-**When using an Animation object on an array of views, it will handle the zIndex of each draggable element.**
+When you use an Animation object with an array of views, it manages zIndex for each draggable element.
 :::
 
-### Draggable Example
+### Draggable example
 ```xml title="index.xml"
 <Alloy>
   <Window class="keep-screen-on exit-on-close-false">
@@ -44,22 +44,24 @@ $.index.open()
 $.draggableAnimation.draggable([$.red, $.green, $.blue])
 ```
 
+<div align="center">
 ![Draggable Method](../images/draggable-method.gif)
+</div>
 
-***\* low framerate gif***
+*Low framerate gif.*
 
-## `drag` and `drop` Modifiers
-- The `drag:` and `drop:` modifiers allow you to set basic animations while dragging and dropping elements.
-- You can set 'global' modifiers in the `Animation` object, or you can set individual modifiers for each view.
-- Local modifiers will overwrite any global modifier.
+## `drag` and `drop` modifiers
+- The `drag:` and `drop:` modifiers set basic animations while dragging and dropping.
+- You can set global modifiers in the Animation object or set modifiers per view.
+- Local modifiers override global modifiers.
 
 :::info
-To simplify things, we are restricting the types of animations that can be applied while dragging (or dropping).
+To keep behavior predictable while dragging, we restrict the types of animations you can apply.
 
-**Mainly, we are not applying any `size`, `scale`, or `anchorPoint` transformation.**
+In particular, we do not apply `size`, `scale`, or `anchorPoint` transformations.
 :::
 
-### Drag & Drop Example
+### Drag and Drop example
 ```xml title="index.xml"
 <Alloy>
   <Window class="keep-screen-on exit-on-close-false">
@@ -80,22 +82,24 @@ To simplify things, we are restricting the types of animations that can be appli
 </Alloy>
 ```
 
+<div align="center">
 ![Drag and Drop Modifiers](../images/drag-drop-modifiers.gif)
+</div>
 
-***\* low framerate gif***
+*Low framerate gif.*
 
 ## `draggingType` Property
-To control how `drag:` and `drop:` modifiers are applied, you can use either the `drag-animate` (default) or `drag-apply` class. The `drag-animate` class will animate the properties, while the `drag-apply` class will apply them immediately.
+Use `drag-animate` (default) or `drag-apply` to control how `drag:` and `drop:` modifiers are applied. `drag-animate` animates the properties, `drag-apply` applies them immediately.
 
-```css title="tailwind.tss"
+```css title="utilities.tss"
 /* Component(s): For the Animation Component */
 /* Property(ies): draggingType */
 .drag-apply { draggingType: 'apply' }
 .drag-animate { draggingType: 'animate' }
 ```
 
-### Dragging Type Example
-In the following example, the `Animation` element sets the global dragging type to `drag-apply`, but the green square overwrites it to `drag-animate`.
+### Dragging Type example
+In this example, the `Animation` object sets the global dragging type to `drag-apply`, but the green square overrides it to `drag-animate`.
 
 ```xml title="index.xml"
 <Alloy>
@@ -117,16 +121,18 @@ In the following example, the `Animation` element sets the global dragging type 
 </Alloy>
 ```
 
+<div align="center">
 ![Dragging Type](../images/draggingType.gif)
+</div>
 
-***\* low framerate gif***
+*Low framerate gif.*
 
-## `bounds` Modifier
-- You can set boundaries in which a view can move within its parent view using the horizontal-constraint or vertical-constraint classes.
-- You can set global boundaries in the Animation object and/or local boundaries for each individual child view.
-- Local values will overwrite any global values.
+## `bounds` modifier
+- Use `bounds` with `horizontal-constraint` or `vertical-constraint` to limit movement within a parent view.
+- You can set global boundaries in the `Animation` object or local boundaries per view.
+- Local values override global values.
 
-### Bounds Example 1
+### Bounds example 1
 The `card` view has a boundary of `m-4` and a bottom boundary of `mb-16`.
 
 ```xml title="index.xml"
@@ -158,14 +164,14 @@ $.index.open()
 $.draggableAnimation.draggable($.card)
 ```
 
+<div align="center">
 ![Local Bounds](../images/local-bounds.gif)
+</div>
 
-***\* low framerate gif***
+*Low framerate gif.*
 
-### Bounds Example 2
-In this example, the boundaries are set globally in the `draggableAnimation` view.
-
-Every card view will use these global values.
+### Bounds example 2
+Here the boundaries are set globally in `draggableAnimation`, so every card uses the same values.
 
 ```xml title="index.xml"
 <Alloy>
@@ -218,12 +224,14 @@ $.index.open()
 $.draggableAnimation.draggable([$.card, $.card2, $.card3])
 ```
 
+<div align="center">
 ![Global Bounds](../images/global-bounds.gif)
+</div>
 
-***\* low framerate gif***
+*Low framerate gif.*
 
 ## `vertical` and `horizontal` Constraints
-To add a vertical and horizontal constraint to any `dragging` element, set the `vertical-constraint` or `horizontal-constraint` classes on the view.
+Add `vertical-constraint` or `horizontal-constraint` to restrict movement while dragging.
 
 ```css
 /* Component(s): Ti.UI.Animation */
@@ -232,8 +240,8 @@ To add a vertical and horizontal constraint to any `dragging` element, set the `
 '.vertical-constraint': { constraint: 'vertical' }
 ```
 
-### Constraint Example
-In this example, the `card` view will move only from side to side.
+### Constraint example
+In this example, the `card` view moves only side to side.
 
 ```xml title="index.xml"
 <Alloy>
@@ -260,6 +268,8 @@ $.index.open()
 $.draggableAnimation.draggable($.card)
 ```
 
+<div align="center">
 ![Horizontal Constraint](../images/horizontal-constraint.gif)
+</div>
 
-***\* low framerate gif***
+*Low framerate gif.*

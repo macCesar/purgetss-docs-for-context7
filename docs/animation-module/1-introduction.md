@@ -7,43 +7,39 @@ slug: introduction
 
 ## The Animation Module
 :::info
-**PurgeTSS** includes an Animation module to apply simple 2D Matrix animations and transformations to any element, an array of elements, or even to individual children of an element.
+PurgeTSS includes an Animation module to apply simple 2D Matrix animations and transformations to any element, an array of elements, or individual children of an element.
 :::
 
-The Animation object describes the properties of an animation. It represents:
+The Animation object describes an animation in a few ways:
 - A single-phase animation with an end state
 - A multi-phase animation using the `open`, `close`, and `complete` modifiers
 - Global states for children of a View using the `children` modifier
 
-When the `play` method is called on a View, the View is animated from its current state to the state described by the `Animation` object. The properties that can be animated include the view's position, size, colors, transformation matrix, and opacity. You can control the pace of the animation and timing with classes like `duration-*` or `delay-*`.
+When you call `play` on a View, it animates from its current state to the state described by the `Animation` object. You can animate position, size, colors, transformation matrix, and opacity. Control timing with classes like `duration-*` and `delay-*`.
 
+## Available methods
+- `play`, `toggle`: Animate an element, an array of elements, or individual children using the `Animation` object.
+- `open`, `close`: Explicitly run opening and closing animations.
+- `apply`: Apply properties instantly without animation.
+- `draggable`: Convert a View or array of Views into draggable elements.
 
-## Available Methods
-- `play`, `toggle`: To animate an element, an array of elements, or individual children of an element with the properties in the `Animation` object.
-- `open`, `close`: Explicitly manage the opening and closing animations of your views.
-- `apply`: Applies the properties instantly without an animation.
-- `draggable`: Convert any View or an array of Views to draggable elements.
+## Available modifiers
+- `open:`, `close:`, `complete:`: Set different properties for each state.
+- `children:`: Set global properties for all children of a View.
+- `child:`: Set individual properties for each child of a View.
+- `bounds:`: Set boundaries within which the View can move inside its parent.
+- `drag:`, `drop:`: Set different properties when dragging or dropping elements.
 
-
-## Available Modifiers
-- `open:`, `close:`, and `complete:` To set different properties for each state.
-- `children:` To set global properties for all the children of a View.
-- `child:` To set individual properties for each child of a View.
-- `bounds:` To set boundaries within which the View can move inside its parent View.
-- `drag:`, `drop:` To set different properties when dragging or dropping elements.
-
-
-## Timing and Other Special Classes
-- `delay-*`: To set a delay before the animation starts.
-- `duration-*`: To set the duration of the animation.
-- `rotate-*`: To set the rotation of the element.
-- `scale-*`: To set the scaling of the element.
-- `repeat-*`: To set the number of times the animation will be repeated.
-- `zoom-in-*`, `zoom-out-*`: To set the zoom in or out of the element.
-- `drag-apply`, `drag-animate`: To apply or animate the properties when dragging elements.
-- `ease-in`, `ease-out`, `ease-linear`, `ease-in-out`: To set the animation curve of the element.
-- `vertical-constraint`, `horizontal-constraint`: Adds a vertical or horizontal constraint when dragging an element.
-
+## Timing and special classes
+- `delay-*`: Delay before the animation starts.
+- `duration-*`: Duration of the animation.
+- `rotate-*`: Rotation of the element.
+- `scale-*`: Scaling of the element.
+- `repeat-*`: Number of repeats.
+- `zoom-in-*`, `zoom-out-*`: Zoom in or out.
+- `drag-apply`, `drag-animate`: Apply or animate properties while dragging.
+- `ease-in`, `ease-out`, `ease-linear`, `ease-in-out`: Animation curve.
+- `vertical-constraint`, `horizontal-constraint`: Constrain dragging to one axis.
 
 ## Installation
 Use the **`purgetss module`** command to install the module in the `lib` folder.
@@ -55,12 +51,11 @@ Use the **`purgetss module`** command to install the module in the `lib` folder.
 > purgetss m
 ```
 
-
 ## Usage
-This is the most basic `Animation` object, equipped with a set of **PurgeTSS** classes to animate any element. You can create as many `Animation` objects as you want, each with different properties to animate.
+This is the simplest `Animation` object, with a set of **PurgeTSS** classes. You can create as many animation objects as you want, each with its own properties.
 
 ```xml
 <Animation id="myAnimation" module="purgetss.ui" class="a-set-of-purgetss-classes-and-modifiers" />
 ```
 
-**You can set any position, size, colors, transformation, and opacity classes from `tailwind.tss`.**
+**You can use any position, size, color, transformation, and opacity classes from `utilities.tss`.**
