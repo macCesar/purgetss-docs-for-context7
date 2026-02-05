@@ -22,72 +22,64 @@ With **PurgeTSS**, creating visually appealing and dynamic mobile apps becomes m
 
 ## Key Features
 
-- **🎨 Tailwind-like Utility Classes**: Offers over 21,000 utility classes similar to Tailwind CSS, providing a vast array of styling options for your projects.
+- **Utility-First Classes**: PurgeTSS ships with 21,000+ utility classes, so you get a lot of styling options out of the box.
 
-- **⚡ Efficient Style Management**: Parses all your XML files to create a clean `app.tss` file, containing only the classes actually used in your project. This helps in reducing file size and improving performance.
+- **Efficient style management**: It parses all XML files to create a clean `app.tss` containing only the classes used in your project, reducing size and improving performance.
 
-- **🔧 Customization and JIT Classes**: Developers can customize default classes via a simple configuration file. It also supports just-in-time (JIT) classes, allowing the creation of arbitrary values within views for tailored styling.
+- **Customization and JIT classes**: You can customize default classes via a config file and use JIT classes for arbitrary values inside views.
 
-- **🎯 Icon Fonts Integration**: Facilitates the use of popular icon fonts such as *Font Awesome*, *Material Icons*, *Material Symbols*, and *Framework7-Icons* in Buttons and Labels.
+- **Icon fonts integration**: Use icon fonts such as Font Awesome, Material Icons, Material Symbols, and Framework7-Icons in Buttons and Labels.
 
-- **📝 fonts.tss Generation**: The `build-fonts` command creates a `fonts.tss` file with class definitions and fontFamily selectors for various font types. It supports both regular fonts and icon fonts, with simplified options for using filenames as class names and icon prefixes.
+- **`fonts.tss` generation**: The `build-fonts` command creates a `fonts.tss` file with class definitions and fontFamily selectors for regular and icon fonts, with simplified options for filenames and icon prefixes.
 
-- **🌈 Shades Command**: Includes a `shades` command that enables developers to generate custom color shades from a specified hex color, eliminating the need for external tools.
+- **`shades` command**: Generate custom color shades from a hex color without external tools.
 
-- **🎬 Animation Module**: Comes with an Animation module to apply basic 2D Matrix animations or transformations to elements or arrays of elements.
+- **Animation module**: Apply basic 2D matrix animations or transformations to elements or arrays of elements.
 
-- **📐 Grid System**: Includes a simple yet effective two-dimensional grid system to align and distribute elements within views.
+- **Grid system**: A two-dimensional grid system to align and distribute elements within views.
 
-## What's New in v7.1.x
+In short, PurgeTSS keeps styling consistent and removes a lot of repetitive UI setup work.
 
-**Major Refactoring & ESM Migration**: **PurgeTSS v7.1** has been completely refactored with improved code organization, better ESM compatibility, enhanced error handling, and a more intuitive CLI experience.
+## What's New in v7.3.x
 
-### ⚠️ Breaking Changes
+**File rename and improved error handling.** PurgeTSS v7.3 renames `tailwind.tss` to `utilities.tss` to reflect the project's standalone identity, and adds XML syntax validation to catch errors early.
 
-- **Node.js 16+** required (ESM support)
-- **Configuration file**: `config.js` → `config.cjs` (same content, different extension for CommonJS compatibility)
-- **Removed deprecated commands**:
-  - `copy-fonts` (use `icon-library` instead)
-  - `build-legacy` (legacy Tailwind build removed)
-- **Complete legacy mode removal**:
-  - All legacy-related code and conditional checks eliminated
-  - Legacy mode no longer supported anywhere in the codebase
-  - `purge.options.legacy` configuration option completely removed
-- **Simplified font generation**:
-  - `build-fonts` `-p` flag removed (now handled by `-f` flag)
-  - `build-fonts` command options simplified for better consistency
-- **Updated dependencies** to latest ESM versions (chalk v5+, etc.)
+### Breaking changes
 
-### ✅ What's Maintained
+- **File rename**: Output file is now `utilities.tss` instead of `tailwind.tss`
+  - Generated file: `purgetss/styles/utilities.tss` (was `purgetss/styles/tailwind.tss`)
+  - Distribution file: `dist/utilities.tss` (was `dist/tailwind.tss`)
 
-- **Same CLI interface** - All commands and options preserved
-- **100% API compatibility** - All existing commands work the same
-- **Same configuration structure** - Your existing config content works unchanged
+### Major improvements
 
-### 🔄 Command Improvements
+- **XML syntax validation**: Catches common Alloy XML malformations before processing
+  - Detects missing opening `<` brackets (e.g., `Label id=` instead of `<Label id=`)
+  - Shows detailed error messages with line numbers, context preview, and fix suggestions
+  - Saves debugging time by catching errors early in the build process
+- **Classic Titanium compatibility**: `deviceInfo()` function now works in both Alloy and Classic projects
+  - Removed dependency on `Alloy.isTablet`/`Alloy.isHandheld`
+  - Uses platform-based detection instead
 
-- **Enhanced CLI error handling**: Improved error messages with command suggestions when unknown commands are entered
-- **CLI reorganization**: Commands are now organized in logical categories (Setup, Development, Assets, Utilities, Maintenance) for better discoverability
-- **`build-fonts` simplified**:
-  - Removed `-p` (--icon-prefix-from-filename) flag
-  - The `-f` flag now controls both font class names AND icon prefixes using filenames
-  - More consistent and intuitive behavior
-- **Internal code modularization**: Refactored monolithic helper files into specialized modules for better maintainability
-- **Complete legacy mode removal**: Removed `build-legacy` command and all legacy-related code for cleaner, modern codebase
+### Migration guide
 
-### 🔧 Migration Guide
+If you have references to `tailwind.tss` in your project, update them to `utilities.tss`:
 
-For most users, upgrading is seamless:
+```bash
+# Update any custom scripts or paths
+# From: purgetss/styles/tailwind.tss
+# To:   purgetss/styles/utilities.tss
+```
+
+For most users, upgrading is straightforward:
 ```bash
 npm install -g purgetss@latest
 ```
 
-**Key changes to note:**
-- Only requirement: **Node.js 16 or higher**
-- If you used the `build-legacy` command, use the regular `build` command instead
-- **Enhanced CLI**: Unknown commands now provide helpful suggestions instead of generic errors
-- If you had `legacy: true` in your config, remove this option (legacy mode completely discontinued)
-- If you used `build-fonts` with the `-p` flag, now use `-f` instead (handles both font classes and icon prefixes)
+Key changes to note:
+- Node.js 20 or higher is now required.
+- FontAwesome 7: If you use FA7, PurgeTSS will automatically handle the new `--fa:` properties.
+- VS Code extension: We recommend `KevinYouu.tailwind-raw-reorder-tw4` for better compatibility with modern Tailwind versions and XML reordering.
+- Clean reinstall: If you run into issues, try `npm uninstall -g purgetss && npm install -g purgetss`.
 
 ## Documentation Structure
 
