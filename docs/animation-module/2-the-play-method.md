@@ -1,8 +1,3 @@
----
-sidebar_position: 2
-slug: the-play-method
----
-
 # The `play` Method
 
 The `play` method runs the animation for a single view or an array of views. You can also chain multiple Animation objects with callbacks to build sequences.
@@ -14,7 +9,8 @@ $.myAnimation.play($.myView)
 ### Play example 1
 Create an Animation element and the view you want to animate, then set the properties.
 
-```xml title="index.xml"
+`index.xml`
+```xml
 <Alloy>
   <Window>
     <Animation module="purgetss.ui" id="myAnimation" class="wh-32 bg-green-500 duration-1000" />
@@ -26,7 +22,8 @@ Create an Animation element and the view you want to animate, then set the prope
 
 In the controller, pass the element you want to animate. In this case, it is the `square` view.
 
-```javascript title="index.js"
+`index.js`
+```javascript
 $.index.open()
 
 $.myAnimation.play($.square)
@@ -46,7 +43,8 @@ Use `open` and `close` to define different states, such as opening and closing b
 
 ### Play example 2
 
-```xml title="index.xml"
+`index.xml`
+```xml
 <Alloy>
   <Window class="keep-screen-on">
     <Animation id="changeWidth" class="close:w-28 debug open:w-11/12" module="purgetss.ui" />
@@ -85,7 +83,8 @@ Use `open` and `close` to define different states, such as opening and closing b
 </Alloy>
 ```
 
-```javascript title="index.js"
+`index.js`
+```javascript
 function transparencyFn() {
   $.changeTransparency.play($.blueSquareView)
 }
@@ -119,7 +118,8 @@ Use `complete` to apply additional properties after an `open` animation finishes
 
 In this example, the `open` animation scales the children of the `letters` view down to 1%. When it completes, `complete` sets the background color to green and scales back to 100%.
 
-```xml title="index.xml"
+`index.xml`
+```xml
 <Alloy>
   <Window title="App Wordle" class="bg-(#181e2d)">
     <Animation module="purgetss.ui" id="myAnimationReset" class="bg-transparent" />
@@ -144,7 +144,8 @@ In this example, the `open` animation scales the children of the `letters` view 
 </Alloy>
 ```
 
-```javascript title="index.js"
+`index.js`
+```javascript
 $.index.open()
 
 function doAnimate() {
@@ -159,3 +160,54 @@ function doReset() {
 <div align="center">
 ![complete example 1](../images/complete-attribute.gif)
 </div>
+
+## Callback event object
+
+When you pass a callback to `play`, `toggle`, `open`, or `close`, it receives an enriched event object instead of the raw native event:
+
+```javascript
+$.myAnimation.play($.myView, (e) => {
+  console.log(e.action)   // 'play'
+  console.log(e.state)    // 'open' or 'close'
+  console.log(e.id)       // Animation object ID
+  console.log(e.targetId) // ID of the animated view
+})
+```
+
+### Event object properties
+
+| Property       | Type     | Description                                 |
+| -------------- | -------- | ------------------------------------------- |
+| `type`         | String   | Event type (`'complete'`)                   |
+| `bubbles`      | Boolean  | Whether the event bubbles                   |
+| `cancelBubble` | Boolean  | Whether bubbling is cancelled               |
+| `action`       | String   | `'play'` or `'apply'`                       |
+| `state`        | String   | `'open'` or `'close'`                       |
+| `id`           | String   | ID of the Animation object                  |
+| `targetId`     | String   | ID of the animated view                     |
+| `index`        | Number   | Position of the view in the array (0-based) |
+| `total`        | Number   | Total number of views in the array          |
+| `getTarget()`  | Function | Returns the animated view object            |
+
+### Animating an array of views
+
+When you pass an array to `play`, the callback is called once per view. Use `index` and `total` to track progress:
+
+```javascript
+$.myAnimation.play([$.card1, $.card2, $.card3], (e) => {
+  console.log(`Animated ${e.index + 1} of ${e.total}`)
+
+  if (e.index === e.total - 1) {
+    console.log('All animations complete')
+  }
+})
+```
+
+Use `getTarget()` to reference the specific view that just finished animating:
+
+```javascript
+$.myAnimation.play([$.card1, $.card2, $.card3], (e) => {
+  const view = e.getTarget()
+  view.borderColor = 'green'
+})
+```

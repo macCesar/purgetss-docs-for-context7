@@ -1,8 +1,3 @@
----
-sidebar_position: 6
-slug: complex-ui-elements
----
-
 # Complex UI elements
 
 This example shows the Animation module in a more complex UI.
@@ -15,7 +10,8 @@ To run it, install the FontAwesome fonts in your project:
 
 Then copy the following code:
 
-```xml title="index.xml"
+`index.xml`
+```xml
 <Alloy>
   <Window class="exit-on-close-false portrait bg-purple-700">
     <Animation id="draggableAnimation" module="purgetss.ui" class="bounds:m-4 bounds:mb-20" />
@@ -147,7 +143,8 @@ Then copy the following code:
 </Alloy>
 ```
 
-```javascript title="index.js"
+`index.js`
+```javascript
 $.index.open()
 
 $.draggableAnimation.draggable($.myCard)

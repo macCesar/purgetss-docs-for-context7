@@ -1,22 +1,19 @@
----
-sidebar_position: 5
-slug: arbitrary-values
----
-
 # Arbitrary values
 
 Sometimes you need a value that is not in the defaults, or you only need it once and do not want to add it to `config.cjs`. Use arbitrary values for that.
 
-:::info
-To generate an arbitrary style, use parentheses notation with almost any default utility class.
+> ℹ️ **INFO**
+>
+> To generate an arbitrary style, use parentheses notation with almost any default utility class.
+> 
+> You cannot use square bracket notation like in Tailwind because Titanium handles platform and conditional statements in `.tss` files differently.
 
-You cannot use square bracket notation like in Tailwind because Titanium handles platform and conditional statements in `.tss` files differently.
-:::
 
 ## Color properties
 You can set arbitrary color values for all available color properties using `hex`, `rgb`, or `rgba` values, directly in XML files or in `config.cjs`.
 
-```xml title="Arbitrary values for color properties"
+`Arbitrary values for color properties`
+```xml
 <Alloy>
   <Window class="from-(#4C61E4) to-(#804C61E4)">
     <Label class="w-(250) bg-(rgba(100,200,50)) text-(#4C61E4) text-(15) rounded-4 h-8 text-center" text="Green Label" />
@@ -24,7 +21,8 @@ You can set arbitrary color values for all available color properties using `hex
 </Alloy>
 ```
 
-```css title="Generated classes"
+`Generated classes`
+```css
 /* PurgeTSS v7.2.7 */
 /* Created by César Estrada */
 /* https://github.com/macCesar/purgeTSS */
@@ -99,7 +97,8 @@ You can set an arbitrary value for any of the following color properties:
 ## Spacing properties
 You can set arbitrary values for most size and dimension properties using `rem`, `px`, or `pt` values, directly in XML files or in `config.cjs`.
 
-```xml title="Arbitrary values for spacing properties"
+`Arbitrary values for spacing properties`
+```xml
 <Alloy>
   <Window>
     <Label class="w-(10rem) h-(1.75rem) text-(15) rounded-(5) bg-blue-800 text-center text-white" text="My custom Label" />
@@ -107,7 +106,8 @@ You can set arbitrary values for most size and dimension properties using `rem`,
 </Alloy>
 ```
 
-```css title="Generated classes"
+`Generated classes`
+```css
 /* PurgeTSS v7.2.7 */
 /* Created by César Estrada */
 /* https://github.com/macCesar/purgeTSS */
@@ -264,7 +264,8 @@ You can use any supported units depending on the property you are generating. Us
 
 ### Credit card
 
-```xml title="index.xml"
+`index.xml`
+```xml
 <Alloy>
   <Window class="bg-(#53606b)">
     <View class="w-(2in) h-(3.5in) bg-(#4C61E4) rounded-(20)">
@@ -287,7 +288,8 @@ You can use any supported units depending on the property you are generating. Us
 </Alloy>
 ```
 
-```css title="app.tss"
+`app.tss`
+```css
 /* PurgeTSS v7.2.7 */
 /* Created by César Estrada */
 /* https://github.com/macCesar/purgeTSS */
@@ -339,7 +341,8 @@ You can use any supported units depending on the property you are generating. Us
 ### Front cover
 Try this example on an iPad or tablet.
 
-```xml title="index.xml"
+`index.xml`
+```xml
 <Alloy>
   <Window class="bg-white">
     <View class="bg-(#1B6F3F) w-(2300px) h-(1600px) ml-0 mt-0">
@@ -372,7 +375,8 @@ Try this example on an iPad or tablet.
 </Alloy>
 ```
 
-```css title="app.tss"
+`app.tss`
+```css
 // PurgeTSS v7.1.0
 // Created by César Estrada
 // https://github.com/macCesar/purgeTSS
@@ -441,7 +445,8 @@ Try this example on an iPad or tablet.
 </div>
 
 ### Menu bar
-```xml title="index.xml"
+`index.xml`
+```xml
 <Alloy>
   <Window class="bg-(#53606b)" backgroundImage="https://i.pinimg.com/originals/ab/70/a1/ab70a19f087cc9ba2b03e3bee71acc3e.jpg">
     <View class="h-(150px) bg-(#53A500) horizontal mt-0 w-full">
@@ -461,7 +466,8 @@ Try this example on an iPad or tablet.
 </Alloy>
 ```
 
-```css title="app.tss"
+`app.tss`
+```css
 /* PurgeTSS v7.2.7 */
 /* Created by César Estrada */
 /* https://github.com/macCesar/purgeTSS */

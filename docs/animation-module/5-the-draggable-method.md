@@ -1,8 +1,3 @@
----
-sidebar_position: 5
-slug: the-draggable-method
----
-
 # The `draggable` Method
 
 - The `draggable` method converts a view or an array of views into draggable elements.
@@ -15,14 +10,16 @@ slug: the-draggable-method
 $.draggableAnimation.draggable('A View or an array of Views')
 ```
 
-:::info
-You can create a blank Animation object or reuse an existing one to call `draggable` on a view or array of views.
+> ℹ️ **INFO**
+>
+> You can create a blank Animation object or reuse an existing one to call `draggable` on a view or array of views.
+> 
+> When you use an Animation object with an array of views, it manages zIndex for each draggable element.
 
-When you use an Animation object with an array of views, it manages zIndex for each draggable element.
-:::
 
 ### Draggable example
-```xml title="index.xml"
+`index.xml`
+```xml
 <Alloy>
   <Window class="keep-screen-on exit-on-close-false">
     <Animation module="purgetss.ui" id="draggableAnimation" />
@@ -38,7 +35,8 @@ When you use an Animation object with an array of views, it manages zIndex for e
 </Alloy>
 ```
 
-```javascript title="index.js"
+`index.js`
+```javascript
 $.index.open()
 
 $.draggableAnimation.draggable([$.red, $.green, $.blue])
@@ -55,14 +53,16 @@ $.draggableAnimation.draggable([$.red, $.green, $.blue])
 - You can set global modifiers in the Animation object or set modifiers per view.
 - Local modifiers override global modifiers.
 
-:::info
-To keep behavior predictable while dragging, we restrict the types of animations you can apply.
+> ℹ️ **INFO**
+>
+> To keep behavior predictable while dragging, we restrict the types of animations you can apply.
+> 
+> In particular, we do not apply `size`, `scale`, or `anchorPoint` transformations.
 
-In particular, we do not apply `size`, `scale`, or `anchorPoint` transformations.
-:::
 
 ### Drag and Drop example
-```xml title="index.xml"
+`index.xml`
+```xml
 <Alloy>
   <Window class="keep-screen-on exit-on-close-false">
     <!-- Global set of modifiers -->
@@ -91,7 +91,8 @@ In particular, we do not apply `size`, `scale`, or `anchorPoint` transformations
 ## `draggingType` Property
 Use `drag-animate` (default) or `drag-apply` to control how `drag:` and `drop:` modifiers are applied. `drag-animate` animates the properties, `drag-apply` applies them immediately.
 
-```css title="utilities.tss"
+`utilities.tss`
+```css
 /* Component(s): For the Animation Component */
 /* Property(ies): draggingType */
 .drag-apply { draggingType: 'apply' }
@@ -101,7 +102,8 @@ Use `drag-animate` (default) or `drag-apply` to control how `drag:` and `drop:` 
 ### Dragging Type example
 In this example, the `Animation` object sets the global dragging type to `drag-apply`, but the green square overrides it to `drag-animate`.
 
-```xml title="index.xml"
+`index.xml`
+```xml
 <Alloy>
   <Window class="keep-screen-on exit-on-close-false">
     <!-- Global set of modifiers -->
@@ -135,7 +137,8 @@ In this example, the `Animation` object sets the global dragging type to `drag-a
 ### Bounds example 1
 The `card` view has a boundary of `m-4` and a bottom boundary of `mb-16`.
 
-```xml title="index.xml"
+`index.xml`
+```xml
 <Alloy>
   <Window class="keep-screen-on exit-on-close-false bg-green-50">
     <Animation id="draggableAnimation" module="purgetss.ui" />
@@ -158,7 +161,8 @@ The `card` view has a boundary of `m-4` and a bottom boundary of `mb-16`.
 </Alloy>
 ```
 
-```javascript title="index.js"
+`index.js`
+```javascript
 $.index.open()
 
 $.draggableAnimation.draggable($.card)
@@ -173,7 +177,8 @@ $.draggableAnimation.draggable($.card)
 ### Bounds example 2
 Here the boundaries are set globally in `draggableAnimation`, so every card uses the same values.
 
-```xml title="index.xml"
+`index.xml`
+```xml
 <Alloy>
   <Window class="keep-screen-on exit-on-close-false bg-green-50">
     <Animation id="draggableAnimation" module="purgetss.ui" class="bounds:m-2 bounds:mb-16" />
@@ -218,7 +223,8 @@ Here the boundaries are set globally in `draggableAnimation`, so every card uses
 </Alloy>
 ```
 
-```javascript title="index.js"
+`index.js`
+```javascript
 $.index.open()
 
 $.draggableAnimation.draggable([$.card, $.card2, $.card3])
@@ -243,7 +249,8 @@ Add `vertical-constraint` or `horizontal-constraint` to restrict movement while 
 ### Constraint example
 In this example, the `card` view moves only side to side.
 
-```xml title="index.xml"
+`index.xml`
+```xml
 <Alloy>
   <Window class="keep-screen-on exit-on-close-false">
     <Animation id="draggableAnimation" module="purgetss.ui" />
@@ -262,7 +269,8 @@ In this example, the `card` view moves only side to side.
 </Alloy>
 ```
 
-```javascript title="index.js"
+`index.js`
+```javascript
 $.index.open()
 
 $.draggableAnimation.draggable($.card)

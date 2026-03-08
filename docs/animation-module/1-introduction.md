@@ -1,14 +1,10 @@
----
-sidebar_position: 1
-slug: introduction
----
-
 # Introduction
 
 ## The Animation Module
-:::info
-PurgeTSS includes an Animation module to apply simple 2D Matrix animations and transformations to any element, an array of elements, or individual children of an element.
-:::
+> ℹ️ **INFO**
+>
+> PurgeTSS includes an Animation module to apply simple 2D Matrix animations and transformations to any element, an array of elements, or individual children of an element.
+
 
 The Animation object describes an animation in a few ways:
 - A single-phase animation with an end state
@@ -22,6 +18,8 @@ When you call `play` on a View, it animates from its current state to the state 
 - `open`, `close`: Explicitly run opening and closing animations.
 - `apply`: Apply properties instantly without animation.
 - `draggable`: Convert a View or array of Views into draggable elements.
+
+All methods except `draggable` accept an optional callback. The callback receives an enriched event object — see [The `play` method](the-play-method#callback-event-object) for details.
 
 ## Available modifiers
 - `open:`, `close:`, `complete:`: Set different properties for each state.
@@ -40,6 +38,13 @@ When you call `play` on a View, it animates from its current state to the state 
 - `drag-apply`, `drag-animate`: Apply or animate properties while dragging.
 - `ease-in`, `ease-out`, `ease-linear`, `ease-in-out`: Animation curve.
 - `vertical-constraint`, `horizontal-constraint`: Constrain dragging to one axis.
+
+## Utility functions
+
+The module also exports two helper functions:
+
+- `deviceInfo()`: Logs detailed platform and display information to the console. Works in both Alloy and Classic Titanium projects.
+- `saveComponent({ source, directory })`: Saves a snapshot of a view as a PNG to the photo gallery.
 
 ## Installation
 Use the **`purgetss module`** command to install the module in the `lib` folder.

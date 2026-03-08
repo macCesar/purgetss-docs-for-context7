@@ -1,13 +1,9 @@
----
-sidebar_position: 4
-slug: the-opacity-modifier
----
-
 # The `opacity` modifier
 
-:::info
-Add an opacity modifier to any available color property by appending a value between 0 and 100 after a slash (`/`).
-:::
+> ℹ️ **INFO**
+>
+> Add an opacity modifier to any available color property by appending a value between 0 and 100 after a slash (`/`).
+
 
 ## In your XML files
 
@@ -30,7 +26,8 @@ Add an opacity modifier to any available color property by appending a value bet
 ## In the `apply` directive
 You can also use color opacity modifiers in the `apply` directive in the `config.cjs` file.
 
-```js title="./purgetss/config.cjs"
+`./purgetss/config.cjs`
+```js
 module.exports = {
   theme: {
     extend: {
@@ -48,7 +45,8 @@ module.exports = {
 }
 ```
 
-```css title="Generated classes"
+`Generated classes`
+```css
 /* Custom Styles and Resets */
 '.main-banner': { backgroundColor: '#59ce10cc', borderColor: '#bfce10cc' }
 
@@ -58,6 +56,8 @@ module.exports = {
 /* And the rest of color properties! */
 ```
 
-:::caution Semantic colors
-Semantic colors can't be modified with the opacity modifier because they are defined as an object with light and dark values.
-:::
+> ⚠️ **CAUTION**
+>
+> Semantic colors
+> Semantic colors can't be modified with the opacity modifier because they are defined as an object with light and dark values.
+

@@ -1,15 +1,11 @@
----
-sidebar_position: 5
-slug: grid-system
----
-
 # Grid system
 
 The grid system is a small layout tool that lets you build rows and columns with utility classes.
 
 The snippet below shows the simplest layout. From there, you can mix columns and rows as needed.
 
-```xml title="index.xml"
+`index.xml`
+```xml
 <Alloy>
   <View class='grid'>
     <View class="grid-cols-4">

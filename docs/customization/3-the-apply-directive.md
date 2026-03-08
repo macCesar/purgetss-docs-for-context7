@@ -1,15 +1,11 @@
----
-sidebar_position: 3
-slug: the-apply-directive
----
-
 # The `apply` Directive
 
 ## Create complex classes and IDs
 
-:::info
-Use `apply` to bundle classes into a new class, or to extract a repeated pattern into a reusable class.
-:::
+> ℹ️ **INFO**
+>
+> Use `apply` to bundle classes into a new class, or to extract a repeated pattern into a reusable class.
+
 
 - Set any ID, class, or Ti Element.
 - Use any of the default classes.
@@ -20,7 +16,8 @@ Use `apply` to bundle classes into a new class, or to extract a repeated pattern
 
 ## Set any ID, class, or Ti Element
 
-```javascript title="./purgetss/config.cjs"
+`./purgetss/config.cjs`
+```javascript
 // ...
 theme: {
   extend: {},
@@ -43,7 +40,8 @@ theme: {
 // ...
 ```
 
-```css title="./purgetss/styles/utilities.tss"
+`./purgetss/styles/utilities.tss`
+```css
 'Label': { color: '#374151', textColor: '#374151', font: { fontSize: 16, fontWeight: 'bold' } }
 
 /* Custom Classes */
@@ -55,7 +53,8 @@ theme: {
 
 ## Use default classes
 
-```javascript title="./purgetss/config.cjs"
+`./purgetss/config.cjs`
+```javascript
 // ...
 theme: {
   '.btn': {
@@ -68,7 +67,8 @@ theme: {
 // ...
 ```
 
-```css title="./purgetss/styles/utilities.tss"
+`./purgetss/styles/utilities.tss`
+```css
 /* Custom Classes */
 '.btn': { borderRadius: 4, borderWidth: 2, top: 2, bottom: 2, width: Ti.UI.SIZE, height: Ti.UI.SIZE, font: { fontFamily: 'SairaCondensed-Regular', fontWeight: 'bold' } }
 '.btn-primary': { backgroundColor: '#22c55e', borderColor: '#bbf7d0', color: '#dcfce7', textColor: '#dcfce7' }
@@ -78,7 +78,8 @@ theme: {
 
 You can use [**Arbitrary values**](arbitrary-values) to define your custom classes.
 
-```javascript title="./purgetss/config.cjs"
+`./purgetss/config.cjs`
+```javascript
 // ...
 theme: {
   extend: {},
@@ -89,7 +90,8 @@ theme: {
 // ...
 ```
 
-```css title="./purgetss/styles/utilities.tss"
+`./purgetss/styles/utilities.tss`
+```css
 /* Custom Classes */
 '.progress': { backgroundColor: '#e9ecef', borderRadius: 4, height: 16, layout: 'horizontal', font: { fontSize: 12 } }
 // ...
@@ -99,7 +101,8 @@ theme: {
 
 In the following example, we are creating `corporate` color classes so we can use them in the `apply` directive with `bg-corporate-500`, `text-corporate-100`, and `border-corporate-200`.
 
-```javascript title="./purgetss/config.cjs"
+`./purgetss/config.cjs`
+```javascript
 // ...
 theme: {
   extend: {
@@ -121,7 +124,8 @@ theme: {
 // ...
 ```
 
-```css title="./purgetss/styles/utilities.tss"
+`./purgetss/styles/utilities.tss`
+```css
 /* Custom Classes */
 '.btn': { borderRadius: 4, borderWidth: 2, top: 2, bottom: 2, width: Ti.UI.SIZE, height: Ti.UI.SIZE, font: { fontWeight: 'bold' } }
 '.btn-corporate': { backgroundColor: '#53606b', borderColor: '#babfc4', color: '#dddfe1', textColor: '#dddfe1' }
@@ -143,7 +147,8 @@ theme: {
 
 ## Set a string of classes or an array of classes
 
-```javascript title="./purgetss/config.cjs"
+`./purgetss/config.cjs`
+```javascript
 // ...
 theme: {
   extend: {
@@ -169,7 +174,8 @@ theme: {
 // ...
 ```
 
-```css title="./purgetss/styles/utilities.tss"
+`./purgetss/styles/utilities.tss`
+```css
 /* Custom Classes */
 '.btn': { borderRadius: 4, borderWidth: 2, top: 2, bottom: 2, width: Ti.UI.SIZE, height: Ti.UI.SIZE, font: { fontWeight: 'bold' } }
 '.btn-corporate': { backgroundColor: '#53606b', borderColor: '#babfc4', color: '#dddfe1', textColor: '#dddfe1' }
@@ -178,7 +184,8 @@ theme: {
 
 ## Combine with platform, device, or conditional blocks
 
-```javascript title="./purgetss/config.cjs"
+`./purgetss/config.cjs`
+```javascript
 // ...
 theme: {
   '.btn': {
@@ -204,7 +211,8 @@ theme: {
 // ...
 ```
 
-```css title="./purgetss/styles/utilities.tss"
+`./purgetss/styles/utilities.tss`
+```css
 /* Custom Classes */
 '.btn': { borderRadius: 4, borderWidth: 2, top: 2, bottom: 2, width: Ti.UI.SIZE, height: Ti.UI.SIZE, font: { fontWeight: 'bold' } }
 '.btn[platform=ios]': { right: 16, left: 16, width: Ti.UI.FILL }
@@ -217,13 +225,15 @@ theme: {
 
 Several classes in `utilities.tss` are platform-specific to prevent adding properties that do not exist on a platform.
 
-:::caution
-To apply these platform styles when creating custom rules, you must specify the platform variant in the `apply` directive.
+> ⚠️ **CAUTION**
+>
+> To apply these platform styles when creating custom rules, you must specify the platform variant in the `apply` directive.
+> 
+> **Even if you are not targeting a specific platform, you still need to specify the platform variant.**
 
-**Even if you are not targeting a specific platform, you still need to specify the platform variant.**
-:::
 
-```javascript title="./purgetss/config.cjs"
+`./purgetss/config.cjs`
+```javascript
 module.exports = {
   theme: {
     '.my-view': {
@@ -236,7 +246,8 @@ module.exports = {
 };
 ```
 
-```css title="./purgetss/styles/utilities.tss"
+`./purgetss/styles/utilities.tss`
+```css
 /* Custom Classes */
 '.my-view[platform=ios]': { backgroundColor: '#22c55e', clipMode: Ti.UI.iOS.CLIP_MODE_ENABLED, width: 128, height: 128 }
 ```
@@ -245,7 +256,8 @@ module.exports = {
 
 If you omit the platform variant, **PurgeTSS** won't be able to determine which platform you are targeting, and the custom class will not have the corresponding property.
 
-```javascript title="./purgetss/config.cjs"
+`./purgetss/config.cjs`
+```javascript
 module.exports = {
   theme: {
     // Even if you are not targeting a specific platform, you must specify the platform variant
@@ -257,7 +269,8 @@ module.exports = {
 };
 ```
 
-```css title="./purgetss/styles/utilities.tss"
+`./purgetss/styles/utilities.tss`
+```css
 /* Omitting the platform variant in `config.cjs` will not generate the corresponding property. */
 /* Missing the property related to `clip-enabled`. */
 '.my-view': { backgroundColor: '#22c55e', width: 128, height: 128 }

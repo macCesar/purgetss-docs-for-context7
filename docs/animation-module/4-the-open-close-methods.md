@@ -1,8 +1,3 @@
----
-sidebar_position: 4
-slug: the-open-and-close-methods
----
-
 # The `open` and `close` Methods
 
 Use `open` and `close` to run opening and closing animations based on the `open:` and `close:` modifiers. They do not toggle based on current view state, so you get explicit control.
@@ -22,7 +17,8 @@ $.myAnimation.open(views, callback);
 
 ### Example
 
-```xml title="index.xml"
+`index.xml`
+```xml
 <Alloy>
   <Window>
     <Animation module="purgetss.ui" id="myAnimation" class="close:opacity-0 open:opacity-100" />
@@ -32,10 +28,13 @@ $.myAnimation.open(views, callback);
 </Alloy>
 ```
 
-```javascript title="index.js"
-$.myAnimation.open($.myView, () => {
-  console.log('Open animation complete');
-});
+`index.js`
+```javascript
+$.myAnimation.open($.myView, (e) => {
+  console.log('Open animation complete')
+  console.log(e.state)    // 'open'
+  console.log(e.targetId) // ID of the animated view
+})
 ```
 
 In this example, `myView` uses the properties under `open`, making it fully opaque.
@@ -55,7 +54,8 @@ $.myAnimation.close(views, callback);
 
 ### Example
 
-```xml title="index.xml"
+`index.xml`
+```xml
 <Alloy>
   <Window>
     <Animation module="purgetss.ui" id="myAnimation" class="close:opacity-0 open:opacity-100" />
@@ -65,10 +65,15 @@ $.myAnimation.close(views, callback);
 </Alloy>
 ```
 
-```javascript title="index.js"
-$.myAnimation.close($.myView, () => {
-  console.log('Close animation complete');
-});
+`index.js`
+```javascript
+$.myAnimation.close($.myView, (e) => {
+  console.log('Close animation complete')
+  console.log(e.state)    // 'close'
+  console.log(e.targetId) // ID of the animated view
+})
 ```
+
+The callback receives the same enriched event object as `play`. See [Callback event object](the-play-method#callback-event-object) for the full property reference.
 
 In this example, `myView` uses the properties under `close`, making it fully transparent.

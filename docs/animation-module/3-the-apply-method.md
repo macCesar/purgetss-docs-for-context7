@@ -1,13 +1,9 @@
----
-sidebar_position: 3
-slug: the-apply-method
----
-
 # The `apply` Method
 
 Use `apply` when you want to set properties immediately without animation.
 
-```javascript title="index.js"
+`index.js`
+```javascript
 $.myAnimation.apply($.myView)
 ```
 
@@ -15,7 +11,8 @@ $.myAnimation.apply($.myView)
 
 `apply` sets properties instantly. In this example, the `ScrollableView` is rotated 90 degrees and its content is counter-rotated -90 degrees to mimic a **TikTok-style** layout.
 
-```xml title="index.xml"
+`index.xml`
+```xml
 <Alloy>
   <Window class="exit-on-close-false keep-screen-on">
     <Animation module="purgetss.ui" id="rotate" class="platform-wh-inverted rotate-90" />
@@ -38,7 +35,8 @@ $.myAnimation.apply($.myView)
 </Alloy>
 ```
 
-```javascript title="index.js"
+`index.js`
+```javascript
 $.rotate.apply($.scrollableView)
 
 $.counterRotate.apply($.scrollableView.views)
@@ -51,3 +49,17 @@ $.index.open()
 </div>
 
 *Low framerate gif.*
+
+## Callback event object
+
+`apply` also accepts an optional callback. It receives the same enriched event object as `play`, with `action` set to `'apply'` and `type` set to `'applied'`:
+
+```javascript
+$.myAnimation.apply($.myView, (e) => {
+  console.log(e.action)   // 'apply'
+  console.log(e.state)    // 'open' or 'close'
+  console.log(e.targetId) // ID of the view
+})
+```
+
+When passing an array of views, `index` and `total` work the same as with `play`. See [Callback event object](the-play-method#callback-event-object) for the full property reference.

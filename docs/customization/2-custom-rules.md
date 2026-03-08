@@ -1,8 +1,3 @@
----
-sidebar_position: 2
-slug: custom-rules
----
-
 # Custom Rules
 
 Custom rules in **PurgeTSS** let you style **Titanium elements**, **IDs**, and **classes** in `config.cjs`. You can also target specific platforms, devices, or conditional blocks using global variables.
@@ -20,9 +15,11 @@ Whether you want to style a Ti Element (also known as a markup element), a custo
 - For IDs, use `camelCase` to match the JavaScript convention.
 - For classes, use `kebab-case` to stay compatible with PurgeTSS v6.x and above. For example, use `.my-custom-class-name` instead of `.myCustomClassName`.
 
-:::caution PurgeTSS v5 or earlier projects
-If your project started on **PurgeTSS** v5 or earlier and you now use 7.x.x or later, set `purge.options.missing` to true in `config.cjs`. It will report missing classes at the end of `app.tss` so you can update them to the new naming convention.
-:::
+> ⚠️ **CAUTION**
+>
+> PurgeTSS v5 or earlier projects
+> If your project started on **PurgeTSS** v5 or earlier and you now use 7.x.x or later, set `purge.options.missing` to true in `config.cjs`. It will report missing classes at the end of `app.tss` so you can update them to the new naming convention.
+
 
 ### Default, Platform, Device, or Conditional blocks
 
@@ -42,7 +39,8 @@ If your project started on **PurgeTSS** v5 or earlier and you now use 7.x.x or l
 
 ## `config.cjs` file example
 
-```javascript title="./purgetss/config.cjs"
+`./purgetss/config.cjs`
+```javascript
 module.exports = {
   theme: {
     '#main-banner': {
@@ -89,7 +87,8 @@ module.exports = {
 };
 ```
 
-```css title="Custom './purgetss/styles/utilities.tss' file"
+`Custom './purgetss/styles/utilities.tss' file`
+```css
 /* Property: TextField */
 /* Description: A single line text field. */
 'TextField': { top: 10, left: 20, right: 20, bottom: 0 }

@@ -1,23 +1,19 @@
----
-sidebar_position: 2
-slug: commands
----
-
 # Commands
 
-:::info What's new in v7.2.x
+> ℹ️ **INFO**
+>
+> What's new in v7.2.x
+> 
+> **PurgeTSS** v7.2 adds full support for **Font Awesome 7**, including the CSS custom properties format. It also reduces install size and refactors internals for performance and maintainability.
+> 
+> **Key changes**:
+> - **Node.js 20+** required (due to the "inquirer" v13 upgrade).
+> - **Font Awesome 7** support, including the CSS custom properties format.
+> - **Titanium SDK 13.1.x** support, with new properties from 13.1.0.GA.
+> - **Removed deprecated commands**: `copy-fonts` and `build-legacy`.
+> - **Install size reduced** by about 45MB by moving non-essential assets to dev dependencies.
+> - **Improved Unicode extraction** for more formats and direct character mappings.
 
-**PurgeTSS** v7.2 adds full support for **Font Awesome 7**, including the CSS custom properties format. It also reduces install size and refactors internals for performance and maintainability.
-
-**Key changes**:
-- **Node.js 20+** required (due to the "inquirer" v13 upgrade).
-- **Font Awesome 7** support, including the CSS custom properties format.
-- **Titanium SDK 13.1.x** support, with new properties from 13.1.0.GA.
-- **Removed deprecated commands**: `copy-fonts` and `build-legacy`.
-- **Install size reduced** by about 45MB by moving non-essential assets to dev dependencies.
-- **Improved Unicode extraction** for more formats and direct character mappings.
-
-:::
 
 This page lists the commands available in PurgeTSS.
 
@@ -56,7 +52,8 @@ No arguments or options are needed. The command creates the file inside `./purge
 > purgetss i
 ```
 
-```javascript title="./purgetss/config.cjs"
+`./purgetss/config.cjs`
+```javascript
 module.exports = {
   purge: {
     mode: 'all',
@@ -76,13 +73,14 @@ module.exports = {
 };
 ```
 
-:::tip To learn more
+> 💡 **TIP**
+>
+> To learn more
+> 
+> PurgeTSS looks for `./purgetss/config.cjs`. Each section is optional and can be customized. Missing sections use the default configuration.
+> 
+> For examples, see the [Configuration section](customization/the-config-file).
 
-PurgeTSS looks for `./purgetss/config.cjs`. Each section is optional and can be customized. Missing sections use the default configuration.
-
-For examples, see the [Configuration section](customization/the-config-file).
-
-:::
 
 
 ## `create` command
@@ -177,11 +175,12 @@ This command installs dev dependencies and configuration files in existing Purge
 > purgetss id
 ```
 
-:::caution Important
+> ⚠️ **CAUTION**
+>
+> Important
+> 
+> This command overwrites any existing `extensions.json` and `settings.json` files. Back them up if you want to keep your current versions.
 
-This command overwrites any existing `extensions.json` and `settings.json` files. Back them up if you want to keep your current versions.
-
-:::
 
 
 ## `icon-library` command
@@ -201,7 +200,8 @@ The `icon-library` command copies the free font files for Font Awesome, Material
   - `-m, --module` to copy the corresponding CommonJS module into the `./app/lib/` folder
   - `-s, --styles` to copy the corresponding `tss` files into the `./purgetss/styles/` folder for your review
 
-```bash title="./app/assets/fonts/"
+`./app/assets/fonts/`
+```bash
 FontAwesome7Brands-Regular.ttf
 FontAwesome7Free-Regular.ttf
 FontAwesome7Free-Solid.ttf
@@ -306,7 +306,8 @@ To use this file, follow these steps:
 - Compile your app as usual.
 - Use `liveview` if you want faster testing.
 
-```xml title="index.xml"
+`index.xml`
+```xml
 <Alloy>
   <Window>
     <View class="grid">
@@ -342,7 +343,8 @@ To use this file, follow these steps:
 </Alloy>
 ```
 
-```css title="app.tss"
+`app.tss`
+```css
 /* PurgeTSS v7.2.7
  * Created by César Estrada
  * https://github.com/macCesar/purgeTSS
@@ -411,7 +413,8 @@ In this example, we use [Bevan and Dancing Script](https://fonts.google.com/shar
 
 First, place the "ttf" font files into `./purgetss/fonts/` folder:
 
-```bash title="./purgetss/fonts/"
+`./purgetss/fonts/`
+```bash
 purgetss
 └─ fonts
    ├─ Bevan-Italic.ttf
@@ -424,7 +427,8 @@ purgetss
 
 After running `> purgetss build-fonts` you will have the following classes:
 
-```css title="./purgetss/styles/fonts.tss"
+`./purgetss/styles/fonts.tss`
+```css
 /* Fonts TSS file generated with PurgeTSS
  * https://github.com/macCesar/purgeTSS
 */
@@ -444,7 +448,8 @@ You can now use these fonts in your project.
 
 For better organization, you can group each font family in subfolders. For example:
 
-```bash title="./purgetss/fonts/"
+`./purgetss/fonts/`
+```bash
 purgetss
 └─ fonts
    └─ bevan
@@ -459,34 +464,37 @@ purgetss
 
 By organizing the fonts folder in this way, you will get the same `fonts.tss` file as in the previous example, but with a much more organized "fonts" folder.
 
-:::tip Tip
+> 💡 **TIP**
+>
+> Tip
+> 
+> ### Renaming `fontFamily` classes
+> 
+> If you want to use a shorter or different name for any of the font classes, simply rename the font file to your desired name.
+> 
+> For example:
+> 
+> `./purgetss/fonts/`
+```bash
+> purgetss
+> └─ fonts
+>    └─ dancing-script
+>       ├─ Script-Bold.ttf
+>       ├─ Script-Medium.ttf
+>       ├─ Script-Regular.ttf
+>       └─ Script-SemiBold.ttf
+> ```
+> 
+> Running `build-fonts` will adjust the class name accordingly:
+> 
+> `./purgetss/styles/fonts.tss`
+```css
+> '.script-bold': { font: { fontFamily: 'DancingScript-Bold' } }
+> '.script-medium': { font: { fontFamily: 'DancingScript-Medium' } }
+> '.script-regular': { font: { fontFamily: 'DancingScript-Regular' } }
+> '.script-semibold': { font: { fontFamily: 'DancingScript-SemiBold' } }
+> ```
 
-### Renaming `fontFamily` classes
-
-If you want to use a shorter or different name for any of the font classes, simply rename the font file to your desired name.
-
-For example:
-
-```bash title="./purgetss/fonts/"
-purgetss
-└─ fonts
-   └─ dancing-script
-      ├─ Script-Bold.ttf
-      ├─ Script-Medium.ttf
-      ├─ Script-Regular.ttf
-      └─ Script-SemiBold.ttf
-```
-
-Running `build-fonts` will adjust the class name accordingly:
-
-```css title="./purgetss/styles/fonts.tss"
-'.script-bold': { font: { fontFamily: 'DancingScript-Bold' } }
-'.script-medium': { font: { fontFamily: 'DancingScript-Medium' } }
-'.script-regular': { font: { fontFamily: 'DancingScript-Regular' } }
-'.script-semibold': { font: { fontFamily: 'DancingScript-SemiBold' } }
-```
-
-:::
 
 ### Icon font libraries
 
@@ -494,7 +502,8 @@ You can add any icon font library that includes a `.ttf` or `.otf` file and a `.
 
 In this example, we use the [map-icons](http://map-icons.com) and [microns](https://www.s-ings.com/projects/microns-icon-font/) libraries.
 
-```bash title="./purgetss/fonts/"
+`./purgetss/fonts/`
+```bash
 purgetss
 └─ fonts
    └─ bevan
@@ -507,13 +516,13 @@ purgetss
       └─ microns.ttf
 ```
 
-:::info
+> ℹ️ **INFO**
+>
+> After running `purgetss build-fonts`, `fonts.tss` will include the `fontFamily` class definitions and Unicode characters.
 
-After running `purgetss build-fonts`, `fonts.tss` will include the `fontFamily` class definitions and Unicode characters.
 
-:::
-
-```css title="./purgetss/styles/fonts.tss"
+`./purgetss/styles/fonts.tss`
+```css
 /* Fonts TSS file generated with PurgeTSS */
 /* https://github.com/macCesar/purgeTSS */
 
@@ -562,7 +571,8 @@ To avoid conflicts with other icon libraries, PurgeTSS keeps each icon's prefix.
 > purgetss bf -m
 ```
 
-```javascript title="./app/lib/purgetss.fonts.js"
+`./app/lib/purgetss.fonts.js`
+```javascript
 const icons = {
   // map-icons/map-icons.css
   'mapIcon': {
@@ -592,78 +602,82 @@ const families = {
 exports.families = families;
 ```
 
-:::tip Tip
+> 💡 **TIP**
+>
+> Tip
+> 
+> ### Using filenames for class names and icon prefixes
+> 
+> Use the `--filename` option to apply the style's filename as both the font class name and the prefix for icon class names in `fonts.tss` and property names in `purgetss.fonts.js`.
+> 
+> `./purgetss/fonts/`
+```bash
+> purgetss
+> └─ fonts
+>    └─ map-icons
+>       └─ map.ttf
+>       └─ mp.css
+>    └─ microns
+>       └─ mic.ttf
+>       └─ mc.css
+> ```
+> 
+> `./purgetss/styles/fonts.tss`
+```css
+> /* "fontFamily" classes use the font's filename */
+> '.map': { font: { fontFamily: 'map-icons' } }
+> '.mic': { font: { fontFamily: 'microns' } }
+> 
+> /* map-icons/mp.css */
+> '.mp-abseiling': { text: '\ue800', title: '\ue800' }
+> '.mp-accounting': { text: '\ue801', title: '\ue801' }
+> '.mp-airport': { text: '\ue802', title: '\ue802' }
+> '.mp-amusement-park': { text: '\ue803', title: '\ue803' }
+> '.mp-aquarium': { text: '\ue804', title: '\ue804' }
+> /* ... */
+> 
+> /* microns/mc.css */
+> '.mc-arrow-left': { text: '\ue700', title: '\ue700' }
+> '.mc-arrow-right': { text: '\ue701', title: '\ue701' }
+> '.mc-arrow-up': { text: '\ue702', title: '\ue702' }
+> '.mc-arrow-down': { text: '\ue703', title: '\ue703' }
+> '.mc-left': { text: '\ue704', title: '\ue704' }
+> /* ... */
+> ```
+> 
+> `./app/lib/purgetss.fonts.js`
+```javascript
+> const icons = {
+>   // map-icons/mp.css
+>   'mp': {
+>     'abseiling': '\ue800',
+>     'accounting': '\ue801',
+>     'airport': '\ue802',
+>     'amusementPark': '\ue803',
+>     // ...
+>   },
+>   // microns/mc.css
+>   'mc': {
+>     'arrowLeft': '\ue700',
+>     'arrowRight': '\ue701',
+>     'arrowUp': '\ue702',
+>     'arrowDown': '\ue703',
+>     // ...
+>   }
+> };
+> exports.icons = icons;
+> 
+> const families = {
+>   // map-icons/mp.css
+>   'mp': 'map-icons',
+>   // microns/mc.css
+>   'mc': 'microns'
+> };
+> exports.families = families;
+> ```
+> 
+> Make sure the new prefix is unique and does not conflict with other class prefixes.
 
-### Using filenames for class names and icon prefixes
-
-Use the `--filename` option to apply the style's filename as both the font class name and the prefix for icon class names in `fonts.tss` and property names in `purgetss.fonts.js`.
-
-```bash title="./purgetss/fonts/"
-purgetss
-└─ fonts
-   └─ map-icons
-      └─ map.ttf
-      └─ mp.css
-   └─ microns
-      └─ mic.ttf
-      └─ mc.css
-```
-
-```css title="./purgetss/styles/fonts.tss"
-/* "fontFamily" classes use the font's filename */
-'.map': { font: { fontFamily: 'map-icons' } }
-'.mic': { font: { fontFamily: 'microns' } }
-
-/* map-icons/mp.css */
-'.mp-abseiling': { text: '\ue800', title: '\ue800' }
-'.mp-accounting': { text: '\ue801', title: '\ue801' }
-'.mp-airport': { text: '\ue802', title: '\ue802' }
-'.mp-amusement-park': { text: '\ue803', title: '\ue803' }
-'.mp-aquarium': { text: '\ue804', title: '\ue804' }
-/* ... */
-
-/* microns/mc.css */
-'.mc-arrow-left': { text: '\ue700', title: '\ue700' }
-'.mc-arrow-right': { text: '\ue701', title: '\ue701' }
-'.mc-arrow-up': { text: '\ue702', title: '\ue702' }
-'.mc-arrow-down': { text: '\ue703', title: '\ue703' }
-'.mc-left': { text: '\ue704', title: '\ue704' }
-/* ... */
-```
-
-```javascript title="./app/lib/purgetss.fonts.js"
-const icons = {
-  // map-icons/mp.css
-  'mp': {
-    'abseiling': '\ue800',
-    'accounting': '\ue801',
-    'airport': '\ue802',
-    'amusementPark': '\ue803',
-    // ...
-  },
-  // microns/mc.css
-  'mc': {
-    'arrowLeft': '\ue700',
-    'arrowRight': '\ue701',
-    'arrowUp': '\ue702',
-    'arrowDown': '\ue703',
-    // ...
-  }
-};
-exports.icons = icons;
-
-const families = {
-  // map-icons/mp.css
-  'mp': 'map-icons',
-  // microns/mc.css
-  'mc': 'microns'
-};
-exports.families = families;
-```
-
-Make sure the new prefix is unique and does not conflict with other class prefixes.
-
-:::
 
 
 ## `shades` command
@@ -692,11 +706,10 @@ The `shades` command generates shades and tints for a given color and writes the
 - `-l, --log`: Logs the generated shades instead of saving them.
 - `-j, --json`: Logs a JSON compatible structure, which can be used in `./app/config.json`, for example.
 
-:::info
+> ℹ️ **INFO**
+>
+> More than 66% of `utilities.tss` classes are related to color properties, so `shades` is a practical way to extend color choices.
 
-More than 66% of `utilities.tss` classes are related to color properties, so `shades` is a practical way to extend color choices.
-
-:::
 
 Basic usage:
 
@@ -711,7 +724,8 @@ Basic usage:
 
 The generated color shades will be added to your `config.cjs` file, which will subsequently generate the `utilities.tss` file with the newly added colors.
 
-```js title="./purgetss/config.cjs"
+`./purgetss/config.cjs`
+```js
 module.exports = {
   // ...
   theme: {
@@ -845,9 +859,10 @@ To log a Titanium `config.json` compatible structure to the console, use `--json
 }
 ```
 
-:::info
-The `shades` command is the first one that writes to `config.cjs`. If you run into issues, please report them.
-:::
+> ℹ️ **INFO**
+>
+> The `shades` command is the first one that writes to `config.cjs`. If you run into issues, please report them.
+
 
 
 ## `color-module` command
@@ -861,7 +876,8 @@ This command creates `purgetss.colors.js` in the `lib` folder with all colors de
 > purgetss cm
 ```
 
-```js title="./lib/purgetss.colors.js"
+`./lib/purgetss.colors.js`
+```js
 module.exports = {
   harlequin: {
     '50': '#ecffe6',
@@ -943,11 +959,12 @@ task('pre:compile', function(event, logger) {
 });
 ```
 
-:::info About the `watch` command
+> ℹ️ **INFO**
+>
+> About the `watch` command
+> 
+> This feature works with standard Alloy projects compiled using `ti build`. It has not been tested with project types built using Webpack or Vue.
 
-This feature works with standard Alloy projects compiled using `ti build`. It has not been tested with project types built using Webpack or Vue.
-
-:::
 
 To deactivate it, use `--off`.
 ```bash
@@ -973,11 +990,12 @@ The PurgeTSS module includes:
 
 - Animation: Methods for playing or applying basic animations and transformations to Alloy objects.
 
-:::tip To learn more
+> 💡 **TIP**
+>
+> To learn more
+> 
+> See the [Animation Module](animation-module/introduction) documentation for details.
 
-See the [Animation Module](animation-module/introduction) documentation for details.
-
-:::
 
 
 ## `update` command

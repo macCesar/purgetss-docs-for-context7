@@ -1,8 +1,3 @@
----
-sidebar_position: 7
-slug: available-utilities
----
-
 # Available Utilities
 
 Along with regular utilities like colors, widths, and heights, you can use the following animation-specific utilities.
