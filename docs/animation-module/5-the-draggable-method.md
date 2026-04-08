@@ -1,6 +1,6 @@
 # The `draggable` Method
 
-- The `draggable` method converts a view or an array of views into draggable elements.
+- The `draggable` method makes one or more views draggable.
 - Use `drag:` and `drop:` modifiers for basic drag/drop animations.
 - Use `drag-apply` or `drag-animate` to apply properties instantly or animate them while dragging.
 - Use `horizontal-constraint` or `vertical-constraint` to constrain movement.
@@ -281,3 +281,220 @@ $.draggableAnimation.draggable($.card)
 </div>
 
 *Low framerate gif.*
+
+## The `undraggable` method
+
+Use `undraggable` to remove drag behavior and clean up all event listeners from one or more views.
+
+```javascript
+$.draggableAnimation.undraggable($.card)
+
+// or with an array of views
+$.draggableAnimation.undraggable([$.card1, $.card2, $.card3])
+```
+
+This method:
+- Removes `touchstart`, `touchend`, and `touchmove` listeners from each view
+- Removes the `orientationchange` listener from `Ti.Gesture`
+- Removes the views from the collision detection registry
+- Cleans up internal tracking properties (`_originTop`, `_originLeft`, `_visualTop`, `_visualLeft`, `_collisionEnabled`, `_dragListeners`)
+
+### Real-world use cases
+
+**Lock a piece after correct placement (puzzle game):**
+
+```javascript
+// When the piece lands on the correct slot
+if (source.valor === target.valor) {
+  $.anim.undraggable(source)  // Can't move it anymore
+  source.applyProperties({ opacity: 0.6 })
+}
+```
+
+**Toggle between edit and presentation mode:**
+
+```javascript
+function enterEditMode() {
+  $.anim.draggable(views)
+}
+
+function enterPresentationMode() {
+  $.anim.undraggable(views)
+  $.anim.transition(views, showcaseLayout)
+}
+```
+
+**Clean up when closing a Window (prevent memory leaks):**
+
+```javascript
+function onClose() {
+  $.anim.undraggable(allDraggableViews)
+}
+```
+
+This is especially important for the `Ti.Gesture.orientationchange` listener, which is global and does not get cleaned up automatically when the Window closes.
+
+## The `detectCollisions` method
+
+After calling `draggable()`, you can enable collision detection to know when a dragged view hovers over or is dropped onto another view.
+
+```javascript
+$.draggableAnimation.draggable(views)
+$.draggableAnimation.detectCollisions(views, onHover, onDrop)
+```
+
+### Parameters
+
+| Parameter | Type       | Description                                                    |
+| --------- | ---------- | -------------------------------------------------------------- |
+| `views`   | View/Array | The view or array of views to register for collision detection |
+| `dragCB`  | Function   | Called during drag when the source hovers over a target        |
+| `dropCB`  | Function   | Called on drop when a collision target is found                |
+
+### How collision detection works
+
+Collision is based on center-point hit testing: the center of the dragged view is checked against the `rect` bounds of each registered view.
+
+**`dragCB(source, target)`** is called during drag:
+- `target` is the view under the drag center, or `null` when leaving all targets
+- Use this to show visual feedback (highlights, borders, scaling)
+
+**`dropCB(source, target)`** is called on drop:
+- `target` is the view where the source was released
+- Snap behavior on drop depends on the classes applied to the `<Animation>` object (see below)
+
+### Snap classes
+
+Both snap behaviors are **off by default** — opt-in via classes on the `<Animation>` object:
+
+| Class         | TSS Rule                                          | Behavior                                                                          |
+| ------------- | ------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `snap-back`   | `animationProperties: { snap: { back: true } }`   | View returns to its origin position when dropped **outside** any collision target |
+| `snap-center` | `animationProperties: { snap: { center: true } }` | View auto-centers on the target when dropped **on** it (uses `snapTo` internally) |
+
+You can use both together:
+
+```xml
+<!-- Snap back when missing + center on target -->
+<Animation id="myAnim" module="purgetss.ui" class="snap-back snap-center duration-200" />
+```
+
+**Without `snap-back`**: the view stays wherever you drop it, even if no target was hit.
+
+**Without `snap-center`**: the view stays at the exact drop position on the target (no centering).
+
+### Collision detection example
+
+`index.xml`
+```xml
+<Alloy>
+  <Window class="keep-screen-on">
+    <Animation id="myAnimation" module="purgetss.ui" class="snap-back snap-center duration-200" />
+
+    <View id="dropZone" class="wh-32 mt-8 rounded-lg border-2 border-dashed border-gray-400 bg-gray-100" />
+
+    <View id="card" class="wh-24 mt-48 rounded-lg bg-blue-500" />
+  </Window>
+</Alloy>
+```
+
+`index.js`
+```javascript
+$.index.open()
+
+const views = [$.dropZone, $.card]
+
+$.myAnimation.draggable(views)
+
+$.myAnimation.detectCollisions(views,
+  // dragCB: visual feedback while hovering
+  (source, target) => {
+    if (target) {
+      target.borderColor = 'green'
+      target.backgroundColor = '#dcfce7'
+    } else {
+      // Reset all potential targets
+      $.dropZone.borderColor = '#9ca3af'
+      $.dropZone.backgroundColor = '#f3f4f6'
+    }
+  },
+  // dropCB: handle the drop
+  (source, target) => {
+    console.log(`Dropped ${source.id} onto ${target.id}`)
+    // Reset visual feedback
+    target.borderColor = '#9ca3af'
+    target.backgroundColor = '#f3f4f6'
+  }
+)
+```
+
+### Real-world use case: Drag-to-swap grid
+
+A 3x3 grid where dragging a card onto another swaps their positions — combining `draggable`, `detectCollisions`, and `swap`:
+
+`grid.xml`
+```xml
+<Alloy>
+  <Window class="bg-slate-900" onClose="onClose">
+    <Animation id="gridAnim" module="purgetss.ui" class="snap-back duration-150" />
+
+    <!-- 3x3 Grid: 80px boxes (wh-20), 88px spacing -->
+    <View class="clip-disabled">
+      <!-- Row 0 -->
+      <View id="c0" class="wh-20 left-0 top-0 rounded-xl bg-red-500 shadow-lg">
+        <Label class="touch-enabled-false text-sm font-bold text-white" text="1" />
+      </View>
+      <View id="c1" class="wh-20 left-(88) top-0 rounded-xl bg-blue-500 shadow-lg">
+        <Label class="touch-enabled-false text-sm font-bold text-white" text="2" />
+      </View>
+      <View id="c2" class="wh-20 left-(176) top-0 rounded-xl bg-green-500 shadow-lg">
+        <Label class="touch-enabled-false text-sm font-bold text-white" text="3" />
+      </View>
+
+      <!-- Row 1 -->
+      <View id="c3" class="wh-20 left-0 top-(88) rounded-xl bg-amber-500 shadow-lg">
+        <Label class="touch-enabled-false text-sm font-bold text-white" text="4" />
+      </View>
+      <!-- ...c4 through c8 follow the same pattern -->
+    </View>
+  </Window>
+</Alloy>
+```
+
+`grid.js`
+```javascript
+const cards = [$.c0, $.c1, $.c2, $.c3, $.c4, $.c5, $.c6, $.c7, $.c8]
+
+// 1. Make all cards draggable
+$.gridAnim.draggable(cards)
+
+// 2. Enable collision + swap on drop
+let lastTarget = null
+
+$.gridAnim.detectCollisions(cards,
+  function (source, target) {
+    // Reset previous highlight
+    if (lastTarget && lastTarget !== target) {
+      lastTarget.applyProperties({ opacity: 1 })
+    }
+    if (target) {
+      target.applyProperties({ opacity: 0.6 })
+    }
+    lastTarget = target
+  },
+  function (source, target) {
+    if (target) {
+      target.applyProperties({ opacity: 1 })
+      $.gridAnim.swap(source, target)
+    }
+    lastTarget = null
+  }
+)
+
+// 3. Clean up on close
+function onClose() {
+  $.gridAnim.undraggable(cards)
+}
+```
+
+Three calls: `draggable`, `detectCollisions`, and `swap` inside the drop callback. The `lastTarget` tracking ensures only the current hover target is highlighted, and the `if (target)` guard prevents errors when dropping outside any card.

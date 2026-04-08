@@ -1,6 +1,6 @@
 # Arbitrary values
 
-Sometimes you need a value that is not in the defaults, or you only need it once and do not want to add it to `config.cjs`. Use arbitrary values for that.
+When you need a one-off value that is not in the defaults, use arbitrary values instead of adding it to `config.cjs`.
 
 > ℹ️ **INFO**
 >

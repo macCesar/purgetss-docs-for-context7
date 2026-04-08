@@ -166,7 +166,7 @@ module.exports = {
 
 ### `theme` section
 
-The `theme` section in `config.cjs` is where you define and extend your project's color palette, type scale, font stacks, border radius values, and other properties.
+The `theme` section defines your project's color palette, type scale, font stacks, border radius values, and other properties.
 
 `The theme section`
 ```javascript
@@ -393,7 +393,7 @@ This will generate classes like `bg-regal-blue` in addition to all of Tailwind's
 
 ## Customize spacing
 
-The `spacing` section controls the global spacing and sizing scale values.
+The `spacing` section sets the global spacing and sizing scale.
 
 `Customizing Spacing`
 ```javascript

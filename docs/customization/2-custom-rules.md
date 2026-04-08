@@ -1,12 +1,8 @@
 # Custom Rules
 
-Custom rules in **PurgeTSS** let you style **Titanium elements**, **IDs**, and **classes** in `config.cjs`. You can also target specific platforms, devices, or conditional blocks using global variables.
-
-This is handy when a project spans iOS and Android and you want to keep styles in one place.
+Custom rules in PurgeTSS let you style Titanium elements, IDs, and classes in `config.cjs`. You can also target specific platforms, devices, or conditional blocks using global variables. Handy when a project spans iOS and Android and you want to keep styles in one place.
 
 ## Classes, IDs, and Ti Elements
-
-You can style any Ti Element, IDs, or your own classes with as many attributes as needed. You can also target specific platforms, devices, or add conditional blocks with global variables.
 
 Whether you want to style a Ti Element (also known as a markup element), a custom ID prefixed with a hash (#), or a custom class prefixed with a period (.), the structure is the same.
 

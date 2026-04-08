@@ -1,6 +1,6 @@
 # Platform and device modifiers
 
-Platform and device modifiers (also called variants or prefixes) let you specify different styles depending on the platform (iOS or Android) and device (tablet or handheld) the app runs on:
+Platform and device modifiers (also called variants or prefixes) apply styles conditionally based on platform (iOS or Android) and device type (tablet or handheld):
 
 - Platform modifiers:
   - `ios:`

@@ -37,6 +37,42 @@ When `play` runs, the blue square goes from 64x64 to 128x128 and changes to gree
 
 *Low framerate gif.*
 
+### Real-world use case: Notification badge pulse
+
+Use the `pulse` method for notification badges. The scale comes from the `<Animation />` object:
+
+`badge-pulse.xml`
+```xml
+<Alloy>
+  <Window class="bg-slate-900">
+    <Animation id="pulseAnim" module="purgetss.ui" class="scale-(1.3) autoreverse duration-150" />
+
+    <View class="wh-24">
+      <View class="wh-20 clip-disabled rounded-xl bg-blue-500">
+        <Label class="touch-enabled-false text-2xl text-white" text="@" />
+      </View>
+
+      <View id="badge" class="wh-6 rounded-full-6 right-1 top-1 bg-red-500">
+        <Label class="touch-enabled-false text-center text-xs text-white" text="3" />
+      </View>
+    </View>
+  </Window>
+</Alloy>
+```
+
+`badge-pulse.js`
+```javascript
+function doPulse() {
+  $.pulseAnim.pulse($.badge)
+}
+
+function doPulse3() {
+  $.pulseAnim.pulse($.badge, 3)
+}
+```
+
+The badge scales to 130%, reverses back to 100%, repeated N times. The `scale` and `duration` come from the `<Animation />` object; `count` is the only parameter per call. See also [the `pulse` method](additional-methods#the-pulse-method) for details.
+
 ## `open` and `close` Modifiers
 
 Use `open` and `close` to define different states, such as opening and closing behaviors.

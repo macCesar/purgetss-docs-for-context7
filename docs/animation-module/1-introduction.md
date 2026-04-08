@@ -3,7 +3,7 @@
 ## The Animation Module
 > ℹ️ **INFO**
 >
-> PurgeTSS includes an Animation module to apply simple 2D Matrix animations and transformations to any element, an array of elements, or individual children of an element.
+> PurgeTSS includes an Animation module for 2D Matrix animations and transformations. It works on single elements, arrays of elements, or individual children of an element.
 
 
 The Animation object describes an animation in a few ways:
@@ -18,8 +18,17 @@ When you call `play` on a View, it animates from its current state to the state 
 - `open`, `close`: Explicitly run opening and closing animations.
 - `apply`: Apply properties instantly without animation.
 - `draggable`: Convert a View or array of Views into draggable elements.
+- `undraggable`: Remove draggable behavior and clean up all listeners.
+- `detectCollisions`: Enable collision detection on draggable views with hover and drop callbacks.
+- `sequence`: Animate views one after another (sequential, not parallel).
+- `swap`: Animate two views exchanging positions.
+- `shake`: Quick horizontal shake for error/feedback.
+- `pulse`: Scale a view up and back for attention (badges, notifications).
+- `snapTo`: Snap a view to the nearest target by center distance.
+- `reorder`: Animate views to new positions based on index mapping.
+- `transition`: Animate multiple views to new layout configurations using Matrix2D (translate, rotate, scale).
 
-All methods except `draggable` accept an optional callback. The callback receives an enriched event object — see [The `play` method](the-play-method#callback-event-object) for details.
+The `play`, `toggle`, `open`, `close`, `apply`, and `sequence` methods accept an optional callback. The callback receives an enriched event object, see [The `play` method](the-play-method#callback-event-object) for details.
 
 ## Available modifiers
 - `open:`, `close:`, `complete:`: Set different properties for each state.

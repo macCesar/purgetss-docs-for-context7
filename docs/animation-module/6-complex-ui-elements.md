@@ -1,6 +1,6 @@
 # Complex UI elements
 
-This example shows the Animation module in a more complex UI.
+This example combines several Animation module features in a single UI: a collapsible sidebar, an expandable card, and draggable elements.
 
 To run it, install the FontAwesome fonts in your project:
 

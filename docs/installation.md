@@ -27,12 +27,12 @@ When you run `purgetss` for the first time in your project, it does the followin
 
 ### 1. Auto-run hook
 
-**PurgeTSS** adds a task in `alloy.jmk` to run `purgetss` every time you compile your app. **This is especially useful when using `liveview`**.
+PurgeTSS adds a task in `alloy.jmk` to run `purgetss` every time you compile your app. Works well with `liveview`.
 
 
 ### 2. purgetss folder
 
-**PurgeTSS** creates a `purgetss` folder at the root of your project containing the following files and folders:
+PurgeTSS creates a `purgetss` folder at the root of your project:
 
 `./purgetss`
 ```bash
@@ -58,11 +58,11 @@ purgetss
 
   - `definitions.css` file
 
-    A special `css` file that incorporates all classes from `utilities.tss`, `_app.tss`, any `.tss` remaining in your project, and `fonts.tss` files. This includes all classes from official icon font libraries, meant for use with the ["**IntelliSense for CSS class names in HTML**"](#vscode-extension) VS Code extension.
+    A CSS file combining all classes from `utilities.tss`, `_app.tss`, any `.tss` files in your project, and `fonts.tss`. Used by the ["IntelliSense for CSS class names in HTML"](#vscode-extension) VS Code extension for autocomplete.
 
 - `fonts` folder
 
-  Here, you can add various font types such as icons, serif, sans-serif, cursive, fantasy, or monospace fonts, all applicable to your app. Step-by-step instructions are available in the [**build-fonts command**](commands#build-fonts-command) section.
+  Place icon, serif, sans-serif, or monospace font files here. See the [build-fonts command](commands#build-fonts-command) for instructions.
 
 > ⚠️ **CAUTION**
 >
@@ -84,7 +84,7 @@ To use the example files:
 - Install Font Awesome font files with `purgetss icon-library --vendor=fontawesome`.
 - Run `purgetss` once to generate the necessary files.
 - Compile your app as usual.
-- **If you use `liveview`, it speeds up testing and development time.**
+- Use `liveview` for faster iteration.
 
 ```xml title=index.xml
 <Alloy>
@@ -124,9 +124,9 @@ To use the example files:
 
 > ℹ️ **INFO**
 >
-> **After running `purgetss`, you will have a new `app.tss` file with only the classes used in the XML files.**
+> After running `purgetss`, `app.tss` contains only the classes used in your XML files.
 > 
-> Your original `app.tss` file is backed up in `_app.tss`. You can use this file to add, delete, or update any of your original styles.
+> Your original `app.tss` is backed up as `_app.tss`. Use that file to add, delete, or update your custom styles.
 > 
 > Every time `purgetss` runs, it copies the content of `_app.tss` to `app.tss`.
 
@@ -185,7 +185,28 @@ To use the example files:
 ![iOS Screen - Example](images/sample-fixed.png)
 </div>
 
-Find more examples in the [**Tailwind TSS Sample App**](https://github.com/macCesar/utilities.tss-sample-app).
+More examples in the [Tailwind TSS Sample App](https://github.com/macCesar/utilities.tss-sample-app).
+
+> 🚨 **WARNING**
+>
+> `Label`, `Button`, and `Switch` with opposite margins
+> In Titanium, `Label`, `Button`, and `Switch` can stretch when opposite margins pin both sides of the same axis and the dimension is still implicit.
+> 
+> - `mt-*` + `mb-*` or `my-*` can stretch the component vertically. Add `h-auto`.
+> - `ml-*` + `mr-*` or `mx-*` can stretch the component horizontally. Add `w-auto`.
+> - If margins affect both axes, use `wh-auto`.
+> 
+> This applies to **any component whose default size is `Ti.UI.SIZE`**. If you set opposite margins on the same axis (e.g., left and right), Titanium's composite layout uses those pins to calculate the dimension instead of the content — so the component stretches to fill its parent.
+> 
+> Examples:
+> 
+> ```xml
+> <Label class="mt-2 mb-4 h-auto" text="Only content height" />
+> <Label class="mx-4 w-auto" text="Only content width" />
+> <Label class="m-4 wh-auto" text="Safe reset on both axes" />
+> <Switch class="my-1 mr-2 h-auto" onChange="onChanged" />
+> ```
+
 
 
 ## VSCode extension

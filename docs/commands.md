@@ -4,15 +4,15 @@
 >
 > What's new in v7.2.x
 > 
-> **PurgeTSS** v7.2 adds full support for **Font Awesome 7**, including the CSS custom properties format. It also reduces install size and refactors internals for performance and maintainability.
+> PurgeTSS v7.2 adds Font Awesome 7 support (including the CSS custom properties format), reduces install size, and refactors internals.
 > 
-> **Key changes**:
-> - **Node.js 20+** required (due to the "inquirer" v13 upgrade).
-> - **Font Awesome 7** support, including the CSS custom properties format.
-> - **Titanium SDK 13.1.x** support, with new properties from 13.1.0.GA.
-> - **Removed deprecated commands**: `copy-fonts` and `build-legacy`.
-> - **Install size reduced** by about 45MB by moving non-essential assets to dev dependencies.
-> - **Improved Unicode extraction** for more formats and direct character mappings.
+> Changes:
+> - Node.js 20+ required (due to the "inquirer" v13 upgrade).
+> - Font Awesome 7 support, including the CSS custom properties format.
+> - Titanium SDK 13.1.x support, with new properties from 13.1.0.GA.
+> - Removed deprecated commands: `copy-fonts` and `build-legacy`.
+> - Install size reduced by about 45MB by moving non-essential assets to dev dependencies.
+> - Improved Unicode extraction for more formats and direct character mappings.
 
 
 This page lists the commands available in PurgeTSS.
@@ -127,7 +127,7 @@ ti config app.workspace 'the-full-path/to-the-workspace-folder'
 
 ### Installing dev dependencies
 
-Installing these dependencies adds linting and editor support for projects using PurgeTSS.
+Adds linting and editor support to an existing project.
 
 ```bash
 > purgetss create 'Name of the Project' [--dependencies]
@@ -185,7 +185,7 @@ This command installs dev dependencies and configuration files in existing Purge
 
 ## `icon-library` command
 
-The `icon-library` command copies the free font files for Font Awesome, Material Icons, Material Symbols, and/or Framework7 Icons into `./app/assets/fonts`. It avoids manual downloading and placement.
+The `icon-library` command copies the free font files for Font Awesome, Material Icons, Material Symbols, and/or Framework7 Icons into `./app/assets/fonts`.
 
 ```bash
 > purgetss icon-library [--vendor=fa,mi,ms,f7] [--module] [--styles]
@@ -444,7 +444,7 @@ After running `> purgetss build-fonts` you will have the following classes:
 
 You can now use these fonts in your project.
 
-### Organizing the Fonts Folder
+### Organizing the fonts folder
 
 For better organization, you can group each font family in subfolders. For example:
 
@@ -462,7 +462,7 @@ purgetss
       └─ DancingScript-SemiBold.ttf
 ```
 
-By organizing the fonts folder in this way, you will get the same `fonts.tss` file as in the previous example, but with a much more organized "fonts" folder.
+Subfolders don't change the output -- you get the same `fonts.tss` as the flat layout above.
 
 > 💡 **TIP**
 >
@@ -470,7 +470,7 @@ By organizing the fonts folder in this way, you will get the same `fonts.tss` fi
 > 
 > ### Renaming `fontFamily` classes
 > 
-> If you want to use a shorter or different name for any of the font classes, simply rename the font file to your desired name.
+> To use a shorter or different class name, rename the font file.
 > 
 > For example:
 > 
@@ -608,7 +608,7 @@ exports.families = families;
 > 
 > ### Using filenames for class names and icon prefixes
 > 
-> Use the `--filename` option to apply the style's filename as both the font class name and the prefix for icon class names in `fonts.tss` and property names in `purgetss.fonts.js`.
+> The `--filename` option uses the style's filename as both the font class name and the icon prefix in `fonts.tss` and `purgetss.fonts.js`.
 > 
 > `./purgetss/fonts/`
 ```bash
@@ -722,7 +722,7 @@ Basic usage:
 ::PurgeTSS:: "Primary" (#53606b) saved in config.cjs
 ```
 
-The generated color shades will be added to your `config.cjs` file, which will subsequently generate the `utilities.tss` file with the newly added colors.
+The shades are added to `config.cjs`. Next time `purgetss` runs, `utilities.tss` picks them up.
 
 `./purgetss/config.cjs`
 ```js
@@ -1009,7 +1009,7 @@ The `update` command upgrades PurgeTSS to the latest version.
 > purgetss u
 ```
 
-PurgeTSS updates include new features, updated dependencies, and bug fixes.
+Runs `npm install -g purgetss@latest`.
 
 
 ## `sudo-update` command

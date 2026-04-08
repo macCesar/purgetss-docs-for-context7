@@ -223,23 +223,17 @@ theme: {
 
 ## Platform-specific classes
 
-Several classes in `utilities.tss` are platform-specific to prevent adding properties that do not exist on a platform.
+Several classes in `utilities.tss` are platform-specific (e.g., `clip-enabled`, `status-bar-style-light-content`). These only exist with a `[platform=ios]` or `[platform=android]` suffix.
 
-> ⚠️ **CAUTION**
->
-> To apply these platform styles when creating custom rules, you must specify the platform variant in the `apply` directive.
-> 
-> **Even if you are not targeting a specific platform, you still need to specify the platform variant.**
-
+When you use these classes inside a platform block (`ios:` or `android:`), PurgeTSS automatically finds the platform-specific version -- no prefix needed:
 
 `./purgetss/config.cjs`
 ```javascript
 module.exports = {
   theme: {
     '.my-view': {
-      // Targeting iOS.
-      'ios': {
-        'apply': 'bg-green-500 wh-32 ios:clip-enabled'
+      ios: {
+        apply: 'bg-green-500 wh-32 clip-enabled'
       }
     }
   },
@@ -252,18 +246,46 @@ module.exports = {
 '.my-view[platform=ios]': { backgroundColor: '#22c55e', clipMode: Ti.UI.iOS.CLIP_MODE_ENABLED, width: 128, height: 128 }
 ```
 
-### Omitting the platform variant
+The `ios:` / `android:` prefix still works from a non-platform block (e.g., `default`), but use it with caution:
 
-If you omit the platform variant, **PurgeTSS** won't be able to determine which platform you are targeting, and the custom class will not have the corresponding property.
+> 🚨 **WARNING**
+>
+> Cross-platform apps
+> Using `ios:` or `android:` in a `default` block applies the property on **all platforms**. Some iOS-only or Android-only properties can cause errors on the other platform at compile time or when the view opens. For cross-platform apps, always use platform blocks instead.
+
 
 `./purgetss/config.cjs`
 ```javascript
 module.exports = {
   theme: {
-    // Even if you are not targeting a specific platform, you must specify the platform variant
+    // For single-platform apps, the prefix works from default:
     '.my-view': {
-      // Missing platform variant in clip-enabled
-      'apply': 'wh-32 clip-enabled bg-green-500'
+      apply: 'wh-32 bg-green-500 ios:clip-enabled'
+    }
+
+    // For cross-platform apps, use platform blocks instead:
+    '.my-view': {
+      apply: 'wh-32 bg-green-500',
+      ios: {
+        apply: 'clip-enabled'
+      }
+    }
+  },
+};
+```
+
+### Classes outside platform blocks
+
+If a platform-specific class is used outside a platform block (without the `ios:` or `android:` prefix), PurgeTSS won't find it because it only exists with the platform suffix in `utilities.tss`:
+
+`./purgetss/config.cjs`
+```javascript
+module.exports = {
+  theme: {
+    '.my-view': {
+      // clip-enabled only exists as '.clip-enabled[platform=ios]' in utilities.tss
+      // Without a platform block or ios: prefix, it won't be found
+      apply: 'wh-32 clip-enabled bg-green-500'
     }
   },
 };
@@ -271,7 +293,6 @@ module.exports = {
 
 `./purgetss/styles/utilities.tss`
 ```css
-/* Omitting the platform variant in `config.cjs` will not generate the corresponding property. */
-/* Missing the property related to `clip-enabled`. */
+/* clip-enabled was not resolved because no platform context was available */
 '.my-view': { backgroundColor: '#22c55e', width: 128, height: 128 }
 ```
