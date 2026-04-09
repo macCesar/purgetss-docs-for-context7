@@ -388,7 +388,7 @@ This will generate classes like `bg-regal-blue` in addition to all of Tailwind's
 >
 > You can use the `shades` command to generate a range of shades for a color and add them to `config.cjs`.
 > 
-> **For details, see the** [**shades command**](/docs/commands#shades-command).
+> **For details, see the** [**shades command**](../Commands.md#shades-command).
 
 
 ## Customize spacing

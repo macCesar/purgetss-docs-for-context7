@@ -994,7 +994,7 @@ The PurgeTSS module includes:
 >
 > To learn more
 > 
-> See the [Animation Module](animation-module/introduction) documentation for details.
+> See the [The UI Module](purgetss-ui/introduction) documentation for details.
 
 
 

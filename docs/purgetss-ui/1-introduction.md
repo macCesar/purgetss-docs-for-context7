@@ -1,10 +1,23 @@
 # Introduction
 
-## The Animation Module
+## The UI Module
+
 > ℹ️ **INFO**
 >
-> PurgeTSS includes an Animation module for 2D Matrix animations and transformations. It works on single elements, arrays of elements, or individual children of an element.
+> `purgetss.ui` is the runtime module included with PurgeTSS. It provides **Animation**, **Appearance management**, and **utility functions** — all accessible from a single `require('purgetss.ui')`.
 
+
+The module exports three areas of functionality:
+
+| Area | What it does |
+|------|-------------|
+| **Animation** | 2D Matrix animations and transformations on single elements, arrays, or children |
+| **[Appearance](appearance)** | Light/Dark/System mode switching with persistent user preference |
+| **Utilities** | `deviceInfo()` for platform diagnostics, `saveComponent()` for view snapshots |
+
+---
+
+## Animation
 
 The Animation object describes an animation in a few ways:
 - A single-phase animation with an end state
@@ -13,7 +26,7 @@ The Animation object describes an animation in a few ways:
 
 When you call `play` on a View, it animates from its current state to the state described by the `Animation` object. You can animate position, size, colors, transformation matrix, and opacity. Control timing with classes like `duration-*` and `delay-*`.
 
-## Available methods
+### Available methods
 - `play`, `toggle`: Animate an element, an array of elements, or individual children using the `Animation` object.
 - `open`, `close`: Explicitly run opening and closing animations.
 - `apply`: Apply properties instantly without animation.
@@ -30,14 +43,14 @@ When you call `play` on a View, it animates from its current state to the state 
 
 The `play`, `toggle`, `open`, `close`, `apply`, and `sequence` methods accept an optional callback. The callback receives an enriched event object, see [The `play` method](the-play-method#callback-event-object) for details.
 
-## Available modifiers
+### Available modifiers
 - `open:`, `close:`, `complete:`: Set different properties for each state.
 - `children:`: Set global properties for all children of a View.
 - `child:`: Set individual properties for each child of a View.
 - `bounds:`: Set boundaries within which the View can move inside its parent.
 - `drag:`, `drop:`: Set different properties when dragging or dropping elements.
 
-## Timing and special classes
+### Timing and special classes
 - `delay-*`: Delay before the animation starts.
 - `duration-*`: Duration of the animation.
 - `rotate-*`: Rotation of the element.
@@ -48,12 +61,16 @@ The `play`, `toggle`, `open`, `close`, `apply`, and `sequence` methods accept an
 - `ease-in`, `ease-out`, `ease-linear`, `ease-in-out`: Animation curve.
 - `vertical-constraint`, `horizontal-constraint`: Constrain dragging to one axis.
 
-## Utility functions
+---
+
+## Utilities
 
 The module also exports two helper functions:
 
 - `deviceInfo()`: Logs detailed platform and display information to the console. Works in both Alloy and Classic Titanium projects.
 - `saveComponent({ source, directory })`: Saves a snapshot of a view as a PNG to the photo gallery.
+
+---
 
 ## Installation
 Use the **`purgetss module`** command to install the module in the `lib` folder.
@@ -65,7 +82,7 @@ Use the **`purgetss module`** command to install the module in the `lib` folder.
 > purgetss m
 ```
 
-## Usage
+## Animation Usage
 This is the simplest `Animation` object, with a set of **PurgeTSS** classes. You can create as many animation objects as you want, each with its own properties.
 
 ```xml

@@ -59,7 +59,7 @@
 - Position normalization — `swap`, `reorder`, and `snapTo` work without explicit `top`/`left`
 - Property inheritance — `swap`, `reorder`, `snapTo`, and `shake` inherit `duration`, `delay`, and `curve` from the `<Animation>` object
 
-See the [Animation Module documentation](docs/animation-module/introduction) for full details.
+See the [UI Module documentation](./purgetss-ui/1-introduction.md) for full details.
 
 ---
 
@@ -76,24 +76,29 @@ What it does:
 
 ## Table of Contents
 
-- [Installation](docs/installation)
-- [Commands](docs/commands)
+- [Installation](./Installation.md)
+- [Commands](./Commands.md)
 - Customization
-  - [The Config File](docs/customization/the-config-file)
-  - [Custom Rules](docs/customization/custom-rules)
-  - [The `apply` Directive](docs/customization/the-apply-directive)
-  - [The `opacity` Modifier](docs/customization/the-opacity-modifier)
-  - [Arbitrary Values](docs/customization/arbitrary-values)
-  - [Platform and Device Modifiers](docs/customization/platform-and-device-modifiers)
-  - [Icon Fonts Libraries](docs/customization/icon-fonts-libraries)
-- Animation Module
-  - [Introduction](docs/animation-module/introduction)
-  - [The `play` Method](docs/animation-module/the-play-method)
-  - [The `apply` Method](docs/animation-module/the-apply-method)
-  - [The `open` and `close` Methods](docs/animation-module/the-open-and-close-methods)
-  - [The `draggable` Method](docs/animation-module/the-draggable-method)
-  - [Complex UI Elements](docs/animation-module/complex-ui-elements)
-  - [Additional Methods](docs/animation-module/additional-methods)
-  - [Available Utilities](docs/animation-module/available-utilities)
-  - [Implementation Rules](docs/animation-module/implementation-rules)
-- [Grid System](docs/grid-system)
+  - [The Config File](./customization/1-configuring-guide.md)
+  - [Custom Rules](./customization/2-custom-rules.md)
+  - [The `apply` Directive](./customization/3-the-apply-directive.md)
+  - [The `opacity` Modifier](./customization/4-Opacity.md)
+  - [Arbitrary Values](./customization/5-arbitrary-values.md)
+  - [Platform and Device Modifiers](./customization/6-platform-and-device-modifiers.md)
+  - [Icon Fonts Libraries](./customization/7-icon-fonts-libraries.md)
+- The UI Module
+  - [Introduction](./purgetss-ui/1-introduction.md)
+  - [The `play` Method](./purgetss-ui/2-the-play-method.md)
+  - [The `apply` Method](./purgetss-ui/3-the-apply-method.md)
+  - [The `open` and `close` Methods](./purgetss-ui/4-the-open-close-methods.md)
+  - [The `draggable` Method](./purgetss-ui/5-the-draggable-method.md)
+  - [Complex UI Elements](./purgetss-ui/7-complex-ui-elements.md)
+  - [Additional Methods](./purgetss-ui/6-additional-methods.md)
+  - [Available Utilities](./purgetss-ui/8-available-utilities.md)
+  - [Implementation Rules](./purgetss-ui/9-implementation-rules.md)
+  - [Appearance](./purgetss-ui/10-appearance.md)
+- Recommendations
+  - [Window Defaults](./recommendations/3-window-defaults.md)
+  - [Semantic Colors](./recommendations/2-semantic-colors.md)
+  - [Appearance Setup](./recommendations/1-appearance-setup.md)
+- [Grid System](./grid-system.md)
