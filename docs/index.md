@@ -34,6 +34,9 @@ What it does:
 
 - [Installation](./Installation.md)
 - [Commands](./Commands.md)
+- App Assets
+  - [App icons and branding](./app-assets/1-app-icons-and-branding.md)
+  - [Multi-density images](./app-assets/2-multi-density-images.md)
 - Customization
   - [The Config File](./customization/1-configuring-guide.md)
   - [Custom Rules](./customization/2-custom-rules.md)
@@ -53,19 +56,26 @@ What it does:
   - [Available Utilities](./purgetss-ui/8-available-utilities.md)
   - [Implementation Rules](./purgetss-ui/9-implementation-rules.md)
   - [Appearance](./purgetss-ui/10-appearance.md)
-- Recommendations
-  - [Window Defaults](./recommendations/3-window-defaults.md)
-  - [Semantic Colors](./recommendations/2-semantic-colors.md)
-  - [Appearance Setup](./recommendations/1-appearance-setup.md)
+- Best Practices
+  - [Appearance Setup](./best-practices/1-appearance-setup.md)
+  - [Semantic Colors](./best-practices/2-semantic-colors.md)
+  - [Large Titles on iOS](./best-practices/3-large-titles-on-ios.md)
 - [Grid System](./grid-system.md)
 
 ---
 
 ## Changelog
 
+### v7.6.0
+
+- **`brand` command** — generate the complete Titanium branding set (launcher icons, adaptive icons, iOS 18+ Dark/Tinted, marketplace artwork, optional notification/splash) from logos auto-discovered in `./purgetss/brand/`. Works on Alloy and Classic projects. See [App icons and branding](./app-assets/1-app-icons-and-branding.md)
+- **`images` command** — generate multi-density UI images (Android `res-*` densities + iPhone `@1x`/`@2x`/`@3x` scales) from sources in `./purgetss/images/`. Subdirectories preserved, short-path scope targeting for re-processing individual files. See [Multi-density images](./app-assets/2-multi-density-images.md)
+- **`brand:` and `images:` config sections** in `purgetss/config.cjs` — percentages can be written as `'15%'` strings for self-documenting clarity; plain numbers also accepted. Auto-injected into older configs on first run.
+- **`semantic` command** — generate Titanium semantic colors (Light/Dark mode) into `app/assets/semantic.colors.json`. Two modes dispatched by `--single`: tonal **palette** (one base hex → 11 shades with mirror inversion + auto config mapping) and **single** purpose-based color (explicit per-mode hex + optional alpha; the JSON entry AND a class mapping in `config.cjs` are written in one shot — class name auto-derived by stripping the `Color` suffix, e.g. `surfaceColor` → class `surface`). Smart in-place updates when a single name matches an existing palette shade. See [Semantic Colors — Generating semantic colors with the `semantic` command](./best-practices/2-semantic-colors.md#generating-semantic-colors-with-the-semantic-command)
+
 ### v7.5.3
 
-- **Appearance module** — new `Appearance` export for Light/Dark/System mode switching with persistence. Methods: `init()`, `set(mode)`, `get()`, `toggle()`. See [Appearance Setup](./recommendations/1-appearance-setup.md)
+- **Appearance module** — new `Appearance` export for Light/Dark/System mode switching with persistence. Methods: `init()`, `set(mode)`, `get()`, `toggle()`. See [Appearance Setup](./best-practices/1-appearance-setup.md)
 - **Default font family classes** — `font-sans`, `font-serif`, and `font-mono` generated automatically with platform-appropriate values
 - **XML validation** — detects illegal `--` inside XML comments during pre-validation
 

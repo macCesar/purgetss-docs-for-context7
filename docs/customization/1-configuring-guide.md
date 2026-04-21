@@ -2,7 +2,7 @@
 
 > ℹ️ **INFO**
 >
-> What's new in v7.2.x
+> Since v7.2.x
 > The configuration file is now named `config.cjs` (it used to be `config.js`). The structure is the same.
 > 
 > Legacy mode was removed in PurgeTSS v7.2.x along with its related options.
@@ -23,7 +23,7 @@ If you want a clean `config.cjs`, delete the existing one and run:
 > purgetss init
 ```
 
-This creates a minimal `./purgetss/config.cjs` file:
+This creates a `./purgetss/config.cjs` file with the default sections:
 
 `./purgetss/config.cjs`
 ```javascript
@@ -40,16 +40,34 @@ module.exports = {
       plugins: [] // Array of properties to ignore
     }
   },
+  brand: {
+    splash: false,           // also generate splash_icon.png × 5
+    padding: '15%',          // Android safe-zone. Range: 12% tight (mature logos) — 20% conservative. Spec floor 19.44%.
+    iosPadding: '4%',        // iOS aesthetic. Range: 2% bold — 8% conservative. No launcher mask.
+    darkBgColor: null,       // opaque dark bg for DefaultIcon-Dark.png (null = transparent per Apple HIG)
+    bgColor: '#FFFFFF',      // Android adaptive bg + iOS/marketplace flatten
+    notification: false,     // also generate ic_stat_notify.png × 5
+    confirmOverwrites: true  // prompt before overwriting files (set false to skip)
+  },
+  images: {
+    quality: 85,             // JPEG/WebP/AVIF quality (0-100)
+    format: null,            // null = keep original; 'webp' | 'jpeg' | 'png' to convert every image
+    confirmOverwrites: true  // prompt before overwriting files (set false to skip)
+  },
   theme: {
     extend: {}
   }
 };
 ```
 
+`init` also creates empty `purgetss/fonts/`, `purgetss/brand/`, and `purgetss/images/` folders so you can see where each kind of asset goes.
+
 Every section is optional. Only add what you want to change. Anything missing falls back to the defaults.
 
 ## Structure
-The config file has two main sections: `purge` and `theme`.
+The config file has four main sections: `purge`, `brand`, `images`, and `theme`.
+
+`brand:` and `images:` configure the matching commands — the full option lists live in the [`brand` guide](../app-assets/1-app-icons-and-branding.md) and the [`images` guide](../app-assets/2-multi-density-images.md). The rest of this page covers `purge` and `theme`.
 
 ### `purge` section
 The `purge` section controls how PurgeTSS removes unused classes or keeps the ones you want.
@@ -195,6 +213,31 @@ module.exports = {
 }
 ```
 
+### Default `font-sans`, `font-serif`, `font-mono`
+
+PurgeTSS generates three `fontFamily` classes by default, even when `theme.fontFamily` is not set in `config.cjs`. iOS and Android get different values on purpose so each platform picks its native system font:
+
+| Class        | iOS              | Android      |
+| ------------ | ---------------- | ------------ |
+| `font-sans`  | `Helvetica Neue` | `sans-serif` |
+| `font-serif` | `Georgia`        | `serif`      |
+| `font-mono`  | `monospace`      | `monospace`  |
+
+If you define a value for `sans`, `serif`, or `mono` in `theme.fontFamily` (or `theme.extend.fontFamily`), your value replaces the default on both platforms, no per-platform fork needed:
+
+`./purgetss/config.cjs`
+```javascript
+module.exports = {
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: 'Inter-Regular'   // replaces Helvetica Neue / sans-serif on both platforms
+      }
+    }
+  }
+}
+```
+
 ## Overriding and extending properties
 
 By default, your project inherits values from the default theme. You have two options depending on your goal.
@@ -265,7 +308,7 @@ module.exports = {
 
 ## Customize colors
 
-PurgeTSS includes Tailwind's default color palette. Customize it under the `colors` key in the `theme` section of your `config.cjs` file:
+PurgeTSS includes a default color palette. Customize it under the `colors` key in the `theme` section of your `config.cjs` file:
 
 `Customizing Colors`
 ```javascript
@@ -382,7 +425,7 @@ module.exports = {
 }
 ```
 
-This will generate classes like `bg-regal-blue` in addition to all of Tailwind's default colors.
+This will generate classes like `bg-regal-blue` in addition to all of the default colors.
 
 > ℹ️ **INFO**
 >

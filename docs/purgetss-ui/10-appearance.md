@@ -122,5 +122,5 @@ When `Appearance.set('dark')` is called, Titanium resolves the semantic color na
 > 💡 **TIP**
 >
 > Complete setup guide
-> For a step-by-step guide covering Window defaults, semantic colors, and Appearance together, see [Appearance Setup](../recommendations/1-appearance-setup.md).
+> For a step-by-step guide covering Window defaults, semantic colors, and Appearance together, see [Appearance Setup](../best-practices/1-appearance-setup.md).
 

@@ -221,6 +221,61 @@ theme: {
 // ...
 ```
 
+## Customizing Window, View, and ImageView
+
+`Window`, `View`, and `ImageView` have built-in defaults (white Window background, `Ti.UI.SIZE` on View, `hires: true` on ImageView for iOS). To change those defaults globally, put the customization under `theme.extend` — the same place you'd extend `colors` or `spacing`:
+
+`./purgetss/config.cjs`
+```javascript
+module.exports = {
+  theme: {
+    extend: {
+      Window: {
+        apply: 'exit-on-close-false bg-blue-500'
+      }
+    }
+  }
+}
+```
+
+Now every `<Window>` in the project picks up `backgroundColor: '#3b82f6'` and `exitOnClose: false`.
+
+### Shorthand: no `default:` wrapper needed
+
+The examples above use `{ apply: '...' }` directly. Internally that gets normalized to `{ default: { apply: '...' } }`, so both forms produce the same TSS:
+
+`Both of these work`
+```javascript
+Window: { apply: 'exit-on-close-false bg-blue-500' }
+Window: { default: { apply: 'exit-on-close-false bg-blue-500' } }
+```
+
+Use the explicit `default:` wrapper when you also need platform blocks (`ios:`, `android:`) next to it. For the common case of one bundle of defaults, the shorthand reads better.
+
+### Apply wins over static defaults
+
+If `apply` sets a property that the component already has as a built-in default, the applied value replaces the original instead of both ending up in the final TSS:
+
+`./purgetss/config.cjs`
+```javascript
+module.exports = {
+  theme: {
+    extend: {
+      Window: { apply: 'bg-blue-500' }
+    }
+  }
+}
+```
+
+`./purgetss/styles/utilities.tss`
+```css
+/* Before dedup: { backgroundColor: '#FFFFFF', backgroundColor: '#3b82f6' } */
+/* After dedup:  */
+'Window': { backgroundColor: '#3b82f6' }
+```
+
+Without the dedup, both `backgroundColor` entries would land in the file; the last one wins at runtime anyway, but reading the TSS with two copies of the same property is confusing. The builder keeps only the applied value.
+
 ## Platform-specific classes
 
 Several classes in `utilities.tss` are platform-specific (e.g., `clip-enabled`, `status-bar-style-light-content`). These only exist with a `[platform=ios]` or `[platform=android]` suffix.

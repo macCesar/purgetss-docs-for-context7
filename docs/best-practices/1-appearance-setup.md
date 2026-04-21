@@ -1,75 +1,14 @@
 # Appearance Setup
 
-How to set up Light/Dark mode in a PurgeTSS project: Window defaults, semantic colors, and the Appearance toggle.
+How to set up Light/Dark mode in a PurgeTSS project: semantic colors, initialization, and the Appearance toggle.
 
-## 1. Window defaults in config.cjs
+## 1. Define semantic colors
 
-Set global Window defaults so Large Title and blur work correctly when the appearance changes:
+Create `app/assets/semantic.colors.json` and register the color names under `theme.extend.colors` in `config.cjs`.
 
-`purgetss/config.cjs`
-```js
-module.exports = {
-  theme: {
-    extend: {
-      colors: {
-        surface: {
-          DEFAULT: 'surfaceColor',
-          high: 'surfaceHighColor'
-        },
-        'on-surface': 'textColor',
-        'on-surface-variant': 'textSecondaryColor',
-        border: 'borderColor',
-        accent: 'accentColor'
-      }
-    },
-    Window: {
-      ios: {
-        apply: 'auto-adjust-scroll-view-insets extend-edges-all large-title-enabled'
-      }
-    }
-  }
-}
-```
+See [Semantic Colors](./2-semantic-colors.md) for the full setup — JSON definitions, class mapping, nesting rules, and alpha transparency.
 
-See [Window Defaults](./3-window-defaults.md) for why these three properties are needed.
-
-## 2. Semantic colors file
-
-Create the semantic color definitions:
-
-`app/assets/semantic.colors.json`
-```json
-{
-  "surfaceColor": {
-    "light": "#F9FAFB",
-    "dark": "#0f172a"
-  },
-  "surfaceHighColor": {
-    "light": "#FFFFFF",
-    "dark": "#1e293b"
-  },
-  "textColor": {
-    "light": "#111827",
-    "dark": "#f1f5f9"
-  },
-  "textSecondaryColor": {
-    "light": "#6B7280",
-    "dark": "#94a3b8"
-  },
-  "borderColor": {
-    "light": "#E5E7EB",
-    "dark": "#334155"
-  },
-  "accentColor": {
-    "light": "#3B82F6",
-    "dark": "#60a5fa"
-  }
-}
-```
-
-See [Semantic Colors](./2-semantic-colors.md) for more on color definitions, nesting rules, and alpha transparency.
-
-## 3. Initialize Appearance at startup
+## 2. Initialize Appearance at startup
 
 Call `Appearance.init()` once before opening the first window:
 
@@ -83,7 +22,7 @@ $.navWin.open()
 
 This reads the saved preference from `Ti.App.Properties` and applies it through `Ti.UI.overrideUserInterfaceStyle`. If no preference is saved, the system default is used.
 
-## 4. Build an Appearance toggle
+## 3. Build an Appearance toggle
 
 Create a settings view where users can choose their preferred mode.
 
@@ -164,15 +103,11 @@ function updateUI(value) {
 │     └─ Reads saved mode from Ti.App.Properties          │
 │     └─ Applies Ti.UI.overrideUserInterfaceStyle         │
 │                                                         │
-│  2. Window opens with config.cjs defaults               │
-│     └─ extendEdges + autoAdjustScrollViewInsets         │
-│     └─ largeTitleEnabled                                │
-│                                                         │
-│  3. Semantic colors resolve automatically               │
+│  2. Semantic colors resolve automatically               │
 │     └─ bg-surface → surfaceColor → light or dark hex    │
 │     └─ text-on-surface → textColor → light or dark hex  │
 │                                                         │
-│  4. User taps "Dark" in settings                        │
+│  3. User taps "Dark" in settings                        │
 │     └─ Appearance.set('dark')                           │
 │     └─ All semantic colors update instantly             │
 │     └─ Preference saved for next app launch             │
@@ -182,5 +117,5 @@ function updateUI(value) {
 
 > 💡 **TIP**
 >
-> This setup works identically whether your root container is a NavigationWindow or a TabGroup — the Window defaults from `config.cjs` apply to all windows.
+> Semantic colors apply everywhere you use `bg-*`, `text-*`, and `border-*` classes — Windows, Views, Labels, Buttons, TextFields, TextAreas, ListViews, and any custom class that references a semantic name. One appearance switch updates the entire UI.
 

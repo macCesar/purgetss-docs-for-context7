@@ -6,7 +6,7 @@ When you need a one-off value that is not in the defaults, use arbitrary values 
 >
 > To generate an arbitrary style, use parentheses notation with almost any default utility class.
 > 
-> You cannot use square bracket notation like in Tailwind because Titanium handles platform and conditional statements in `.tss` files differently.
+> You cannot use square bracket notation because Titanium handles platform and conditional statements in `.tss` files differently.
 
 
 ## Color properties

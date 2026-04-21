@@ -54,7 +54,7 @@ purgetss
 
   - `utilities.tss` file
 
-    This file includes all Tailwind-like utility classes, including any custom classes defined in `config.cjs`.
+    This file includes all utility classes, including any custom classes defined in `config.cjs`.
 
   - `definitions.css` file
 
@@ -185,7 +185,7 @@ To use the example files:
 ![iOS Screen - Example](images/sample-fixed.png)
 </div>
 
-More examples in the [Tailwind TSS Sample App](https://github.com/macCesar/utilities.tss-sample-app).
+More examples in the [Utilities TSS Sample App](https://github.com/macCesar/utilities.tss-sample-app).
 
 > 🚨 **WARNING**
 >
@@ -207,6 +207,24 @@ More examples in the [Tailwind TSS Sample App](https://github.com/macCesar/utili
 > <Switch class="my-1 mr-2 h-auto" onChange="onChanged" />
 > ```
 
+
+
+## XML validation
+
+Before purging, PurgeTSS pre-checks every XML file in your project. One case worth calling out: double dashes (`--`) are not allowed inside XML comments. That's the XML spec itself, not a PurgeTSS rule, but most workflows never trip on it until something actually parses the file.
+
+```xml
+<!-- Options: --flag or --value -->
+```
+
+The `--flag` inside that comment is illegal. PurgeTSS stops with a pointer to the line:
+
+```text
+XML comment contains illegal "--" sequence ("--flag")
+Fix: Replace "--" with "—" (em-dash) or reword the comment to avoid double dashes
+```
+
+Either swap `--` for an em-dash (`—`) or rephrase so the two dashes don't sit next to each other. Any XML parser would reject the original, so catching it up front is more helpful than a confusing TSS output later.
 
 
 ## VSCode extension

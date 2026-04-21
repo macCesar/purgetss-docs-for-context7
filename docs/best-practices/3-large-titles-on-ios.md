@@ -1,4 +1,4 @@
-# Window Defaults
+# Large Titles on iOS
 
 When using Large Titles with a ScrollView inside a NavigationWindow or TabGroup, three Window properties must work together. Missing any one of them causes visual glitches.
 
