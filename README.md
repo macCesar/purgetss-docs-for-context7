@@ -103,6 +103,11 @@ This repository contains the complete documentation for PurgeTSS, organized as f
 
 ## Changelog
 
+### v7.6.2
+
+- **`semantic` command now works in Classic Titanium projects.** Previously aborted in Classic with a "not an Alloy project" error. The command now detects the layout and writes `semantic.colors.json` to the correct location per TiDev convention (`app/assets/` for Alloy, `Resources/` for Classic). Covers palette mode, fresh single mode, and the in-place shade-conflict update. Existing unrelated entries (default `backgroundColor` / `textColor` shipped with Classic templates) are preserved.
+- Fixed a UX bug where Classic printed the error message followed by a palette preview, making it look like the command half-succeeded.
+
 ### v7.6.0
 
 - **`brand` command** — generate the complete Titanium branding set (launcher icons, adaptive icons, iOS 18+ Dark/Tinted, marketplace artwork, optional notification/splash) from logos auto-discovered in `./purgetss/brand/`. Works on Alloy and Classic projects.
