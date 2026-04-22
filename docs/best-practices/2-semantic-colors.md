@@ -4,7 +4,15 @@ Semantic colors let your app respond to Light/Dark mode changes without extra co
 
 ## Setting up semantic.colors.json
 
-Create `app/assets/semantic.colors.json` with your color definitions:
+Create the `semantic.colors.json` file with your color definitions. The file location depends on your project type, per the TiDev convention:
+
+- **Alloy** → `app/assets/semantic.colors.json`
+- **Classic** → `Resources/semantic.colors.json`
+
+> ℹ️ **INFO**
+>
+> The `semantic` command (covered later on this page) auto-detects the project layout and writes to the right location — you don't need to specify it manually. The path examples below use the Alloy location; Classic users get their output under `Resources/` automatically.
+
 
 `app/assets/semantic.colors.json`
 ```json
@@ -295,7 +303,7 @@ One base hex → 11 entries with mirror inversion + matching `config.cjs` mappin
 > `pt semantic <hex> <name>` runs the full tonal-inversion workflow:
 > 
 > 1. Generates the 11-step tonal palette from the input hex (same algorithm as `shades`).
-> 2. Writes `app/assets/semantic.colors.json` with mirror-by-index values — `50` ↔ `950`, `100` ↔ `900`, …, `500` as the identical anchor.
+> 2. Writes `semantic.colors.json` at the project's canonical location (`app/assets/` on Alloy, `Resources/` on Classic) with mirror-by-index values — `50` ↔ `950`, `100` ↔ `900`, …, `500` as the identical anchor.
 > 3. Updates `purgetss/config.cjs` to map the family to those semantic keys (`{ 50: 'amazon50', 100: 'amazon100', … }`).
 > 4. Strips any prior keys for the same family before writing — re-runs cleanly replace, never duplicate.
 > 
