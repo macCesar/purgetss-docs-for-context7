@@ -41,15 +41,7 @@ module.exports = {
     }
   },
   brand: {
-    logos: {
-      // Optional overrides. If omitted, PurgeTSS auto-discovers files from purgetss/brand/:
-      // primary: './docs/logo.svg',
-      // androidLauncher: './docs/app-icon.svg',
-      // androidSplash: './docs/splash.svg',
-      // monochrome: './docs/logo-mono.svg',
-      // iosDark: './docs/logo-dark.svg',
-      // iosTinted: './docs/logo-tinted.svg'
-    },
+    logos: {},  // empty = auto-discovers from purgetss/brand/
     padding: {
       ios: '4%',
       androidLegacy: '10%',
@@ -59,15 +51,14 @@ module.exports = {
       splash: false,
       notification: false
     },
+    ios: {
+      dark: true,
+      tinted: true,
+      darkBackground: null  // null = transparent per Apple HIG
+    },
     colors: {
       background: '#FFFFFF'
     },
-    // Optional iOS overrides:
-    // ios: {
-    //   dark: false,
-    //   tinted: false,
-    //   darkBackground: '#111111'
-    // },
     confirmOverwrites: true  // prompt before overwriting files (set false to skip)
   },
   images: {
@@ -99,6 +90,28 @@ For `brand`, the structure is grouped by purpose:
 - `colors`: shared color settings such as the adaptive background and iOS flatten color
 
 For the complete property-by-property reference, see [App icons and branding](../app-assets/1-app-icons-and-branding.md#brand-config-reference).
+
+### Overriding logo paths
+
+By default, PurgeTSS auto-discovers logo files from `purgetss/brand/`. If you want to use custom paths, add them to `brand.logos`:
+
+`Example: Custom logo paths`
+```javascript
+module.exports = {
+  brand: {
+    logos: {
+      primary: './my-logos/main.svg',         // overrides auto-discovered logo.svg
+      androidLauncher: './my-logos/icon.svg', // overrides auto-discovered logo-icon.svg
+      androidSplash: './my-logos/splash.svg', // overrides auto-discovered logo-splash.svg
+      monochrome: './my-logos/mono.svg',      // overrides auto-discovered logo-mono.svg
+      iosDark: './my-logos/dark.svg',         // overrides auto-discovered logo-dark.svg
+      iosTinted: './my-logos/tinted.svg'      // overrides auto-discovered logo-tinted.svg
+    }
+  }
+}
+```
+
+You only need to override the ones you're using. Missing overrides still auto-discover from `purgetss/brand/`.
 
 ### `purge` section
 The `purge` section controls how PurgeTSS removes unused classes or keeps the ones you want.

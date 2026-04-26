@@ -97,15 +97,7 @@ On the first run, `purgetss brand` injects a `brand:` block into your existing `
 `./purgetss/config.cjs`
 ```javascript
 brand: {
-  logos: {
-    // Optional overrides. If omitted, PurgeTSS auto-discovers files from purgetss/brand/:
-    // primary: './docs/logo.svg',
-    // androidLauncher: './docs/app-icon.svg',
-    // androidSplash: './docs/splash.svg',
-    // monochrome: './docs/logo-mono.svg',
-    // iosDark: './docs/logo-dark.svg',
-    // iosTinted: './docs/logo-tinted.svg'
-  },
+  logos: {},  // empty = auto-discovers from purgetss/brand/
   padding: {
     ios: '4%',
     androidLegacy: '10%',
@@ -115,22 +107,39 @@ brand: {
     splash: false,
     notification: false
   },
+  ios: {
+    dark: true,
+    tinted: true,
+    darkBackground: null  // null = transparent per Apple HIG
+  },
   colors: {
     background: '#FFFFFF'
   },
-  // Optional iOS overrides:
-  // ios: {
-  //   dark: false,
-  //   tinted: false,
-  //   darkBackground: '#111111'
-  // },
   confirmOverwrites: true  // prompt before overwriting files (set false to skip)
 }
 ```
 
 Change only what you want to keep as a project default. CLI flags still win for one-off runs.
 
-The recommended workflow is still to rely on filenames in `purgetss/brand/`. Treat `brand.logos.*` as optional overrides, not as required boilerplate.
+### Overriding logo paths
+
+By default, PurgeTSS auto-discovers logo files from `purgetss/brand/`. If you want to use custom paths, add them to `brand.logos`:
+
+`Example: Custom logo paths`
+```javascript
+brand: {
+  logos: {
+    primary: './my-logos/main.svg',         // overrides auto-discovered logo.svg
+    androidLauncher: './my-logos/icon.svg', // overrides auto-discovered logo-icon.svg
+    androidSplash: './my-logos/splash.svg', // overrides auto-discovered logo-splash.svg
+    monochrome: './my-logos/mono.svg',      // overrides auto-discovered logo-mono.svg
+    iosDark: './my-logos/dark.svg',         // overrides auto-discovered logo-dark.svg
+    iosTinted: './my-logos/tinted.svg'      // overrides auto-discovered logo-tinted.svg
+  }
+}
+```
+
+You only need to override the ones you're using. Missing overrides still auto-discover from `purgetss/brand/`.
 
 If `logo.svg` is a wide wordmark, leave it as the main brand source and set `logos.androidLauncher` to a square mark for Android. That gives you cleaner launcher results without changing the iOS or marketplace outputs.
 
@@ -286,6 +295,8 @@ The Android outputs are related, but they are not interchangeable:
 - `splash_icon.png` is only generated when you ask for it with `--splash`
 - `default.png` is the older Titanium Android splash fallback
 
+`brand` is aimed at the modern Titanium path: adaptive launcher icons, current iOS icon variants, and optional Android 12+ splash artwork. Older Android splash theme assets such as `background.png` or `background.9.png` are intentionally left out of the normal `brand` flow.
+
 ## Android dark mode
 
 > ℹ️ **INFO**
@@ -329,11 +340,17 @@ brand: {
 
 Important detail: generating `splash_icon.png` does not automatically switch Titanium to use it for the Android 12+ system splash. Titanium still needs a custom splash theme that points `android:windowSplashScreenAnimatedIcon` to `@drawable/splash_icon`. If you do nothing, Android will keep using `ic_launcher`.
 
+If your app already has a custom Android theme in `tiapp.xml`, merge the splash settings into that existing theme instead of replacing it wholesale.
+
+Also, if you still see a brief flash during splash exit even with correct assets, do not assume the PNGs are wrong. That artifact can come from Titanium's splash theme or the system splash transition itself.
+
 ## Android legacy splash fallback
 
 PurgeTSS now regenerates `app/assets/android/default.png` in Alloy projects and `Resources/android/default.png` in Classic projects.
 
-That file still matters as a fallback on older Titanium Android splash paths, which is why `cleanup-legacy` no longer removes it.
+That file still matters as a compatibility fallback on older Titanium Android splash paths, which is why `cleanup-legacy` no longer removes it.
+
+That said, it is not the main modern splash strategy. If a project still depends on `background.png`, `background.9.png`, or a custom Android splash theme, keep managing that part manually.
 
 ## iOS 18+ Dark and Tinted variants
 
@@ -384,12 +401,12 @@ The adaptive default is `19%`, which stays close to the Android safe-zone. The l
 
 ### Adaptive icon padding
 
-| Padding | Logo fill | When to use                                                                                            |
-| ------- | --------- | ------------------------------------------------------------------------------------------------------ |
-| `15%`   | 70%       | Aggressive. Better for square symbols with lots of built-in breathing room.                             |
-| `18%`   | 64%       | Defensive: for intricate logos, fine serifs, multi-element designs.                                    |
-| `19%`   | 62%       | **Default**. Close to the Android safe-zone and safer for adaptive masks.                               |
-| `20%`   | 60%       | Conservative, spec-compliant. Safe on every launcher, including aggressive masks.                       |
+| Padding | Logo fill | When to use                                                                       |
+| ------- | --------- | --------------------------------------------------------------------------------- |
+| `15%`   | 70%       | Aggressive. Better for square symbols with lots of built-in breathing room.       |
+| `18%`   | 64%       | Defensive: for intricate logos, fine serifs, multi-element designs.               |
+| `19%`   | 62%       | **Default**. Close to the Android safe-zone and safer for adaptive masks.         |
+| `20%`   | 60%       | Conservative, spec-compliant. Safe on every launcher, including aggressive masks. |
 
 A useful visual check is the "corners" heuristic: imagine a circle inscribed in your 1024×1024 canvas with the given padding. If your logo's outermost corners fit inside that circle, you're safe on circular launchers (Pixel default, Oppo Android 15). If they poke out, they'll be clipped.
 
