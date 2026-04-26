@@ -95,6 +95,7 @@ This repository contains the complete documentation for PurgeTSS, organized as f
 - **[Appearance Setup](docs/best-practices/1-appearance-setup.md)** - Configure Light/Dark/System mode in your app
 - **[Semantic Colors](docs/best-practices/2-semantic-colors.md)** - Generate and use Titanium semantic colors
 - **[Large Titles on iOS](docs/best-practices/3-large-titles-on-ios.md)** - iOS-native large title patterns
+- **[Values and Units](docs/best-practices/4-values-and-units.md)** - How PurgeTSS handles numeric values and units
 
 ### 📐 Layout System
 
@@ -103,10 +104,25 @@ This repository contains the complete documentation for PurgeTSS, organized as f
 
 ## Changelog
 
+### v7.7.0
+
+- **`brand` config was cleaned up before stabilizing** — branding settings now live under grouped sections: `brand.logos`, `brand.padding`, `brand.android`, `brand.ios`, and `brand.colors`.
+- **Separate Android brand inputs** — `brand` can now use one logo for the general brand set, another for Android launcher icons, and another for Android 12+ splash artwork. Use `brand.logos.androidLauncher` / `--icon-logo` and `brand.logos.androidSplash` / `--splash-logo`, or drop `logo-icon.*` and `logo-splash.*` into `purgetss/brand/`.
+- **Legacy Android splash fallback is back** — `purgetss brand` now regenerates `app/assets/android/default.png` in Alloy projects and `Resources/android/default.png` in Classic projects.
+- **Safer cleanup** — `cleanup-legacy` no longer removes `default.png`, because that file can still matter on older Titanium Android splash paths.
+- **Clearer branding docs** — the docs now explain what uses `ic_launcher`, what uses `splash_icon.png`, and what still falls back to `default.png`.
+
 ### v7.6.2
 
 - **`semantic` command now works in Classic Titanium projects.** Previously aborted in Classic with a "not an Alloy project" error. The command now detects the layout and writes `semantic.colors.json` to the correct location per TiDev convention (`app/assets/` for Alloy, `Resources/` for Classic). Covers palette mode, fresh single mode, and the in-place shade-conflict update. Existing unrelated entries (default `backgroundColor` / `textColor` shipped with Classic templates) are preserved.
 - Fixed a UX bug where Classic printed the error message followed by a palette preview, making it look like the command half-succeeded.
+
+### v7.6.1
+
+- **Confirmation prompt for destructive writes** in `brand` and `images` (`y` / `N` / `a` for "always"). Auto-skips when `stdin` is not a TTY (alloy.jmk hook, CI, pipes), when `-y` / `--yes` is passed, or when `PURGETSS_YES=1` is set. Pair with `confirmOverwrites: false` on the matching config section to silence permanently.
+- **Disproportionate-viewBox warning** for SVG logos and images — detects viewBoxes above 4096 pt on any side (common in Affinity/Illustrator exports) and rasterizes with adaptive density to stay within Sharp's pixel budget.
+- **Auto-created `purgetss/{fonts,brand,images}/` subfolders** on init — the directory structure is self-documenting from the first build.
+- **Unified `::PurgeTSS::` output** — multi-line command output is now grouped under a single signed header with indented continuation lines (applies across `purge`, `fonts`, `icon-library`, `brand`, `images`, and most warnings).
 
 ### v7.6.0
 
@@ -170,7 +186,7 @@ This documentation repository is designed to be:
 - **📚 Comprehensive**: Complete coverage of all PurgeTSS features and capabilities
 - **🔍 Searchable**: Optimized for AI/LLM processing and search systems
 - **🎯 Self-contained**: All images and references are included within this repository
-- **🔄 Up-to-date**: Reflects the latest PurgeTSS v7.6.x features and changes
+- **🔄 Up-to-date**: Reflects the latest PurgeTSS v7.7.x features and changes
 
 ## Purpose
 
