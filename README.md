@@ -14,43 +14,26 @@
 
 ## About PurgeTSS
 
-**PurgeTSS** is a powerful toolkit designed to enhance the development of mobile applications using the **[Titanium framework](https://titaniumsdk.com)**. It introduces several key features to streamline the app development process, making it simpler and more efficient for developers.
+PurgeTSS is a toolkit for building mobile apps with the [Titanium framework](https://titaniumsdk.com). It gives you utility classes, icon font support, an Animation module, a grid system, and a handful of commands (`shades`, `semantic`, `brand`, `images`) that take care of the repetitive parts of setting up an app.
 
-It offers a range of tools such as customizable utility classes, support for icon fonts, a user-friendly Animation module, a straightforward grid system, and the added convenience of the `shades` command for crafting personalized colors.
+The point: write less TSS by hand. If you spend a lot of time wiring up screens, PurgeTSS removes most of the boring parts.
 
-With **PurgeTSS**, creating visually appealing and dynamic mobile apps becomes more accessible and efficient.
+## What it does
 
-## Key Features
-
-- **Utility-First Classes**: PurgeTSS ships with 23,300+ utility classes, so you get a lot of styling options out of the box.
-
-- **Efficient style management**: It parses all XML files to create a clean `app.tss` containing only the classes used in your project, reducing size and improving performance.
-
-- **Customization and JIT classes**: You can customize default classes via a config file and use JIT classes for arbitrary values inside views.
-
-- **`extend` for Window, View, and ImageView**: Customize component defaults from `theme.extend` in `config.cjs`, with automatic platform resolution and property deduplication.
-
-- **Icon fonts integration**: Use icon fonts such as Font Awesome, Material Icons, Material Symbols, and Framework7-Icons in Buttons and Labels.
-
-- **`fonts.tss` generation**: The `build-fonts` command creates a `fonts.tss` file with class definitions and fontFamily selectors for regular and icon fonts, with simplified options for filenames and icon prefixes.
-
-- **Default font families**: `font-sans`, `font-serif`, and `font-mono` classes generated automatically with platform-appropriate values.
-
-- **`shades` command**: Generate custom color shades from a hex color without external tools.
-
-- **`semantic` command**: Generate Titanium semantic colors (Light/Dark mode) into `app/assets/semantic.colors.json` — tonal palettes (11 shades with mirror inversion) or purpose-based single colors with optional alpha.
-
-- **`brand` command**: Generate the complete Titanium branding set (launcher icons, adaptive icons, iOS 18+ Dark/Tinted, marketplace artwork, optional notification/splash) from logos auto-discovered in `./purgetss/brand/`.
-
-- **`images` command**: Generate multi-density UI images (Android `res-*` densities + iPhone `@1x`/`@2x`/`@3x` scales) from sources in `./purgetss/images/`.
-
-- **Appearance module**: Switch between Light/Dark/System modes with automatic persistence via `Appearance.init()`, `set()`, `get()`, and `toggle()`.
-
-- **Animation module**: 2D matrix animations, draggable views with collision detection, sequential animations, position utilities, and declarative property inheritance.
-
-- **Grid system**: A two-dimensional grid system to align and distribute elements within views.
-
-In short, PurgeTSS keeps styling consistent and removes a lot of repetitive UI setup work.
+- 23,300+ utility classes for colors, spacing, typography, layout, and more.
+- Parses your XML files and writes an `app.tss` containing only the classes you actually use.
+- Configurable through `config.cjs`. You can also use arbitrary values inside views for one-off sizes and colors.
+- `extend` for `Window`, `View`, and `ImageView`: set component defaults from `theme.extend` in `config.cjs`. Platform resolution and property deduplication are handled for you.
+- Icon fonts work out of the box. Font Awesome, Material Icons, Material Symbols, and Framework7-Icons are usable directly in Buttons and Labels.
+- `build-fonts` generates a `fonts.tss` with class definitions and `fontFamily` selectors for any font you drop into the fonts folder.
+- Default font family classes (`font-sans`, `font-serif`, `font-mono`) are generated with platform-appropriate values.
+- `shades` generates color palettes from a single hex value.
+- `semantic` writes Titanium semantic colors (Light/Dark) to `app/assets/semantic.colors.json`. You can generate a tonal palette from one base color (11 shades with mirror inversion), or a single purpose-based color with explicit per-mode hex and optional alpha.
+- `brand` generates the full Titanium branding set from logos in `./purgetss/brand/`: launcher icons, adaptive icons, iOS 18+ Dark/Tinted variants, marketplace artwork, and optional notification/splash. Use one logo for everything, or separate logos for the Android launcher and the Android 12+ splash. The legacy `default.png` splash is regenerated for older Android paths.
+- `images` generates multi-density UI images (Android `res-*` densities and iPhone `@1x`/`@2x`/`@3x`) from sources in `./purgetss/images/`.
+- Appearance module: switch between Light, Dark, and System modes with automatic persistence. Methods: `Appearance.init()`, `set()`, `get()`, `toggle()`.
+- Animation module: 2D transforms, draggable views with collision detection, sequential animations, and position helpers.
+- Grid system for arranging elements in rows and columns.
 
 
 ## Documentation Structure
