@@ -42,8 +42,8 @@ This repository contains the complete documentation for PurgeTSS, organized as f
 
 ### 📖 Core Documentation
 
-- **[Installation](docs/Installation.md)** - Getting started with PurgeTSS
-- **[Commands](docs/Commands.md)** - Complete CLI reference
+- **[Installation](docs/installation.md)** - Getting started with PurgeTSS
+- **[Commands](docs/commands.md)** - Complete CLI reference
 
 ### 🖼️ App Assets
 
@@ -55,7 +55,7 @@ This repository contains the complete documentation for PurgeTSS, organized as f
 - **[The Config File](docs/customization/1-configuring-guide.md)** - Configuration options and setup
 - **[Custom Rules](docs/customization/2-custom-rules.md)** - Creating your own utility classes
 - **[The `apply` Directive](docs/customization/3-the-apply-directive.md)** - Applying multiple classes at once
-- **[The `opacity` Modifier](docs/customization/4-Opacity.md)** - Working with opacity values
+- **[The `opacity` Modifier](docs/customization/4-opacity.md)** - Working with opacity values
 - **[Arbitrary Values](docs/customization/5-arbitrary-values.md)** - Just-in-time custom values
 - **[Platform and Device Modifiers](docs/customization/6-platform-and-device-modifiers.md)** - Platform-specific styling
 - **[Icon Fonts Libraries](docs/customization/7-icon-fonts-libraries.md)** - Working with icon fonts
