@@ -1,10 +1,10 @@
-# The `apply` Directive
+# The `apply` directive
 
 ## Create complex classes and IDs
 
 > ℹ️ **INFO**
 >
-> Use `apply` to bundle classes into a new class, or to extract a repeated pattern into a reusable class.
+> Use `apply` to bundle classes into a new class, or to extract a repeated pattern into something reusable.
 
 
 - Set any ID, class, or Ti Element.
@@ -99,7 +99,7 @@ theme: {
 
 ## Use newly defined classes in `config.cjs`
 
-In the following example, we are creating `corporate` color classes so we can use them in the `apply` directive with `bg-corporate-500`, `text-corporate-100`, and `border-corporate-200`.
+In the next example, we create `corporate` color classes so we can use them in the `apply` directive with `bg-corporate-500`, `text-corporate-100`, and `border-corporate-200`.
 
 `./purgetss/config.cjs`
 ```javascript
@@ -223,7 +223,7 @@ theme: {
 
 ## Customizing Window, View, and ImageView
 
-`Window`, `View`, and `ImageView` have built-in defaults (white Window background, `Ti.UI.SIZE` on View, `hires: true` on ImageView for iOS). To change those defaults globally, put the customization under `theme.extend` — the same place you'd extend `colors` or `spacing`:
+`Window`, `View`, and `ImageView` have built-in defaults: white Window background, `Ti.UI.SIZE` on View, and `hires: true` on ImageView for iOS. To change those defaults globally, put the customization under `theme.extend`, the same place you would extend `colors` or `spacing`:
 
 `./purgetss/config.cjs`
 ```javascript

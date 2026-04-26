@@ -1,17 +1,17 @@
-# Semantic Colors
+# Semantic colors
 
 Semantic colors let your app respond to Light/Dark mode changes without extra code. You define color names that resolve to different hex values depending on the current appearance.
 
 ## Setting up semantic.colors.json
 
-Create the `semantic.colors.json` file with your color definitions. The file location depends on your project type, per the TiDev convention:
+Create the `semantic.colors.json` file with your color definitions. The file location depends on your project type, following the TiDev convention:
 
 - **Alloy** → `app/assets/semantic.colors.json`
 - **Classic** → `Resources/semantic.colors.json`
 
 > ℹ️ **INFO**
 >
-> The `semantic` command (covered later on this page) auto-detects the project layout and writes to the right location — you don't need to specify it manually. The path examples below use the Alloy location; Classic users get their output under `Resources/` automatically.
+> The `semantic` command, covered later on this page, auto-detects the project layout and writes to the right location. You do not need to specify it manually. The path examples below use the Alloy location; Classic projects write under `Resources/` automatically.
 
 
 `app/assets/semantic.colors.json`
@@ -123,7 +123,7 @@ colors: {
 }
 ```
 
-Both approaches work. Choose based on how you want to organize your class names.
+Both approaches work. Pick the one that gives you the class names you want.
 
 ## Using semantic classes in views
 
@@ -141,7 +141,7 @@ When the appearance changes (via `Appearance.set()` or system toggle), Titanium 
 
 ## Using semantic colors in controllers
 
-Semantic colors also work from JavaScript. You have three options, depending on whether you are creating a new component or styling an existing one.
+Semantic colors also work from JavaScript. You have three reasonable options, depending on whether you are creating a new component or styling an existing one.
 
 ### Option 1: Direct assignment by semantic name
 
@@ -153,11 +153,11 @@ $.card.backgroundColor = 'surfaceHighColor'
 $.divider.backgroundColor = 'borderColor'
 ```
 
-This skips PurgeTSS entirely. Use it when you only need one or two color changes and no other utilities.
+This skips PurgeTSS entirely. Use it when you only need one or two color changes and nothing else.
 
 ### Option 2: `$.UI.create()` with PurgeTSS classes
 
-When you build a component dynamically, use `$.UI.create()` so you get the full set of utilities — colors included:
+When you build a component dynamically, use `$.UI.create()` so you get the full set of utilities, including colors:
 
 ```js
 const card = $.UI.create('View', {
@@ -174,7 +174,7 @@ card.add(title)
 
 ### Option 3: `Alloy.createStyle()` + `applyProperties()`
 
-To swap styles on an **existing** component — for example, to react to a state change — create the style and apply it:
+To restyle an **existing** component, for example when state changes, create the style and apply it:
 
 ```js
 function setActive(isActive) {
@@ -212,12 +212,12 @@ A minimal semantic palette for most apps:
 
 > 💡 **TIP**
 >
-> Start with these 5-6 colors. Add more only when the design requires it. Fewer semantic colors means easier maintenance.
+> Start with these 5-6 colors. Add more only when the design actually needs them. Fewer semantic colors are easier to maintain.
 
 
 ## Alternative: numeric scale with inversion
 
-Instead of purpose-based names, you can take any color palette with 11 tonal steps and map them to a numeric scale (`50` through `950`), where each light-mode value inverts in dark mode. This gives you a full tonal range from a single palette.
+Instead of purpose-based names, you can take any palette with 11 tonal steps and map it to a numeric scale (`50` through `950`), where each light-mode value inverts in dark mode. That gives you a full tonal range from a single palette.
 
 The example below uses a neutral gray palette for clarity, but the same inversion pattern works with any hue — blues, greens, warm tones, or a custom brand palette. What matters is that the 11 stops share a consistent tonal progression.
 

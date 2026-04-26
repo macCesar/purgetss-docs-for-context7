@@ -66,6 +66,14 @@ What it does:
 
 ## Changelog
 
+### v7.7.0
+
+- **`brand` config was cleaned up before stabilizing** — branding settings now live under grouped sections: `brand.logos`, `brand.padding`, `brand.android`, `brand.ios`, and `brand.colors`.
+- **Separate Android brand inputs** — `brand` can now use one logo for the general brand set, another for Android launcher icons, and another for Android 12+ splash artwork. Use `brand.logos.androidLauncher` / `--icon-logo` and `brand.logos.androidSplash` / `--splash-logo`, or drop `logo-icon.*` and `logo-splash.*` into `purgetss/brand/`.
+- **Legacy Android splash fallback is back** — `purgetss brand` now regenerates `app/assets/android/default.png` in Alloy projects and `Resources/android/default.png` in Classic projects.
+- **Safer cleanup** — `cleanup-legacy` no longer removes `default.png`, because that file can still matter on older Titanium Android splash paths.
+- **Clearer branding docs** — the docs now explain what uses `ic_launcher`, what uses `splash_icon.png`, and what still falls back to `default.png`.
+
 ### v7.6.2
 
 - **`semantic` command now works in Classic Titanium projects** — writes to `Resources/semantic.colors.json` (Alloy keeps writing to `app/assets/semantic.colors.json` as before). Existing unrelated entries (the default `backgroundColor` / `textColor` that ship with Classic templates) are preserved in both project types. See [Semantic Colors](./best-practices/2-semantic-colors.md)

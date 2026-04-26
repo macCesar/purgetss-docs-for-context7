@@ -3,7 +3,7 @@
 > ℹ️ **INFO**
 >
 > Official icon fonts for PurgeTSS
-> Previous versions of PurgeTSS included several icon font libraries such as Bootstrap Icons, Boxicons, LineIcons, and Tabler Icons. We reduced the list to keep maintenance manageable.
+> Older versions of PurgeTSS included more icon font libraries, such as Bootstrap Icons, Boxicons, LineIcons, and Tabler Icons. The list was reduced to keep maintenance under control.
 > 
 > These are the official icon fonts supported by PurgeTSS:
 > 
@@ -14,10 +14,11 @@
 
 
 ## Recreate removed libraries
-You can recreate them using the `build-fonts` command:
+
+If you still want one of the removed libraries, you can rebuild it yourself with `build-fonts`:
 
 ### 1. Download the libraries
-Start by downloading the libraries from their official websites:
+Start by downloading the libraries from their official sites:
 
 - [Bootstrap Icons](https://icons.getbootstrap.com)
 - [Boxicons](https://boxicons.com)
@@ -25,7 +26,7 @@ Start by downloading the libraries from their official websites:
 - [Tabler Icons](https://tabler-icons.io)
 
 ### 2. The `fonts` folder
-Put the desired libraries in the `./purgetss/fonts` folder.
+Put the libraries you want in `./purgetss/fonts`.
 
 > ℹ️ **INFO**
 >
@@ -45,7 +46,7 @@ purgetss
 ```
 
 ### 3. The `build-fonts` command
-Run the `build-fonts` command to create a custom `fonts.tss` file.
+Run `build-fonts` to create a custom `fonts.tss` file.
 
 ```bash
 $ purgetss build-fonts [--modules]
@@ -79,7 +80,7 @@ The `build-fonts` command generates `./purgetss/styles/fonts.tss` with Unicode c
 ```
 
 #### Rename the style rule name
-PurgeTSS uses the font file name as the style rule name. You can change it by renaming the font file.
+PurgeTSS uses the font file name as the style rule name. If you want a different rule name, rename the font file.
 
 `./purgetss/fonts/`
 ```bash
@@ -135,7 +136,7 @@ exports.icons = icons;
 
 #### The `--prefix` option
 
-PurgeTSS determines the group's prefix for each icon family and class name. Use `--prefix` to apply the style's filename as the prefix for class names in `fonts.tss` and property names in `purgetss.fonts.js`.
+PurgeTSS determines the group prefix for each icon family and class name. Use `--prefix` to apply the style filename as the prefix for class names in `fonts.tss` and property names in `purgetss.fonts.js`.
 
 `./purgetss/fonts/`
 ```bash
@@ -171,5 +172,5 @@ exports.icons = icons;
 > 🛑 **DANGER**
 >
 > Warning
-> Make sure the new prefix remains unique to avoid conflicts with other class prefixes.
+> Make sure the new prefix stays unique so it does not collide with other class prefixes.
 

@@ -1,12 +1,12 @@
-# Appearance Setup
+# Appearance setup
 
-How to set up Light/Dark mode in a PurgeTSS project: semantic colors, initialization, and the Appearance toggle.
+How to set up Light/Dark mode in a PurgeTSS project: semantic colors, initialization, and an Appearance toggle.
 
 ## 1. Define semantic colors
 
 Create `app/assets/semantic.colors.json` and register the color names under `theme.extend.colors` in `config.cjs`.
 
-See [Semantic Colors](./2-semantic-colors.md) for the full setup — JSON definitions, class mapping, nesting rules, and alpha transparency.
+See [Semantic colors](./2-semantic-colors.md) for the full setup: JSON definitions, class mapping, nesting rules, and alpha transparency.
 
 ## 2. Initialize Appearance at startup
 
@@ -20,7 +20,7 @@ Appearance.init()
 $.navWin.open()
 ```
 
-This reads the saved preference from `Ti.App.Properties` and applies it through `Ti.UI.overrideUserInterfaceStyle`. If no preference is saved, the system default is used.
+This reads the saved preference from `Ti.App.Properties` and applies it through `Ti.UI.overrideUserInterfaceStyle`. If no preference is saved, the system default stays in place.
 
 ## 3. Build an Appearance toggle
 
@@ -117,5 +117,5 @@ function updateUI(value) {
 
 > 💡 **TIP**
 >
-> Semantic colors apply everywhere you use `bg-*`, `text-*`, and `border-*` classes — Windows, Views, Labels, Buttons, TextFields, TextAreas, ListViews, and any custom class that references a semantic name. One appearance switch updates the entire UI.
+> Semantic colors apply everywhere you use `bg-*`, `text-*`, and `border-*` classes: Windows, Views, Labels, Buttons, TextFields, TextAreas, ListViews, and any custom class that references a semantic name. One appearance switch updates the whole UI.
 

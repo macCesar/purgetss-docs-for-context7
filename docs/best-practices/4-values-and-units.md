@@ -1,4 +1,4 @@
-# Values and Units
+# Values and units
 
 PurgeTSS writes plain numeric values into your TSS files. Titanium decides how to interpret them.
 
@@ -64,7 +64,7 @@ Some PurgeTSS classes use explicit pixel values written as strings:
 '.h-px':             { height: '1px' }
 ```
 
-If a value includes its own suffix, such as `'1px'`, `'2pt'`, or `'4mm'`, Titanium uses that unit directly and skips `ti.ui.defaultunit`.
+If a value includes its own suffix, such as `'1px'`, `'2pt'`, or `'4mm'`, Titanium uses that unit directly and ignores `ti.ui.defaultunit`.
 
 Use these when you actually need a 1px line or another exact unit.
 

@@ -1,6 +1,6 @@
-# Large Titles on iOS
+# Large titles on iOS
 
-When using Large Titles with a ScrollView inside a NavigationWindow or TabGroup, three Window properties must work together. Missing any one of them causes visual glitches.
+When you use Large Titles with a ScrollView inside a NavigationWindow or TabGroup, three Window properties have to work together. If one is missing, you get visual glitches.
 
 ## The problem
 
@@ -38,7 +38,7 @@ module.exports = {
 }
 ```
 
-This generates default styles for all Windows on iOS. Individual windows only need to set `largeTitleDisplayMode` if they want to override the collapse behavior.
+This generates default styles for all Windows on iOS. Individual windows only need to set `largeTitleDisplayMode` when they want to override the collapse behavior.
 
 ## Works with NavigationWindow and TabGroup
 
@@ -96,5 +96,5 @@ In PurgeTSS, use the utility class `large-title-display-mode-never` on detail wi
 
 > 💡 **TIP**
 >
-> Set the three base properties (`autoAdjustScrollViewInsets`, `extendEdges`, `largeTitleEnabled`) as global defaults in `config.cjs`, and only override `largeTitleDisplayMode` per-window as needed.
+> Set the three base properties (`autoAdjustScrollViewInsets`, `extendEdges`, `largeTitleEnabled`) as global defaults in `config.cjs`, then override `largeTitleDisplayMode` per window only when needed.
 

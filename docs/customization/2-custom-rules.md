@@ -1,13 +1,13 @@
-# Custom Rules
+# Custom rules
 
-Custom rules in PurgeTSS let you style Titanium elements, IDs, and classes in `config.cjs`. You can also target specific platforms, devices, or conditional blocks using global variables. Handy when a project spans iOS and Android and you want to keep styles in one place.
+Custom rules in PurgeTSS let you style Titanium elements, IDs, and classes in `config.cjs`. You can also target specific platforms, devices, or conditional blocks using global variables. This is handy when a project spans iOS and Android and you want to keep those styles in one place.
 
 ## Classes, IDs, and Ti Elements
 
-Whether you want to style a Ti Element (also known as a markup element), a custom ID prefixed with a hash (#), or a custom class prefixed with a period (.), the structure is the same.
+Whether you want to style a Ti Element, a custom ID prefixed with `#`, or a custom class prefixed with `.`, the structure is the same.
 
 ### Modifier key
-- For Titanium Elements, use the exact name of the element, such as `Label`, `Button`, or `ScrollView`.
+- For Titanium Elements, use the exact element name, such as `Label`, `Button`, or `ScrollView`.
 - For IDs, use `camelCase` to match the JavaScript convention.
 - For classes, use `kebab-case` to stay compatible with PurgeTSS v6.x and above. For example, use `.my-custom-class-name` instead of `.myCustomClassName`.
 
@@ -26,7 +26,7 @@ Whether you want to style a Ti Element (also known as a markup element), a custo
 
 ### Property Values
 
-- For `Titanium` constants, `Alloy Configuration Values`, or `Global Variables`, always enclose them in quotes.
+- For `Titanium` constants, `Alloy` configuration values, or global variables, always enclose them in quotes.
 - For `color` values, you can use `hex`, `8-digit hex`, `rgb(R,G,B)`, `rgba(R,G,B,A)`, `transparent`, or any of the standard color names. Use hex values if you want to avoid issues with the opacity modifier.
 - For `spacing` values, you can use different types of units: `em`, `rem`, `%`, `px`, `dp`, `cm`, or `in`.
   - `%`, `px`, `cm`, or `in` are passed through without conversion.
