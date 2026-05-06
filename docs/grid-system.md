@@ -9,16 +9,16 @@ The snippet below shows the simplest layout. From there, you can mix columns and
 <Alloy>
   <View class='grid'>
     <View class="grid-cols-4">
-      <!-- Remove it if you don't need a gutter between columns (or rows) -->
+      <!-- Remove this if you don't need a gutter between columns or rows -->
       <View class="gap-1">
-        <!-- ANY CONTENT GOES HERE -->
+        <!-- Content goes here -->
       </View>
     </View>
 
     <View class="grid-cols-4">
-      <!-- Remove it if you don't need a gutter between columns (or rows) -->
+      <!-- Remove this if you don't need a gutter between columns or rows -->
       <View class="gap-1">
-        <!-- ANY CONTENT GOES HERE -->
+        <!-- Content goes here -->
       </View>
     </View>
     ...

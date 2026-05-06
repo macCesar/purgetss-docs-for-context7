@@ -8,7 +8,7 @@
 > Legacy mode was removed in PurgeTSS v7.2.x along with its related options.
 
 
-By default, **PurgeTSS** looks for `./purgetss/config.cjs`. That is where project-level customization lives.
+By default, PurgeTSS looks for `./purgetss/config.cjs`. That is where project-level customization lives.
 
 ## Create the `config.cjs` file
 
@@ -79,7 +79,7 @@ Every section is optional. Only add what you want to change. Anything missing fa
 ## Structure
 The config file has four main sections: `purge`, `brand`, `images`, and `theme`.
 
-`brand:` and `images:` configure the matching commands. The full option lists live in the [`brand` guide](../app-assets/1-app-icons-and-branding.md) and the [`images` guide](../app-assets/2-multi-density-images.md). The rest of this page covers `purge` and `theme`.
+`brand:` and `images:` configure the matching commands. Their option lists live in the [`brand` guide](../app-assets/1-app-icons-and-branding.md) and the [`images` guide](../app-assets/2-multi-density-images.md). The rest of this page covers `purge` and `theme`.
 
 For `brand`, the structure is grouped by purpose:
 
@@ -89,7 +89,7 @@ For `brand`, the structure is grouped by purpose:
 - `ios`: optional iOS-only variant toggles and the optional dark background color
 - `colors`: shared color settings such as the adaptive background and iOS flatten color
 
-For the complete property-by-property reference, see [App icons and branding](../app-assets/1-app-icons-and-branding.md#brand-config-reference).
+For the property-by-property reference, see [App icons and branding](../app-assets/1-app-icons-and-branding.md#brand-config-reference).
 
 ### Overriding logo paths
 
@@ -134,23 +134,23 @@ module.exports = {
 }
 ```
 
-- **`mode.all`**
+- `mode: 'all'`
 
   By default, PurgeTSS searches XML files everywhere: comments, attributes, classes, IDs, and Ti Elements.
 
   Use this mode if you want PurgeTSS to parse Ti Elements you style in `config.cjs`.
 
-- **`mode.method`**
+- `method`
 
   The `method` setting controls how the auto-purge task runs: `sync` (default) or `async`.
 
   If changes are not showing up when rebuilding a project with TiKit Components and LiveView, set the method to `async`.
 
-- **`mode.class`**
+- `mode: 'class'`
 
   Use `class` to search only class and ID attributes in XML files.
 
-- **`options.missing`**
+- `options.missing`
 
   Set `missing` to `true` if you want a list of missing or misspelled classes at the end of `app.tss`.
 
@@ -159,11 +159,11 @@ module.exports = {
 > Helpful when you want to confirm you did not forget class definitions or when you are upgrading from PurgeTSS v5 to v6.
 
 
-- **`options.widgets`**
+- `options.widgets`
 
   Set `widgets` to `true` to also parse all XML files under the Widgets folder.
 
-- **`options.safelist`**
+- `options.safelist`
 
   The `safelist` is a list of classes and Ti Elements you want to keep no matter the purge mode or whether they appear in XML.
 
@@ -206,7 +206,7 @@ module.exports = {
   ];
   ```
 
-- **`options.plugins`**
+- `options.plugins`
 
   The `plugins` option lets you disable classes PurgeTSS would normally generate.
 
@@ -304,7 +304,7 @@ module.exports = {
 }
 ```
 
-This will completely replace the original default `opacity` values with the new ones.
+This replaces the default `opacity` values with the new ones.
 
 > ℹ️ **INFO**
 >
@@ -388,7 +388,7 @@ module.exports = {
 }
 ```
 
-These colors will be available across utilities like text, border, and background colors.
+These colors are available across utilities like text, border, and background colors.
 
 ### Color object syntax
 
@@ -469,13 +469,13 @@ module.exports = {
 }
 ```
 
-This will generate classes like `bg-regal-blue` in addition to all of the default colors.
+This generates classes like `bg-regal-blue` alongside the default colors.
 
 > ℹ️ **INFO**
 >
 > You can use the `shades` command to generate a range of shades for a color and add them to `config.cjs`.
 > 
-> **For details, see the** [**shades command**](../Commands.md#shades-command).
+> For details, see the [shades command](../Commands.md#shades-command).
 
 
 ## Customize spacing
@@ -503,7 +503,7 @@ By default, the spacing scale is inherited by the padding, margin, width, height
 ### Shared spacing
 The `spacing` section is shared by the `padding`, `margin`, `width`, and `height` properties.
 
-> When you include the `spacing` section, PurgeTSS will automatically generate all spacing-related properties and merge them with any other spacing-related properties present in the configuration file.
+> When you include the `spacing` section, PurgeTSS generates all spacing-related properties and merges them with any other spacing-related properties in the configuration file.
 
 `Shared spacing`
 ```javascript
@@ -590,7 +590,7 @@ module.exports = {
 }
 ```
 
-This will generate classes like `p-72`, `m-84`, and `h-96` in addition to all of the default spacing and sizing utilities.
+This generates classes like `p-72`, `m-84`, and `h-96` alongside the default spacing and sizing utilities.
 
 ## List of customizable properties
 
@@ -598,7 +598,7 @@ This will generate classes like `p-72`, `m-84`, and `h-96` in addition to all of
 - All color properties inherit from the `theme.colors` property.
 - All spacing properties inherit from the `theme.spacing` property.
 
-You can customize any of the following properties individually by adding them in the `theme` section of your `config.cjs` file, or by extending them in the `theme.extend` section.
+You can customize any of the following properties by adding them to the `theme` section of your `config.cjs` file, or by extending them in `theme.extend`.
 
 ### Color properties
 
@@ -741,4 +741,4 @@ You can customize any of the following properties individually by adding them in
 - zoomScale
 
 ### Custom rules and Ti Elements
-- Create your own custom rules and include Ti Elements with any number of attributes or conditional statements. See the [**Custom rules section**](2-custom-rules.md) for details.
+- Create your own custom rules and include Ti Elements with any number of attributes or conditional statements. See the [custom rules section](2-custom-rules.md) for details.

@@ -8,7 +8,7 @@
 
 </div>
 
-Building consistent UIs in Titanium SDK can feel repetitive. TiKit is a small library of UI components built with Alloy and PurgeTSS to reduce that work. It gives you reusable building blocks for common UI patterns, so you can focus on the parts of your app that are unique.
+Building consistent UIs in Titanium SDK can feel repetitive. TiKit is a small library of UI components built with Alloy and PurgeTSS to cut down that work. It gives you reusable building blocks for common UI patterns, so you can spend more time on the parts of your app that are actually unique.
 
 TiKit is meant to help you move faster without fighting styling details.
 
@@ -50,7 +50,7 @@ npm install -g purgetss
    # Follow the prompts
    ```
 
-2. Install TiKit components. Navigate into your new project directory (`cd myApp`) and run the TiKit installer. It will guide you through picking the components you want:
+2. Install TiKit components. Go into your new project directory (`cd myApp`) and run the TiKit installer. It guides you through picking the components you want:
 
    ```bash
    tikit install
@@ -64,7 +64,7 @@ npm install -g purgetss
 
 ## Component Default Values
 
-TiKit components work out of the box with sensible defaults. Here's a summary of what each primary component uses when a property isn't specified:
+TiKit components work out of the box with sensible defaults. Here's what each primary component uses when a property isn't specified:
 
 | Component | Property  | Default Value                                                                  | Description                  |
 | --------- | --------- | ------------------------------------------------------------------------------ | ---------------------------- |
@@ -77,7 +77,7 @@ TiKit components work out of the box with sensible defaults. Here's a summary of
 | Cards     | `color`   | `"dark"`                                                                       | The card's color scheme      |
 |           | `variant` | `"showcase"` (with image) or `"content"` (with subtitle) or `"code"` (default) | The card's layout style      |
 
-This means you can use components with minimal properties. For example:
+That means you can use components with minimal properties:
 
 ```xml
 <!-- Uses variant="pop", color="dark" by default -->
@@ -349,7 +349,7 @@ Buttons with text and an icon. Use the `icon` property to specify the icon class
 
 ### Using Custom Icons in Buttons
 
-You can use any icon font loaded via PurgeTSS. Specify the font prefix and icon name in the `icon` property, along with any size or color classes from PurgeTSS.
+You can use any icon font loaded through PurgeTSS. Pass the font prefix and icon name in the `icon` property, along with any size or color classes you need.
 
 `Button with Material Icon`
 ```xml
@@ -484,9 +484,9 @@ Because these are `Titanium.UI.Tab` objects, you can use standard properties and
 
 ## Updating Components Dynamically
 
-TiKit components do not need to be destroyed and recreated just to change simple things like text or an image. When you give a component an `id` in your XML, you can call update methods in your controller (`.js` file).
+TiKit components do not need to be destroyed and recreated just to change simple things like text or an image. Give the component an `id` in XML, then call update methods from your controller.
 
-Why this is useful:
+This is useful when you need to:
 
 - Update a Card's text after data loads from an API.
 - Change an Avatar image after the user uploads a new photo.
@@ -566,13 +566,13 @@ To add popular free icon sets, run:
 purgetss icon-library --vendor=fa,mi,ms,f7
 ```
 
-This copies the font files and CSS into your project, ready to use.
+This copies the font files and CSS into your project.
 
 ### Adding Your Own Custom Icon Fonts
 
 If you use a custom icon font, follow these steps:
 
-1. Organize files. Place your font (`.ttf` or `.otf`) and its CSS file (mapping icon names to Unicode characters) in the PurgeTSS fonts directory:
+1. Organize files. Place your font (`.ttf` or `.otf`) and its CSS file, which maps icon names to Unicode characters, in the PurgeTSS fonts directory:
 
    ```
    YourProject/
@@ -583,7 +583,7 @@ If you use a custom icon font, follow these steps:
                └── cool-font.ttf
    ```
 
-2. Build fonts. Run the PurgeTSS command to process them:
+2. Build fonts. Run the PurgeTSS command:
 
    ```bash
    purgetss build-fonts
@@ -591,7 +591,7 @@ If you use a custom icon font, follow these steps:
 
    This generates the necessary TSS classes in `fonts.tss`.
 
-3. Use in TiKit. Now you can use your custom icons just like the built-in ones:
+3. Use them in TiKit. Now you can use your custom icons like the built-in ones:
 
    ```xml
    <Button module="tikit.ui" variant="icon-left" title="Launch"
@@ -603,7 +603,7 @@ If you use a custom icon font, follow these steps:
           icon="myicon myicon-download text-2xl" />
    ```
 
-You can mix and match icons from different libraries throughout your app.
+You can mix icons from different libraries throughout your app.
 
 -----
 

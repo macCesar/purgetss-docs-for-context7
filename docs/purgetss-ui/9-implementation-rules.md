@@ -1,10 +1,10 @@
-# Implementation Rules
+# Implementation rules
 
 Rules that every method in the Animation module must follow. They keep behavior consistent with the declarative model of PurgeTSS.
 
 ## Rule 1: Inherit from the `<Animation />` object via `...args`
 
-Every method MUST inherit all properties from the Animation object by spreading `args`. Never cherry-pick individual properties.
+Every method must inherit all properties from the Animation object by spreading `args`. Never cherry-pick individual properties.
 
 The `<Animation />` object is the single source of truth for animation behavior. When a developer declares:
 
@@ -12,13 +12,13 @@ The `<Animation />` object is the single source of truth for animation behavior.
 <Animation id="myAnim" module="purgetss.ui" class="curve-animation-ease-out opacity-50 delay-100 duration-300" />
 ```
 
-Every property — timing (`duration`, `delay`, `curve`) AND visual (`opacity`, `backgroundColor`, `width`, etc.) — is available in `args` and MUST be inherited by all methods.
+Every timing property (`duration`, `delay`, `curve`) and visual property (`opacity`, `backgroundColor`, `width`, and so on) is available in `args` and must be inherited by all methods.
 
 ```javascript
-// CORRECT — inherits everything, method-specific props override
+// Correct: inherits everything, method-specific props override
 view.animate({ ...args, left: destLeft, top: destTop, transform: Ti.UI.createMatrix2D() })
 
-// WRONG — cherry-picks individual properties, breaks if new ones are added
+// Wrong: cherry-picks individual properties, breaks if new ones are added
 view.animate({ duration: args.duration, delay: args.delay, left: destLeft, top: destTop })
 ```
 
@@ -27,12 +27,12 @@ view.animate({ duration: args.duration, delay: args.delay, left: destLeft, top: 
 This is the same pattern used by the core `playView` function:
 
 ```javascript
-// playView passes ALL of args to Ti.UI.createAnimation
+// playView passes all of args to Ti.UI.createAnimation
 const animation = Ti.UI.createAnimation(args)
 view.animate(animation)
 ```
 
-If a developer adds `opacity-50` to their `<Animation>`, they expect ALL methods to animate opacity, not just `play`. The `<Animation />` declares behavior, methods execute it.
+If a developer adds `opacity-50` to their `<Animation>`, they expect every method to animate opacity, including methods beyond `play`. The `<Animation />` declares behavior; methods execute it.
 
 ---
 
@@ -41,7 +41,7 @@ If a developer adds `opacity-50` to their `<Animation>`, they expect ALL methods
 If a method needs fixed values for specific properties, they go AFTER `...args` to override. Never filter or exclude properties from args.
 
 ```javascript
-// CORRECT — shake: inherits everything from args, then overrides what it needs
+// Correct: shake inherits everything from args, then overrides what it needs
 view.animate({
   ...args,                                                    // inherit all
   transform: Ti.UI.createMatrix2D().translate(intensity, 0),  // override: shake-specific transform
@@ -51,7 +51,7 @@ view.animate({
   curve: Ti.UI.ANIMATION_CURVE_EASE_IN_OUT                    // override: required for shake
 })
 
-// WRONG — filters args, only picks what it thinks it needs
+// Wrong: filters args, only picks what it thinks it needs
 view.animate({
   duration: args.duration,
   transform: Ti.UI.createMatrix2D().translate(intensity, 0),
@@ -72,26 +72,26 @@ view.animate({
   curve: EASE_IN   // overrides to EASE_IN
 })
 // Result: { duration: 50, opacity: 0.5, curve: EASE_IN }
-// opacity 0.5 is preserved from args — not lost by filtering
+// opacity 0.5 is preserved from args, not lost by filtering
 ```
 
 ---
 
 ## Rule 3: No timing parameters in method signatures
 
-The existing core methods (`play`, `open`, `close`, `apply`, `sequence`) do NOT accept `duration`, `delay`, or `curve` as parameters. New methods MUST follow the same pattern.
+The existing core methods (`play`, `open`, `close`, `apply`, `sequence`) do not accept `duration`, `delay`, or `curve` as parameters. New methods must follow the same pattern.
 
 Only parameters specific to the method's unique functionality are allowed.
 
 ```javascript
-// CORRECT — only method-specific parameters
+// Correct: only method-specific parameters
 animationView.swap = (view1, view2) => {
 animationView.reorder = (views, newOrder) => {
 animationView.shake = (view, intensity = 10) => {    // intensity is shake-specific
 animationView.snapTo = (view, targets) => {
 animationView.pulse = (view, scale = 1.2) => {       // future: scale is pulse-specific
 
-// WRONG — timing parameters belong in the <Animation /> object
+// Wrong: timing parameters belong in the <Animation /> object
 animationView.swap = (view1, view2, duration) => {
 animationView.shake = (view, intensity, duration) => {
 ```
@@ -109,7 +109,7 @@ All timing is controlled declaratively via the `<Animation>` object's classes:
 ```
 
 ```javascript
-// Same method call, different behavior — controlled by XML
+// Same method call, different behavior controlled by XML
 $.fastSwap.swap($.card1, $.card2)
 $.slowSwap.swap($.card1, $.card2)
 ```
@@ -118,17 +118,17 @@ $.slowSwap.swap($.card1, $.card2)
 
 ## Rule 4: Consolidate state with `applyProperties` post-animation
 
-After animating position (`left`/`top`), ALWAYS consolidate with `applyProperties` in the callback so the final state is real (not just visual via transform).
+After animating position (`left`/`top`), always consolidate with `applyProperties` in the callback so the final state is real, not only visual through `transform`.
 
 ```javascript
-// CORRECT — consolidates after animation
+// Correct: consolidates after animation
 view.animate({
   ...args, left: destLeft, top: destTop, transform: Ti.UI.createMatrix2D()
 }, () => {
   view.applyProperties({ left: destLeft, top: destTop, transform: Ti.UI.createMatrix2D() })
 })
 
-// WRONG — animation ends but view's actual properties are stale
+// Wrong: animation ends but view's actual properties are stale
 view.animate({
   ...args, left: destLeft, top: destTop, transform: Ti.UI.createMatrix2D()
 })
@@ -136,7 +136,7 @@ view.animate({
 
 ### Why this matters
 
-On iOS, dragging uses `transform.translate()` — the view's `left`/`top` properties don't change. After a position animation, `applyProperties` ensures:
+On iOS, dragging uses `transform.translate()`, so the view's `left`/`top` properties do not change. After a position animation, `applyProperties` ensures:
 - The view's actual `left`/`top` match the visual position
 - The transform is reset to identity
 - Subsequent animations start from the correct position
@@ -145,10 +145,10 @@ On iOS, dragging uses `transform.translate()` — the view's `left`/`top` proper
 
 ## Rule 5: Track position with `_origin*` properties
 
-Methods that move position (`swap`, `reorder`, `snapTo`, and future methods like `slideTo`) MUST update `_originTop`/`_originLeft` after the animation so that subsequent drag/swap operations work correctly.
+Methods that move position (`swap`, `reorder`, `snapTo`, and future methods like `slideTo`) must update `_originTop`/`_originLeft` after the animation so later drag and swap operations work correctly.
 
 ```javascript
-// CORRECT — updates origin tracking
+// Correct: updates origin tracking
 view.animate({
   ...args, left: destLeft, top: destTop, transform: Ti.UI.createMatrix2D()
 }, () => {
@@ -158,17 +158,17 @@ view.animate({
 view._originTop = destTop
 view._originLeft = destLeft
 
-// WRONG — origin tracking is stale
+// Wrong: origin tracking is stale
 view.animate({
   ...args, left: destLeft, top: destTop, transform: Ti.UI.createMatrix2D()
 })
-// Next swap/drag will use the OLD position
+// Next swap/drag uses the old position
 ```
 
 ### How `_origin*` works
 
 - `_originTop`/`_originLeft` represent the view's "logical grid position"
-- `swap` reads from `view._originTop ?? view.top` — falls back to the actual `top` if no origin is set
+- `swap` reads from `view._originTop ?? view.top`; it falls back to the actual `top` if no origin is set
 - `onTouchStart` in the drag handler saves the current `top`/`left` as `_origin*` for bounce-back
 - `undraggable` cleans up all `_origin*` properties
 
@@ -176,7 +176,7 @@ view.animate({
 
 ## Rule 6: Consolidate Android drag position before drop animations
 
-On Android, drag uses `animate({ duration: 0 })` which is asynchronous — the last frame may still be in-flight when `touchend` fires. Any animation started on drop (`snapTo`, bounce-back, or `swap` via `dropCB`) can conflict with this pending drag animation.
+On Android, drag uses `animate({ duration: 0 })`, which is asynchronous. The last frame may still be in flight when `touchend` fires. Any animation started on drop (`snapTo`, bounce-back, or `swap` via `dropCB`) can conflict with this pending drag animation.
 
 Before starting any drop animation on Android, consolidate the view's position with `applyProperties`:
 
@@ -193,13 +193,13 @@ This applies to both the snap path and the bounce-back path in `onTouchEnd`. iOS
 
 ### Collision fallback on drop
 
-During drag, `checkCollision` runs on every `touchmove`. When the user releases while still in motion, the drag center may exit the target between the last `touchmove` and `touchend`. To handle this, the module tracks `lastKnownTarget` — the last non-null collision during drag — and uses it as fallback when `checkCollision` returns null on drop.
+During drag, `checkCollision` runs on every `touchmove`. When the user releases while still in motion, the drag center may exit the target between the last `touchmove` and `touchend`. To handle this, the module tracks `lastKnownTarget`, the last non-null collision during drag, and uses it as a fallback when `checkCollision` returns null on drop.
 
 ---
 
 ## Rule 7: Clean up in `undraggable`
 
-Every internal property added to views MUST be cleaned up in `undraggable`. This includes:
+Every internal property added to views must be cleaned up in `undraggable`. This includes:
 
 | Property                     | Set by                                      | Purpose                                                                          |
 | ---------------------------- | ------------------------------------------- | -------------------------------------------------------------------------------- |
@@ -224,7 +224,7 @@ animationView.undraggable = (_views) => {
 
 ---
 
-## Summary: Method implementation template
+## Summary: method implementation template
 
 When creating a new method, follow this template:
 

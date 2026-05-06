@@ -1,8 +1,8 @@
-# The `open` and `close` Methods
+# The `open` and `close` methods
 
 Use `open` and `close` to run opening and closing animations based on the `open:` and `close:` modifiers. They do not toggle based on current view state, so you get explicit control.
 
-## `open` Method
+## `open` method
 
 `open` triggers the opening animation for the specified views and uses properties defined under the `open` modifier.
 
@@ -39,7 +39,7 @@ $.myAnimation.open($.myView, (e) => {
 
 In this example, `myView` uses the properties under `open`, making it fully opaque.
 
-## `close` Method
+## `close` method
 
 `close` triggers the closing animation for the specified views and uses properties defined under the `close` modifier.
 
@@ -74,7 +74,7 @@ $.myAnimation.close($.myView, (e) => {
 })
 ```
 
-The callback receives the same enriched event object as `play`. See [Callback event object](the-play-method#callback-event-object) for the full property reference.
+The callback receives the same enriched event object as `play`. See [Callback event object](the-play-method#callback-event-object) for the property reference.
 
 In this example, `myView` uses the properties under `close`, making it fully transparent.
 
@@ -126,10 +126,10 @@ function onOverlayTap({ source }) {
 }
 ```
 
-The key classes:
-- **`zoom-in-110`** — scales the content to 110% on open, then `complete` resets to 100% (a subtle "pop")
-- **`opacity-to-100`** — fades the overlay from transparent to opaque
-- **`close:duration-0 open:duration-100`** — open animates at 100ms, close is instant
-- **`duration-75`** — fast overlay fade
+The main classes:
+- `zoom-in-110`: scales the content to 110% on open, then `complete` resets it to 100% for a subtle pop.
+- `opacity-to-100`: fades the overlay from transparent to opaque.
+- `close:duration-0 open:duration-100`: opens at 100ms and closes instantly.
+- `duration-75`: keeps the overlay fade quick.
 
 Show and hide are two lines each. The animation behavior lives in the XML.

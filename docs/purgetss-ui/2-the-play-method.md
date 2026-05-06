@@ -1,4 +1,4 @@
-# The `play` Method
+# The `play` method
 
 The `play` method runs the animation for a single view or an array of views. You can also chain multiple Animation objects with callbacks to build sequences.
 
@@ -35,9 +35,9 @@ When `play` runs, the blue square goes from 64x64 to 128x128 and changes to gree
 ![Basic Animation](../images/basic-animation.gif)
 </div>
 
-*Low framerate gif.*
+*Low framerate GIF.*
 
-### Real-world use case: Notification badge pulse
+### Real-world use case: notification badge pulse
 
 Use the `pulse` method for notification badges. The scale comes from the `<Animation />` object:
 
@@ -71,9 +71,9 @@ function doPulse3() {
 }
 ```
 
-The badge scales to 130%, reverses back to 100%, repeated N times. The `scale` and `duration` come from the `<Animation />` object; `count` is the only parameter per call. See also [the `pulse` method](additional-methods#the-pulse-method) for details.
+The badge scales to 130%, reverses back to 100%, and repeats for the count you pass. The `scale` and `duration` come from the `<Animation />` object; `count` is the only parameter per call. See [the `pulse` method](additional-methods#the-pulse-method) for details.
 
-## `open` and `close` Modifiers
+## `open` and `close` modifiers
 
 Use `open` and `close` to define different states, such as opening and closing behaviors.
 
@@ -144,7 +144,7 @@ $.index.open()
 ![Complex Animations](../images/complex-animations.gif)
 </div>
 
-*Low framerate gif.*
+*Low framerate GIF.*
 
 ## `complete` modifier
 

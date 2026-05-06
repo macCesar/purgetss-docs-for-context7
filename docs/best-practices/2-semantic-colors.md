@@ -4,14 +4,14 @@ Semantic colors let your app respond to Light/Dark mode changes without extra co
 
 ## Setting up semantic.colors.json
 
-Create the `semantic.colors.json` file with your color definitions. The file location depends on your project type, following the TiDev convention:
+Create `semantic.colors.json` with your color definitions. The file location follows the TiDev project layout:
 
-- **Alloy** → `app/assets/semantic.colors.json`
-- **Classic** → `Resources/semantic.colors.json`
+- Alloy: `app/assets/semantic.colors.json`
+- Classic: `Resources/semantic.colors.json`
 
 > ℹ️ **INFO**
 >
-> The `semantic` command, covered later on this page, auto-detects the project layout and writes to the right location. You do not need to specify it manually. The path examples below use the Alloy location; Classic projects write under `Resources/` automatically.
+> The `semantic` command, covered later on this page, detects the project layout and writes to the right location. The examples below use the Alloy path; Classic projects write under `Resources/` automatically.
 
 
 `app/assets/semantic.colors.json`
@@ -83,14 +83,14 @@ module.exports = {
 }
 ```
 
-This generates utility classes like `bg-surface`, `bg-surface-high`, `text-on-surface`, `text-accent`, `bg-border`, etc.
+This generates classes such as `bg-surface`, `bg-surface-high`, `text-on-surface`, `text-accent`, and `bg-border`.
 
 ### Nesting rules
 
 You can nest one level deep using an object with `DEFAULT`:
 
 ```js
-// ✅ Correct — generates bg-surface and bg-surface-high
+// Correct: generates bg-surface and bg-surface-high
 surface: {
   DEFAULT: 'surfaceColor',
   high: 'surfaceHighColor'
@@ -101,7 +101,7 @@ surface: {
 >
 > Common error: nested objects without DEFAULT
 > ```js
-> // ❌ Wrong — generates [object Object] instead of a color
+> // Wrong: generates [object Object] instead of a color
 > surface: {
 >   regular: 'surfaceColor',
 >   high: 'surfaceHighColor'
@@ -137,7 +137,47 @@ Both approaches work. Pick the one that gives you the class names you want.
 </Window>
 ```
 
-When the appearance changes (via `Appearance.set()` or system toggle), Titanium resolves each semantic color name to its `light` or `dark` value on its own.
+When the appearance changes, either through `Appearance.set()` or the system toggle, Titanium resolves each semantic color name to its `light` or `dark` value.
+
+### Opacity modifier auto-derivation
+
+You can apply an opacity modifier (`/N`) to any class that resolves to a semantic name, and PurgeTSS will derive a new semantic key with that alpha pre-applied for both `light` and `dark`:
+
+```xml
+<View class="bg-surface/65" />
+```
+
+On the next `purgetss build` or `purgetss` run, PurgeTSS:
+
+1. Detects that `bg-surface` maps to the semantic name `surfaceColor`.
+2. Adds a derived key `surfaceColor_65` to `semantic.colors.json` with the original hex values and `alpha: "65"` for both modes:
+
+   ```json
+   "surfaceColor_65": {
+     "light": { "color": "#F9FAFB", "alpha": "65" },
+     "dark":  { "color": "#0f172a", "alpha": "65" }
+   }
+   ```
+
+3. Emits the rule against the derived key, e.g. `'.bg-surface/65': { backgroundColor: 'surfaceColor_65' }`.
+
+Light/Dark switching still works because Titanium handles the lookup like any other semantic color. The same flow runs for opacity inside an `apply:` string in `config.cjs`.
+
+> ℹ️ **INFO**
+>
+> Native rebuild required for new alpha entries
+> `semantic.colors.json` is read at native build time, so the first time a new opacity variant is auto-derived, the running app will not see it until the next full Titanium build. For example, if you have never used `bg-surface/65` before, that new key needs a native rebuild. Later runs reuse the existing entry.
+> 
+> In practice: run `purgetss build` once after introducing a new opacity class, then start your usual Liveview / `appc run` cycle. The Liveview hot-reload alone does not refresh `semantic.colors.json` for the running app.
+
+
+Re-runs are idempotent. Keys are reused, not duplicated. If you manually edit a derived key with different values, the next build halts with a `Conflict` error instead of overwriting your changes.
+
+Constraints:
+
+- Alpha must be an integer in the `0–100` range, matching the existing opacity modifier syntax.
+- The base key (`surfaceColor` in this example) must already exist in `semantic.colors.json`. Without it, PurgeTSS emits a warning (direct XML usage) or throws an Error (apply directives) with three concrete suggestions.
+- The naming convention is `<originalKey>_<alphaPercent>` (underscore + integer percent). It mirrors the `/65` you typed and stays quote-free in `config.cjs`.
 
 ## Using semantic colors in controllers
 
@@ -174,7 +214,7 @@ card.add(title)
 
 ### Option 3: `Alloy.createStyle()` + `applyProperties()`
 
-To restyle an **existing** component, for example when state changes, create the style and apply it:
+To restyle an existing component, for example when state changes, create the style and apply it:
 
 ```js
 function setActive(isActive) {
@@ -192,9 +232,9 @@ function setActive(isActive) {
 > 💡 **TIP**
 >
 > When to use which
-> - **Option 1** — single property change, no other utilities needed.
-> - **Option 2** — creating new components from scratch.
-> - **Option 3** — restyling components that already exist in the view.
+> - Option 1: single property change, no other utilities needed.
+> - Option 2: creating new components from scratch.
+> - Option 3: restyling components that already exist in the view.
 
 
 ## Recommended color palette
@@ -219,7 +259,7 @@ A minimal semantic palette for most apps:
 
 Instead of purpose-based names, you can take any palette with 11 tonal steps and map it to a numeric scale (`50` through `950`), where each light-mode value inverts in dark mode. That gives you a full tonal range from a single palette.
 
-The example below uses a neutral gray palette for clarity, but the same inversion pattern works with any hue — blues, greens, warm tones, or a custom brand palette. What matters is that the 11 stops share a consistent tonal progression.
+The example below uses a neutral gray palette for clarity, but the same inversion pattern works with any hue: blues, greens, warm tones, or a custom brand palette. What matters is that the 11 stops share a consistent tonal progression.
 
 `app/assets/semantic.colors.json`
 ```json
@@ -268,30 +308,30 @@ module.exports = {
 }
 ```
 
-Generates `bg-primary-50`, `text-primary-950`, `border-primary-500`, etc. — the tonal contrast automatically flips with the appearance.
+Generates `bg-primary-50`, `text-primary-950`, `border-primary-500`, and similar classes. The tonal contrast automatically flips with the appearance.
 
 ### How the inversion works
 
 | Role                | Light     | Dark      | Notes                                   |
 | ------------------- | --------- | --------- | --------------------------------------- |
 | `color50` (extreme) | `#030712` | `#f9fafb` | Darkest in light mode, lightest in dark |
-| `color500` (middle) | `#6b7280` | `#6b7280` | **Anchor** — identical in both modes    |
-| `color950` (mirror) | `#f9fafb` | `#030712` | Mirror of `color50` — extremes reversed |
+| `color500` (middle) | `#6b7280` | `#6b7280` | Anchor, identical in both modes         |
+| `color950` (mirror) | `#f9fafb` | `#030712` | Mirror of `color50`, extremes reversed  |
 
 Fill in intermediate stops (`100`, `300`, `400`, `600`, `700`, `900`) as needed. The full tonal scale is 11 steps.
 
 > 💡 **TIP**
 >
-> Use this pattern when you want a familiar numeric tonal scale. Use the purpose-based pattern (above) when you prefer semantic intent in the class names. Both can coexist in the same project.
+> Use this pattern when you want a familiar numeric tonal scale. Use the purpose-based pattern above when you want the class names to describe intent. Both can live in the same project.
 
 
 ### Generating semantic colors with the `semantic` command
 
-Writing the 11 JSON entries (palette) or each purpose-based color (single) by hand is mechanical and error-prone. The [`semantic`](../Commands.md#semantic-command) command does both, dispatched by `--single`.
+Writing 11 palette entries by hand is tedious. So is creating each purpose-based color one by one. The [`semantic`](../Commands.md#semantic-command) command handles both forms; `--single` chooses the purpose-based mode.
 
-#### Palette mode — auto-generated tonal scale
+#### Palette mode: generated tonal scale
 
-One base hex → 11 entries with mirror inversion + matching `config.cjs` mapping. Both files in one step.
+One base hex creates 11 entries with mirror inversion and the matching `config.cjs` mapping.
 
 ```bash
 > purgetss semantic '#15803d' amazon
@@ -299,22 +339,22 @@ One base hex → 11 entries with mirror inversion + matching `config.cjs` mappin
 
 > 💡 **TIP**
 >
-> Pro Tip — palette in one command
+> Palette in one command
 > `pt semantic <hex> <name>` runs the full tonal-inversion workflow:
 > 
 > 1. Generates the 11-step tonal palette from the input hex (same algorithm as `shades`).
-> 2. Writes `semantic.colors.json` at the project's canonical location (`app/assets/` on Alloy, `Resources/` on Classic) with mirror-by-index values — `50` ↔ `950`, `100` ↔ `900`, …, `500` as the identical anchor.
-> 3. Updates `purgetss/config.cjs` to map the family to those semantic keys (`{ 50: 'amazon50', 100: 'amazon100', … }`).
-> 4. Strips any prior keys for the same family before writing — re-runs cleanly replace, never duplicate.
+> 2. Writes `semantic.colors.json` at the project's canonical location (`app/assets/` on Alloy, `Resources/` on Classic) with mirror-by-index values: `50` ↔ `950`, `100` ↔ `900`, and `500` as the identical anchor.
+> 3. Updates `purgetss/config.cjs` to map the family to those semantic keys, for example `{ 50: 'amazon50', 100: 'amazon100' }`.
+> 4. Removes prior keys for the same family before writing, so re-runs replace instead of duplicating.
 > 
 > Classes like `bg-amazon-50`, `text-amazon-950`, `border-amazon-500` flip tonal contrast automatically when the appearance changes.
 
 
 Flags that pair well with palette mode:
 
-- `--log` (`-l`) — preview the JSON on the console without writing anything.
-- `--override` (`-o`) — place the mapping in `theme.colors` instead of `theme.extend.colors`.
-- `--random` (`-r`) with `--name` (`-n`) — pick a random base color for a named family.
+- `--log` (`-l`): preview the JSON on the console without writing anything.
+- `--override` (`-o`): place the mapping in `theme.colors` instead of `theme.extend.colors`.
+- `--random` (`-r`) with `--name` (`-n`): pick a random base color for a named family.
 
 ```bash
 > purgetss semantic '#15803d' amazon --log         # preview only
@@ -322,9 +362,9 @@ Flags that pair well with palette mode:
 > purgetss semantic --random --name brand          # random base, named family
 ```
 
-#### Single mode — purpose-based with explicit per-mode hex
+#### Single mode: purpose-based colors
 
-For colors like `surfaceColor`, `textColor`, `borderColor`, `overlayColor`, etc. — where light and dark values are **hand-picked from the design system**, not derived algorithmically. Pass `--single`, the light hex, the name, and optionally `--dark` and `--alpha`.
+Use single mode for colors like `surfaceColor`, `textColor`, `borderColor`, and `overlayColor`, where the light and dark values come from your design system instead of a generated scale. Pass `--single`, the light hex, the name, and optionally `--dark` and `--alpha`.
 
 ```bash
 > purgetss semantic --single '#F9FAFB' surfaceColor       --dark '#0f172a'
@@ -336,9 +376,9 @@ For colors like `surfaceColor`, `textColor`, `borderColor`, `overlayColor`, etc.
 > purgetss semantic --single '#000000' overlayColor       --alpha 50
 ```
 
-The name is preserved verbatim as the JSON key (camelCase respected). When `--dark` is omitted, it defaults to the light hex — useful for overlays/glass surfaces where alpha is the only variation.
+The name is preserved verbatim as the JSON key, including camelCase. When `--dark` is omitted, it defaults to the light hex. That is useful for overlays or glass surfaces where alpha is the only variation.
 
-Single mode writes **both files** in one shot — the JSON entry and an auto-generated class mapping in `config.cjs`. The class name is derived from the semantic key by stripping the conventional `Color` suffix and kebab-casing the rest:
+Single mode writes both files: the JSON entry and an auto-generated class mapping in `config.cjs`. The class name is derived from the semantic key by stripping the conventional `Color` suffix and kebab-casing the rest:
 
 `./purgetss/config.cjs (auto-generated)`
 ```js
@@ -359,20 +399,20 @@ theme: {
 
 After the batch above you can use `bg-surface`, `bg-surface-high`, `text-text`, `bg-accent`, `bg-overlay`, etc. immediately.
 
-If your design system uses different class names (e.g. `on-surface` instead of `text`, or the nested `surface: { DEFAULT, high }` form from earlier in this page), edit `config.cjs` after running the commands — overriding one mapping is one keystroke; typing the whole structure from scratch is many.
+If your design system uses different class names, such as `on-surface` instead of `text`, or the nested `surface: { DEFAULT, high }` form from earlier in this page, edit `config.cjs` after running the commands. Adjusting one generated mapping is faster than typing the whole structure from scratch.
 
 > 💡 **TIP**
 >
 > Smart in-place updates
-> If a `--single` name matches an existing palette shade — e.g. `pt semantic --single '#000' amazon500` while palette `amazon` exists — the entry is **updated in place** in the JSON (preserving its position) and `config.cjs` is left untouched. The palette already maps to that key, so the operation is interpreted as "edit one shade", not "create a duplicate top-level color".
+> If a `--single` name matches an existing palette shade, the entry is updated in place in the JSON and `config.cjs` is left untouched. For example, `pt semantic --single '#000' amazon500` edits the existing `amazon500` shade when the `amazon` palette already exists. The palette already maps to that key, so PurgeTSS treats the command as "edit one shade" instead of "create a duplicate top-level color".
 
 
 > 💡 **TIP**
 >
 > Re-running replaces the family
-> Re-running on the same family fully replaces it: prior keys (the bare name plus the 11 shade keys) are stripped before the new entries are written. Other palettes and manually-defined entries (`textSecondaryColor`, etc.) survive untouched. Switching between palette and single forms works cleanly — no orphans.
+> Re-running on the same family replaces it. Prior keys, including the bare name and the 11 shade keys, are removed before the new entries are written. Other palettes and manually-defined entries such as `textSecondaryColor` stay untouched. Switching between palette and single forms does not leave orphaned keys.
 
 
 #### Alpha details
 
-Alpha follows the Titanium spec exactly: range `0.0–100.0`, stored as a **string**, wrapped per-mode as `{ color, alpha }`. Without `--alpha`, values stay as bare hex strings. Out-of-range values are rejected before any file is written.
+Alpha follows the Titanium spec: range `0.0–100.0`, stored as a string, wrapped per-mode as `{ color, alpha }`. Without `--alpha`, values stay as bare hex strings. Out-of-range values are rejected before any file is written.

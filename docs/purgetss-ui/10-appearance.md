@@ -1,6 +1,6 @@
-# Appearance Management
+# Appearance management
 
-The `Appearance` export handles Light/Dark/System mode switching and persists the user's choice across app restarts.
+The `Appearance` export handles light, dark, and system mode switching. It also persists the user's choice across app restarts.
 
 ## Setup
 
@@ -121,6 +121,6 @@ When `Appearance.set('dark')` is called, Titanium resolves the semantic color na
 
 > 💡 **TIP**
 >
-> Complete setup guide
-> For a step-by-step guide covering Window defaults, semantic colors, and Appearance together, see [Appearance Setup](../best-practices/1-appearance-setup.md).
+> Setup guide
+> For a step-by-step guide covering Window defaults, semantic colors, and Appearance together, see [Appearance setup](../best-practices/1-appearance-setup.md).
 

@@ -1,4 +1,4 @@
-# Available Utilities
+# Available utilities
 
 Besides regular utilities like colors, widths, and heights, the Animation module has these animation-specific utilities.
 
@@ -7,7 +7,7 @@ The point on the View around which animations pivot.
 
 A dictionary with `x` and `y` properties, where `{x: 0.5, y: 0.5}` is the center of the View.
 
-**Default:** `(0.5, 0.5)`
+Default: `(0.5, 0.5)`
 
 ```css
 /* Property(ies): anchorPoint */
@@ -37,7 +37,7 @@ A dictionary with `x` and `y` properties, where `{x: 0.5, y: 0.5}` is the center
 ## autoreverse
 Whether the animation replays in reverse after completing.
 
-**Default:** `false`
+Default: `false`
 
 ```css
 /* Property: autoreverse */
@@ -149,7 +149,7 @@ If `autoreverse` is true, one repeat means the animation plays forward and backw
 ## rotate
 Rotation in degrees. See the rotate method for more detail.
 
-**Default:** `No rotation.`
+Default: no rotation.
 
 ```css
 /* Property: rotate */
@@ -180,7 +180,7 @@ Rotation in degrees. See the rotate method for more detail.
 ## scale
 Scales the matrix by the specified factor. The same value applies to both horizontal and vertical scaling.
 
-**Default:** `1`
+Default: `1`
 
 ```css
 /* Property: scale */
@@ -203,7 +203,7 @@ Scales the matrix by the specified factor. The same value applies to both horizo
 
 ## snap-back, snap-center, snap-magnet
 
-Control how draggable views behave when dropped. All are **off by default** — opt-in via classes on the `<Animation>` object.
+Control how draggable views behave when dropped. All are off by default; opt in with classes on the `<Animation>` object.
 
 - `snap-back`: view returns to its origin when dropped outside a collision target
 - `snap-center`: view auto-centers on the target when dropped on it (uses `snapTo` internally)

@@ -14,17 +14,17 @@ Whether you want to style a Ti Element, a custom ID prefixed with `#`, or a cust
 > ⚠️ **CAUTION**
 >
 > PurgeTSS v5 or earlier projects
-> If your project started on **PurgeTSS** v5 or earlier and you now use 7.x.x or later, set `purge.options.missing` to true in `config.cjs`. It will report missing classes at the end of `app.tss` so you can update them to the new naming convention.
+> If your project started on PurgeTSS v5 or earlier and now uses 7.x.x or later, set `purge.options.missing` to true in `config.cjs`. PurgeTSS will report missing classes at the end of `app.tss` so you can update them to the new naming convention.
 
 
-### Default, Platform, Device, or Conditional blocks
+### Default, platform, device, or conditional blocks
 
 - To generate a global style, use either the lowercase `default` or the uppercase `DEFAULT` keyword.
 - To target a specific platform, use the `ios` or `android` keywords.
 - To target a specific device, use the `tablet` or `handheld` keywords.
 - To target a condition with a global variable, use the `[if=globalVariableName]` keyword.
 
-### Property Values
+### Property values
 
 - For `Titanium` constants, `Alloy` configuration values, or global variables, always enclose them in quotes.
 - For `color` values, you can use `hex`, `8-digit hex`, `rgb(R,G,B)`, `rgba(R,G,B,A)`, `transparent`, or any of the standard color names. Use hex values if you want to avoid issues with the opacity modifier.

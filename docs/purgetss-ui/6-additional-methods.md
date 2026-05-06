@@ -1,4 +1,4 @@
-# Additional Methods
+# Additional methods
 
 These methods add sequential animations, position helpers, and feedback effects to the Animation module.
 
@@ -21,7 +21,7 @@ $.myAnimation.sequence(views, callback)
 
 - The `open`/`close` state is toggled once for the entire sequence
 - Each view fully completes its animation before the next starts
-- The callback receives the same enriched event object as `play` — see [Callback event object](the-play-method#callback-event-object) for details
+- The callback receives the same enriched event object as `play`. See [Callback event object](the-play-method#callback-event-object) for details
 
 ### Sequence example
 
@@ -51,7 +51,7 @@ $.fadeIn.sequence([$.title, $.subtitle, $.cta], () => {
 
 Each view fades in one after another for a staggered reveal.
 
-### Real-world use case: Onboarding screen
+### Real-world use case: onboarding screen
 
 Show app features one at a time as the user lands on the welcome screen:
 
@@ -83,14 +83,14 @@ const views = [$.logo, $.headline, $.subtitle, $.startBtn]
 function doReveal() {
   // Force open state first, then sequence
   $.revealAnim.sequence(views, (e) => {
-    $.status.applyProperties({ text: `sequence done — ${e.index + 1}/${e.total} views revealed` })
+    $.status.applyProperties({ text: `sequence done - ${e.index + 1}/${e.total} views revealed` })
   })
 }
 
 function doReset() {
   // Use close to properly reset the Animation state
   $.revealAnim.close(views, () => {
-    $.status.applyProperties({ text: 'Reset — tap Reveal to start again' })
+    $.status.applyProperties({ text: 'Reset - tap Reveal to start again' })
   })
 }
 ```
@@ -120,8 +120,8 @@ $.myAnimation.swap(view1, view2)
 - Temporarily elevates the z-index of both views so the animation renders above siblings
 - Restores original z-index order after the animation completes
 - Updates internal `_originLeft`/`_originTop` for subsequent drag operations
-- **Automatic position normalization**: views don't need explicit `top`/`left` properties. Views positioned with margins (`ml-`, `mr-`), `right`, or centered layout are automatically resolved using `view.rect` and normalized to `top`/`left` on first swap
-- **Bounce-back safe**: if either view has a bounce-back animation in progress when `swap` is called, it is completed immediately before starting the swap — prevents both views from overlapping at the same position
+- Automatic position normalization: views do not need explicit `top`/`left` properties. Views positioned with margins (`ml-`, `mr-`), `right`, or centered layout are resolved through `view.rect` and normalized to `top`/`left` on first swap
+- Bounce-back safety: if either view has a bounce-back animation in progress when `swap` is called, it completes before the swap starts. This prevents both views from overlapping at the same position
 
 ### Swap example
 
@@ -150,7 +150,7 @@ function doSwap() {
 }
 ```
 
-### Real-world use case: Memory card game
+### Real-world use case: memory card game
 
 Players tap two cards to flip them. If they don't match, swap them back:
 
@@ -171,7 +171,7 @@ function onCardTap({ source }) {
     // Match! Leave both revealed
     firstCard = null
   } else {
-    // No match — swap positions and flip back
+    // No match: swap positions and flip back
     $.gameAnim.swap(firstCard, card)
     setTimeout(() => {
       $.flipAnim.close([firstCard, card])
@@ -193,14 +193,14 @@ $.myAnimation.pulse(view, count)
 
 | Parameter | Type   | Default | Description       |
 | --------- | ------ | ------- | ----------------- |
-| `view`    | View   | —       | The view to pulse |
+| `view`    | View   | N/A     | The view to pulse |
 | `count`   | Number | `1`     | Number of pulses  |
 
 ### How it works
 
 - Scale value is inherited from the Animation object's `scale` class (e.g., `scale-(1.3)`). If not set, defaults to 1.2x
-- Uses `autoreverse: true` and `repeat: count` natively — no timers or callbacks needed
-- Duration is inherited from the Animation object — this is the time for one scale-up (the full cycle is double)
+- Uses `autoreverse: true` and `repeat: count` natively, with no timers or callbacks
+- Duration is inherited from the Animation object. This is the time for one scale-up; the full cycle takes twice as long
 - Always uses `EASE_IN_OUT` curve for natural motion
 - Resets transform to identity on completion
 
@@ -237,7 +237,7 @@ function doPulse3() {
 }
 ```
 
-### Real-world use case: Notification badge
+### Real-world use case: notification badge
 
 Pulse the badge when a new notification arrives:
 
@@ -261,15 +261,15 @@ $.myAnimation.shake(view, intensity)
 
 | Parameter   | Type   | Default | Description                       |
 | ----------- | ------ | ------- | --------------------------------- |
-| `view`      | View   | —       | The view to shake                 |
+| `view`      | View   | N/A     | The view to shake                 |
 | `intensity` | Number | `10`    | Horizontal displacement in pixels |
 
 ### Inherited properties
 
-- **`duration`**: inherited from the Animation object; divided by 6 internally for each shake cycle. Fallback: 400ms
-- **`delay`**: inherited from the Animation object; applied before the shake starts
-- **`curve`**: always uses `EASE_IN_OUT` internally (not inherited — required for natural shake motion)
-- **`autoreverse`** and **`repeat`**: always `true` and `3` internally (not inherited — required for the shake effect)
+- `duration`: inherited from the Animation object; divided by 6 internally for each shake cycle. Fallback: 400ms
+- `delay`: inherited from the Animation object; applied before the shake starts
+- `curve`: always uses `EASE_IN_OUT` internally. It is not inherited because the shake effect depends on that curve
+- `autoreverse` and `repeat`: always `true` and `3` internally. They are not inherited because the shake effect needs fixed values
 
 ### Shake example
 
@@ -287,7 +287,7 @@ $.myAnimation.shake($.errorLabel, 20)
 
 The view shakes left and right around its original position and returns to its starting point automatically.
 
-### Real-world use case: Login validation
+### Real-world use case: login validation
 
 Shake the input field when the user enters invalid credentials:
 
@@ -320,14 +320,14 @@ function doLogin() {
   if (!$.emailField.value) {
     $.errorAnim.shake($.emailField, 5)
     $.emailField.applyProperties({ borderColor: '#ef4444' })
-    $.status.applyProperties({ text: 'shake(emailField) — empty email' })
+    $.status.applyProperties({ text: 'shake(emailField) - empty email' })
     return
   }
 
   if (!$.passwordField.value) {
     $.errorAnim.shake($.passwordField, 5)
     $.passwordField.applyProperties({ borderColor: '#ef4444' })
-    $.status.applyProperties({ text: 'shake(passwordField) — empty password' })
+    $.status.applyProperties({ text: 'shake(passwordField) - empty password' })
     return
   }
 
@@ -335,7 +335,7 @@ function doLogin() {
 }
 ```
 
-`shake(view, 5)` — subtle 5px oscillation. The red border provides additional visual feedback. Leave fields empty and tap Sign In to see the effect.
+`shake(view, 5)` gives a subtle 5px oscillation. The red border adds visual feedback. Leave fields empty and tap Sign In to see the effect.
 
 ## The `snapTo` method
 
@@ -365,7 +365,7 @@ Returns the matched target view, or `null` if no targets are provided.
 - Animates the view to the target's position
 - Handles iOS transform reset automatically
 - Updates internal `_originLeft`/`_originTop` for subsequent drag operations
-- **Automatic position normalization**: target views don't need explicit `top`/`left` properties
+- Automatic position normalization: target views do not need explicit `top`/`left` properties
 
 ### SnapTo example
 
@@ -400,7 +400,7 @@ $.card.addEventListener('touchend', () => {
 })
 ```
 
-### Real-world use case: Puzzle game with collision detection
+### Real-world use case: puzzle game with collision detection
 
 Drag puzzle pieces onto their matching slots. Correct matches lock the piece in place:
 
@@ -435,11 +435,11 @@ $.puzzleAnim.detectCollisions(pieces.concat(slots),
   null,  // no dragCB needed
   function dropCB(source, target) {
     if (source.valor === target.valor) {
-      // Correct match — lock the piece
+      // Correct match: lock the piece
       $.puzzleAnim.undraggable(source)
       source.applyProperties({ opacity: 0.6 })
     }
-    // Wrong match — snap-back handles it automatically
+    // Wrong match: snap-back handles it automatically
   }
 )
 ```
@@ -465,15 +465,15 @@ $.myAnimation.reorder(views, newOrder)
 
 The `newOrder` array maps each view's current index to the position it should move to. For example, with three views:
 
-- `[2, 1, 0]` — reverses the order (first goes to last, last goes to first)
-- `[1, 2, 0]` — rotates all positions forward
-- `[0, 1, 2]` — no change
+- `[2, 1, 0]`: reverses the order; first goes to last, last goes to first
+- `[1, 2, 0]`: rotates all positions forward
+- `[0, 1, 2]`: no change
 
 The length of `newOrder` must match the length of `views`.
 
 Inherits `duration`, `delay`, and `curve` from the Animation object's classes. Falls back to 200ms, 0ms delay, and `EASE_IN_OUT` curve.
 
-**Automatic position normalization**: views don't need explicit `top`/`left` properties. Views positioned with margins or `right` are resolved via `view.rect` and normalized on first reorder.
+Automatic position normalization: views do not need explicit `top`/`left` properties. Views positioned with margins or `right` are resolved through `view.rect` and normalized on first reorder.
 
 ### Reorder example
 
@@ -512,9 +512,9 @@ function doReorder() {
 }
 ```
 
-### Real-world use case: Sort by priority
+### Real-world use case: sort by priority
 
-Let the user sort items by tapping a button — e.g., reorder tasks by priority:
+Let the user sort items by tapping a button. For example, reorder tasks by priority:
 
 `tasks.js`
 ```javascript
@@ -551,7 +551,7 @@ $.myAnimation.transition(views, layouts)
 | Parameter | Type       | Description                                                              |
 | --------- | ---------- | ------------------------------------------------------------------------ |
 | `views`   | View/Array | The view or array of views to animate                                    |
-| `layouts` | Array      | Array of layout objects — positional mapping (`layouts[i]` → `views[i]`) |
+| `layouts` | Array      | Array of layout objects; positional mapping (`layouts[i]` to `views[i]`) |
 
 ### Layout object properties
 
@@ -560,24 +560,24 @@ $.myAnimation.transition(views, layouts)
 | `translation` | Object | `{x:0, y:0}` | Translation offset `{x, y}` in pixels (matches TiDesigner format) |
 | `rotate`      | Number | `0`          | Rotation in degrees                                               |
 | `scale`       | Number | `1`          | Scale factor                                                      |
-| `zIndex`      | Number | —            | Applied synchronously before animation                            |
-| `width`       | Number | —            | Optional width change                                             |
-| `height`      | Number | —            | Optional height change                                            |
-| `opacity`     | Number | —            | Optional opacity change                                           |
+| `zIndex`      | Number | N/A          | Applied synchronously before animation                            |
+| `width`       | Number | N/A          | Optional width change                                             |
+| `height`      | Number | N/A          | Optional height change                                            |
+| `opacity`     | Number | N/A          | Optional opacity change                                           |
 
 ### How it works
 
 - Inherits `duration`, `delay`, and `curve` from the Animation object's classes
-- Each view gets a single `Ti.UI.createAnimation()` call with a combined `Matrix2D` transform — no concurrent animation conflicts on Android
+- Each view gets a single `Ti.UI.createAnimation()` call with a combined `Matrix2D` transform, avoiding concurrent animation conflicts on Android
 - All animations launch simultaneously (`forEach` without await)
 - The `transform` is persisted via `applyProperties` in the animation callback
 - `zIndex` is applied synchronously before the animation starts
 
 ### Mismatched lengths
 
-- **More views than layouts**: extra views automatically **fade out** (animated to `opacity: 0`)
-- **More layouts than views**: extra layout entries are ignored
-- When a faded-out view receives a layout entry again, it **fades back in** as part of the same animation (no separate animation call)
+- More views than layouts: extra views fade out with `opacity: 0`
+- More layouts than views: extra layout entries are ignored
+- When a faded-out view receives a layout entry again, it fades back in as part of the same animation, with no separate animation call
 
 ### Reusable presets
 
@@ -644,7 +644,7 @@ function doStack() { $.anim.transition(views, stack) }
 function doReset() { $.anim.transition(views, reset) }
 ```
 
-### Real-world use case: Photo gallery with layout presets
+### Real-world use case: photo gallery with layout presets
 
 A gallery where users switch between different viewing modes:
 
@@ -673,7 +673,7 @@ A gallery where users switch between different viewing modes:
 ```javascript
 const photos = [$.photo1, $.photo2, $.photo3]
 
-// Presets — same format as TiDesigner mockup layouts
+// Presets use the same format as TiDesigner mockup layouts
 const fan = [
   { zIndex: 3, translation: { x: 0, y: 0 }, rotate: 0, scale: 0.8 },
   { zIndex: 2, translation: { x: -63, y: 9 }, rotate: -5, scale: 0.6 },
@@ -696,7 +696,7 @@ function doFan() { $.galleryAnim.transition(photos, fan) }
 function doStack() { $.galleryAnim.transition(photos, stack) }
 function doShowcase() { $.galleryAnim.transition(photos, showcase) }
 
-// Enable drag — photos keep their rotation and scale while dragging
+// Enable drag. Photos keep their rotation and scale while dragging
 $.galleryAnim.draggable(photos)
 ```
 
@@ -704,7 +704,7 @@ $.galleryAnim.draggable(photos)
 
 ### Mac Catalyst note
 
-On Mac Catalyst, parent containers of transitioned views should use **fixed dimensions** (not `Ti.UI.FILL`). Resizable containers trigger a UIKit re-layout that distorts views with rotated `Matrix2D` transforms. This does not affect iOS or Android.
+On Mac Catalyst, parent containers of transitioned views should use fixed dimensions, not `Ti.UI.FILL`. Resizable containers trigger a UIKit re-layout that distorts views with rotated `Matrix2D` transforms. This does not affect iOS or Android.
 
 ---
 
@@ -726,17 +726,16 @@ The parsed properties (`duration: 150`, `delay: 100`, `curve: EASE_OUT`) are sto
 
 | Property      | `play` / `toggle` | `open` / `close` | `apply` | `sequence` | `swap` | `reorder` | `snapTo` | `shake` | `pulse` | `transition` |
 | ------------- | :---------------: | :--------------: | :-----: | :--------: | :----: | :-------: | :------: | :-----: | :-----: | :----------: |
-| `duration`    |         ✅         |        ✅         |    —    |     ✅      |   ✅    |     ✅     |    ✅     | ✅ (÷6)  |    ✅    |      ✅       |
-| `delay`       |         ✅         |        ✅         |    —    |     ✅      |   ✅    |     ✅     |    ✅     |    ✅    |    ✅    |      ✅       |
-| `curve`       |         ✅         |        ✅         |    —    |     ✅      |   ✅    |     ✅     |    ✅     |  fixed  |  fixed  |      ✅       |
-| `autoreverse` |         ✅         |        ✅         |    —    |     ✅      |   —    |     —     |    —     |  fixed  |  fixed  |      —       |
-| `repeat`      |         ✅         |        ✅         |    —    |     ✅      |   —    |     —     |    —     |  fixed  |  param  |      —       |
+| `duration`    | Yes | Yes | N/A | Yes | Yes | Yes | Yes | Yes, divided by 6 | Yes | Yes |
+| `delay`       | Yes | Yes | N/A | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
+| `curve`       | Yes | Yes | N/A | Yes | Yes | Yes | Yes | Fixed | Fixed | Yes |
+| `autoreverse` | Yes | Yes | N/A | Yes | N/A | N/A | N/A | Fixed | Fixed | N/A |
+| `repeat`      | Yes | Yes | N/A | Yes | N/A | N/A | N/A | Fixed | Parameter | N/A |
 
-- **✅** = inherited from the Animation object's classes
-- **—** = not applicable to this method
-- **fixed** = uses internal fixed values (`shake` always uses `autoreverse: true`, `repeat: 3`, `curve: EASE_IN_OUT`; `pulse` always uses `autoreverse: true`, `curve: EASE_IN_OUT`)
-- **param** = controlled by method parameter (`pulse` `count` sets the repeat value)
-- **(÷6)** = `shake` divides the inherited duration by 6 for each oscillation cycle
+- Yes means inherited from the Animation object's classes.
+- N/A means the property does not apply to this method.
+- Fixed means the method uses internal fixed values. `shake` always uses `autoreverse: true`, `repeat: 3`, and `curve: EASE_IN_OUT`; `pulse` always uses `autoreverse: true` and `curve: EASE_IN_OUT`.
+- Parameter means a method parameter controls the value. For `pulse`, `count` sets the repeat value.
 
 ### Fallback defaults
 

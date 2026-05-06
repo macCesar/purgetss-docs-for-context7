@@ -5,10 +5,10 @@
 > The `brand` command at a glance
 > `purgetss brand` generates launcher icons, adaptive icons, iOS 18+ Dark/Tinted variants, marketplace artwork, and optional notification/splash icons from one main SVG or PNG logo, with optional Android-specific overrides when you need them.
 > 
-> Works on **Alloy** and **Classic** projects. The layout is auto-detected.
+> Works on Alloy and Classic projects. The layout is detected automatically.
 
 
-This guide covers the full `brand` workflow: setting up `purgetss/brand/`, tuning padding for your logo, handling dark mode on iOS 18+ and Android 13+, and fixing the issues that usually show up after a rebuild.
+This guide covers the `brand` workflow: setting up `purgetss/brand/`, tuning padding for your logo, handling dark mode on iOS 18+ and Android 13+, and fixing common rebuild issues.
 
 For a terse reference of every flag, see the [`brand` command reference](../commands#brand-command).
 
@@ -44,27 +44,27 @@ PurgeTSS auto-discovers logo files under this folder, the same way `purgetss/fon
 `./purgetss/brand/`
 ```text
 purgetss/brand/
-├── logo.svg              required — main logo (or logo.png)
-├── logo-icon.svg         optional — square Android launcher mark
-├── logo-mono.svg         optional — monochrome layer + notifications
-├── logo-dark.svg         optional — iOS 18+ dark variant
-├── logo-splash.svg       optional — Android 12+ splash icon override
-└── logo-tinted.svg       optional — iOS 18+ tinted variant
+├── logo.svg              required - main logo (or logo.png)
+├── logo-icon.svg         optional - square Android launcher mark
+├── logo-mono.svg         optional - monochrome layer + notifications
+├── logo-dark.svg         optional - iOS 18+ dark variant
+├── logo-splash.svg       optional - Android 12+ splash icon override
+└── logo-tinted.svg       optional - iOS 18+ tinted variant
 ```
 
 Only `logo.svg` (or `logo.png`) is required. Everything else is optional:
 
-- **`logo-icon`**: a separate square mark for Android launcher icons. Use this when your main logo is a horizontal wordmark, a vertical lockup, or anything else that looks fine in a 1024×1024 branding canvas but feels cramped inside an Android launcher mask.
-- **`logo-splash`**: alternate artwork for Android 12+ `splash_icon.png`. Useful when the splash should use a different composition than the launcher icon. PurgeTSS generates the file, but Titanium still needs a custom Android splash theme if you want the system splash to use it instead of `ic_launcher`.
+- `logo-icon`: a separate square mark for Android launcher icons. Use this when your main logo is a horizontal wordmark, a vertical lockup, or anything else that looks fine in a 1024×1024 branding canvas but feels cramped inside an Android launcher mask.
+- `logo-splash`: alternate artwork for Android 12+ `splash_icon.png`. Use this when the splash should use a different composition than the launcher icon. PurgeTSS generates the file, but Titanium still needs a custom Android splash theme if you want the system splash to use it instead of `ic_launcher`.
 
-- **`logo-mono`**: silhouette used for the Android adaptive monochrome layer (themed icons on Android 13+) and for notification icons. When omitted, `brand` whitens the main logo automatically. Provide your own when the colored logo has detail that would collapse into a blob under naive whitening. A painter's palette with colored dots is a good example: the monochrome version should have cutouts instead.
-- **`logo-dark`**: alternate logo for iOS 18+ dark mode. When omitted, the dark variant comes from the main logo with a transparent background (Apple's recommended approach). Provide your own when dark-mode brand guidelines use a different lockup or color treatment.
-- **`logo-tinted`**: alternate logo for iOS 18+ tinted mode. When omitted, the tinted variant comes from a grayscale of the main logo. Provide your own when you want a pre-simplified silhouette that tints better than a naive grayscale of the colored version.
+- `logo-mono`: silhouette used for the Android adaptive monochrome layer (themed icons on Android 13+) and for notification icons. When omitted, `brand` whitens the main logo automatically. Provide your own when the colored logo has detail that would collapse under automatic whitening. A painter's palette with colored dots is a good example: the monochrome version should have cutouts instead.
+- `logo-dark`: alternate logo for iOS 18+ dark mode. When omitted, the dark variant comes from the main logo with a transparent background (Apple's recommended approach). Provide your own when dark-mode brand guidelines use a different lockup or color treatment.
+- `logo-tinted`: alternate logo for iOS 18+ tinted mode. When omitted, the tinted variant comes from a grayscale of the main logo. Provide your own when you want a simpler silhouette that tints better than a grayscale of the colored version.
 
 > 💡 **TIP**
 >
 > Prefer SVG for the master
-> SVG scales losslessly to every density Sharp needs to emit. A single `logo.svg` rasterizes perfectly at every `res-*dpi` output. PNG masters should be at least **1024×1024** to avoid upscaling artifacts.
+> SVG scales cleanly to every density Sharp needs to emit. A single `logo.svg` can be rasterized at every `res-*dpi` output. PNG masters should be at least 1024×1024 to avoid upscaling artifacts.
 
 
 ### Overriding auto-discovery
@@ -92,7 +92,7 @@ CLI flags override config values, and config values override auto-discovery.
 
 ## The `brand:` config section
 
-On the first run, `purgetss brand` injects a `brand:` block into your existing `purgetss/config.cjs` (between `purge:` and `theme:`) with these defaults:
+On the first run, `purgetss brand` adds a `brand:` block to your existing `purgetss/config.cjs` between `purge:` and `theme:`:
 
 `./purgetss/config.cjs`
 ```javascript
@@ -145,7 +145,7 @@ If `logo.svg` is a wide wordmark, leave it as the main brand source and set `log
 
 ## Brand config reference
 
-This is the complete reference for the `brand:` section in `purgetss/config.cjs`.
+This is the reference for the `brand:` section in `purgetss/config.cjs`.
 
 ### `brand.logos`
 
@@ -233,15 +233,15 @@ Properties:
 Continue? [y/N/a]
 ```
 
-- `y` / `yes` — write this time
-- `N` / `no` / `Enter` — abort (nothing is written)
-- `a` / `always` — write, then add `confirmOverwrites: false` to the `brand:` section of `config.cjs` so the prompt stays quiet on future runs
+- `y` / `yes`: write this time
+- `N` / `no` / `Enter`: abort without writing
+- `a` / `always`: write, then add `confirmOverwrites: false` to the `brand:` section of `config.cjs`
 
 The prompt is skipped automatically when:
 
-- `stdin` is not a TTY (the `alloy.jmk` hook, CI, a pipe)
-- you pass `-y` / `--yes` — one-shot bypass
-- `PURGETSS_YES=1` is set in the environment — lasts the whole shell session
+- `stdin` is not a TTY, such as the `alloy.jmk` hook, CI, or a pipe
+- you pass `-y` / `--yes`
+- `PURGETSS_YES=1` is set in the environment
 - `confirmOverwrites: false` is already in the `brand:` config
 
 ```bash
@@ -256,36 +256,36 @@ The output is automatically routed to the right directory for your project layou
 `Alloy layout`
 ```text
 <project>/
-├── DefaultIcon.png                 ← 1024×1024, universal fallback (Android-safe padding)
-├── DefaultIcon-ios.png             ← 1024×1024, iOS flattened on bgColor
-├── DefaultIcon-Dark.png            ← 1024×1024, iOS 18+ dark (transparent per Apple HIG)
-├── DefaultIcon-Tinted.png          ← 1024×1024, iOS 18+ tinted (grayscale on black)
-├── iTunesConnect.png               ← 1024×1024, App Store submission
-├── MarketplaceArtwork.png          ← 512×512, Google Play submission
+├── DefaultIcon.png                 <- 1024×1024, universal fallback (Android-safe padding)
+├── DefaultIcon-ios.png             <- 1024×1024, iOS flattened on bgColor
+├── DefaultIcon-Dark.png            <- 1024×1024, iOS 18+ dark (transparent per Apple HIG)
+├── DefaultIcon-Tinted.png          <- 1024×1024, iOS 18+ tinted (grayscale on black)
+├── iTunesConnect.png               <- 1024×1024, App Store submission
+├── MarketplaceArtwork.png          <- 512×512, Google Play submission
 └── app/
     └── assets/android/
-        ├── default.png             ← legacy Titanium Android splash fallback
+        ├── default.png             <- legacy Titanium Android splash fallback
         └── res/
-            ├── mipmap-mdpi/        ← 108×108 foreground + background + monochrome + legacy
-            ├── mipmap-hdpi/        ← 162×162
-            ├── mipmap-xhdpi/       ← 216×216
-            ├── mipmap-xxhdpi/      ← 324×324
-            ├── mipmap-xxxhdpi/     ← 432×432
-            ├── drawable-*/         ← optional splash_icon.png when --splash is enabled
+            ├── mipmap-mdpi/        <- 108×108 foreground + background + monochrome + legacy
+            ├── mipmap-hdpi/        <- 162×162
+            ├── mipmap-xhdpi/       <- 216×216
+            ├── mipmap-xxhdpi/      <- 324×324
+            ├── mipmap-xxxhdpi/     <- 432×432
+            ├── drawable-*/         <- optional splash_icon.png when --splash is enabled
             └── mipmap-anydpi-v26/
-                └── ic_launcher.xml ← adaptive-icon binder
+                └── ic_launcher.xml <- adaptive-icon binder
 ```
 
 `Classic layout`
 ```text
 <project>/
-├── DefaultIcon.png  DefaultIcon-ios.png  ...     ← same root-level files as Alloy
+├── DefaultIcon.png  DefaultIcon-ios.png  ...     <- same root-level files as Alloy
 ├── Resources/
-│   └── android/default.png         ← legacy Titanium Android splash fallback
+│   └── android/default.png         <- legacy Titanium Android splash fallback
 └── platform/
     └── android/res/
-        ├── mipmap-*/               ← same 5 densities as Alloy
-        ├── drawable-*/             ← optional splash_icon.png when --splash is enabled
+        ├── mipmap-*/               <- same 5 densities as Alloy
+        ├── drawable-*/             <- optional splash_icon.png when --splash is enabled
         └── mipmap-anydpi-v26/ic_launcher.xml
 ```
 
@@ -302,9 +302,9 @@ The Android outputs are related, but they are not interchangeable:
 > ℹ️ **INFO**
 >
 > No separate "dark icon" file on Android
-> Unlike iOS 18+, Android has no dedicated dark-mode icon file. Instead, Android 13+ uses the **monochrome layer** of the adaptive icon and tints it based on the user's wallpaper + theme.
+> Unlike iOS 18+, Android has no dedicated dark-mode icon file. Instead, Android 13+ uses the monochrome layer of the adaptive icon and tints it based on the user's wallpaper + theme.
 > 
-> The `brand` command generates `ic_launcher_monochrome.png` at every density by default — you don't need any extra flags to get themed icon support.
+> The `brand` command generates `ic_launcher_monochrome.png` at every density by default. You do not need extra flags for themed icon support.
 
 
 If you want to provide a dedicated silhouette (recommended for detailed logos):
@@ -354,12 +354,12 @@ That said, it is not the main modern splash strategy. If a project still depends
 
 ## iOS 18+ Dark and Tinted variants
 
-iOS 18 added two appearance variants on top of the standard app icon: **Dark** (for the dark appearance of the Home Screen) and **Tinted** (for the user-accent-colored mode).
+iOS 18 added two appearance variants on top of the standard app icon: Dark (for the dark appearance of the Home Screen) and Tinted (for the user-accent-colored mode).
 
 The `brand` command generates both by default:
 
-- **`DefaultIcon-Dark.png`**: 1024×1024, **transparent by default** per Apple HIG. The system paints its own dark gradient behind the icon at render time. Override with `--dark-bg-color <hex>` to bake in an opaque dark tint instead.
-- **`DefaultIcon-Tinted.png`**: 1024×1024, **grayscale on black (`#000000`)** per Apple HIG. iOS composites its own gradient background and multiplies the luminance by the user-selected accent color at render time.
+- `DefaultIcon-Dark.png`: 1024×1024, transparent by default per Apple HIG. The system paints its own dark gradient behind the icon at render time. Override with `--dark-bg-color <hex>` to bake in an opaque dark tint instead.
+- `DefaultIcon-Tinted.png`: 1024×1024, grayscale on black (`#000000`) per Apple HIG. iOS composites its own gradient background and multiplies the luminance by the user-selected accent color at render time.
 
 ### Skipping Dark or Tinted
 
@@ -371,17 +371,17 @@ The `brand` command generates both by default:
 
 ### Titanium SDK wiring status
 
-As of April 2026, Titanium SDK picks up `DefaultIcon-ios.png` automatically but does **not** yet wire `DefaultIcon-Dark.png` / `DefaultIcon-Tinted.png` into the generated iOS appiconset. Upstream tracking: [tidev/titanium-sdk#14122](https://github.com/tidev/titanium-sdk/issues/14122).
+As of April 2026, Titanium SDK picks up `DefaultIcon-ios.png` automatically but does not yet wire `DefaultIcon-Dark.png` / `DefaultIcon-Tinted.png` into the generated iOS appiconset. Upstream tracking: [tidev/titanium-sdk#14122](https://github.com/tidev/titanium-sdk/issues/14122).
 
 Until that PR lands, after your first iOS build you may need to add the two PNGs manually into `build/iphone/Assets.xcassets/AppIcon.appiconset/` in Xcode (via the "Appearance" column in the asset catalog editor). Once #14122 merges, the command becomes fully end-to-end.
 
 ## Brand color
 
-The `--bg-color` flag (or `brand.colors.background` in config) controls three things at once:
+The `--bg-color` flag (or `brand.colors.background` in config) controls three outputs:
 
-1. The **Android adaptive background layer**: a solid color that fills the full 108dp canvas behind your logo.
-2. The **iOS alpha flatten** for `DefaultIcon-ios.png`. Apple rejects transparent App Store icons, so the logo is flattened on this color.
-3. The **marketplace flatten** for `iTunesConnect.png` and `MarketplaceArtwork.png` when you pass a non-default value explicitly.
+1. The Android adaptive background layer: a solid color that fills the full 108dp canvas behind your logo.
+2. The iOS alpha flatten for `DefaultIcon-ios.png`. Apple rejects transparent App Store icons, so the logo is flattened on this color.
+3. The marketplace flatten for `iTunesConnect.png` and `MarketplaceArtwork.png` when you pass a non-default value explicitly.
 
 ```bash
 > purgetss brand --bg-color "#0B1326"
@@ -395,7 +395,7 @@ PurgeTSS now treats Android adaptive and Android legacy launcher icons as two re
 
 - `brand.padding.androidAdaptive` or `--android-adaptive-padding` for the adaptive foreground
 - `brand.padding.androidLegacy` or `--android-legacy-padding` for `ic_launcher.png`
-- `--padding` as a one-shot shortcut when you want both Android paddings to match for a single run
+- `--padding` as a shortcut when you want both Android paddings to match for a single run
 
 The adaptive default is `19%`, which stays close to the Android safe-zone. The legacy default is `10%`, so the flat `ic_launcher.png` can keep a little more visual weight.
 
@@ -405,7 +405,7 @@ The adaptive default is `19%`, which stays close to the Android safe-zone. The l
 | ------- | --------- | --------------------------------------------------------------------------------- |
 | `15%`   | 70%       | Aggressive. Better for square symbols with lots of built-in breathing room.       |
 | `18%`   | 64%       | Defensive: for intricate logos, fine serifs, multi-element designs.               |
-| `19%`   | 62%       | **Default**. Close to the Android safe-zone and safer for adaptive masks.         |
+| `19%`   | 62%       | Default. Close to the Android safe-zone and safer for adaptive masks.            |
 | `20%`   | 60%       | Conservative, spec-compliant. Safe on every launcher, including aggressive masks. |
 
 A useful visual check is the "corners" heuristic: imagine a circle inscribed in your 1024×1024 canvas with the given padding. If your logo's outermost corners fit inside that circle, you're safe on circular launchers (Pixel default, Oppo Android 15). If they poke out, they'll be clipped.
@@ -418,7 +418,7 @@ Legacy `ic_launcher.png` does not go through the same adaptive mask, so it can u
 
 ## Cleanup legacy branding artifacts
 
-Projects that predate Android adaptive icons (API 26+) or modern iOS launch storyboards often accumulate obsolete assets: `res-long-*/res-notlong-*` qualifiers dead since Android 3.0, legacy `Default-*.png` launch images ignored when the storyboard is enabled, pre-adaptive `appicon.png`, and so on.
+Projects that predate Android adaptive icons (API 26+) or modern iOS launch storyboards often accumulate obsolete assets: `res-long-*/res-notlong-*` qualifiers dead since Android 3.0, legacy `Default-*.png` launch images ignored when the storyboard is enabled, pre-adaptive `appicon.png`, and similar files.
 
 The `--cleanup-legacy` flag removes them with context-aware safety rules: it reads `tiapp.xml` to decide what is actually safe to delete for your project. Always preview first:
 
@@ -444,7 +444,7 @@ Add `--aggressive` to also remove `ldpi` density folders (less than 1% of active
 > `--cleanup-legacy` deletes files permanently. Commit your project to git before running without `--dry-run` so `git restore` is available as a rollback.
 
 
-What it keeps on purpose:
+Files kept on purpose:
 
 - `app/assets/android/default.png` in Alloy projects
 - `Resources/android/default.png` in Classic projects
@@ -481,7 +481,7 @@ Adaptive padding is probably too generous. Lower it:
 
 ### The monochrome version looks like a white blob
 
-Your colored logo likely has multi-color detail that doesn't survive a naive whitening. Provide a dedicated silhouette:
+Your colored logo likely has multi-color detail that does not survive automatic whitening. Provide a dedicated silhouette:
 
 ```bash
 > cp docs/my-logo-mono.svg purgetss/brand/logo-mono.svg
@@ -490,7 +490,7 @@ Your colored logo likely has multi-color detail that doesn't survive a naive whi
 
 ### iOS rejects the app icon upload ("contains transparency")
 
-That's Apple's rule: App Store icons must have no alpha channel. `DefaultIcon-ios.png` is always flattened on `bgColor` for that reason. If you edited the file manually and reintroduced alpha, re-run `purgetss brand` to regenerate.
+Apple requires App Store icons to have no alpha channel. `DefaultIcon-ios.png` is always flattened on `bgColor` for that reason. If you edited the file manually and reintroduced alpha, re-run `purgetss brand`.
 
 ### The dark variant doesn't show on my iPhone
 
@@ -498,13 +498,13 @@ Dark variants require iOS 18+ and Titanium SDK automatic wiring (tracked upstrea
 
 ### I get "Input image exceeds pixel limit" on an SVG from Affinity / Illustrator
 
-Affinity Designer and Adobe Illustrator often bake transforms into the exported SVG's `viewBox`, so the intrinsic dimensions end up at something absurd like `29559×13542 pt`. Rasterized at 1× density, that blows past Sharp's pixel limit and the command crashes.
+Affinity Designer and Adobe Illustrator often bake transforms into the exported SVG's `viewBox`, so the intrinsic dimensions can end up at something like `29559×13542 pt`. Rasterized at 1× density, that exceeds Sharp's pixel limit and the command crashes.
 
 PurgeTSS checks the `viewBox` on every SVG. When either side is over 4096 pt, it prints a warning with the actual dimensions and switches to an adaptive density that caps the output pixel count regardless of input size. The warning tells you the source is oversized; the command still finishes.
 
 If you want to clean up the source, re-export from the vector editor with a canvas-sized viewBox (`0 0 1024 1024`, for example). The rasterized output is identical either way, but a normalized viewBox keeps the SVG portable for other tools.
 
-### I changed my bg color — do I need to regenerate the Android densities too?
+### I changed my bg color. Do I need to regenerate the Android densities too?
 
 Yes. `bgColor` bakes into every Android background layer and the iOS flatten. Re-run:
 

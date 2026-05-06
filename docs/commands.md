@@ -2,7 +2,7 @@
 
 > ℹ️ **INFO**
 >
-> Latest changes
+> Changelog
 > 
 > For the latest changes and release notes, see the [CHANGELOG](https://github.com/macCesar/purgetss/blob/main/CHANGELOG.md).
 
@@ -12,7 +12,7 @@ This page lists the commands available in PurgeTSS.
 ## Setup commands
 - `init`: Initializes PurgeTSS on an existing Alloy project.
 - `create`: Creates a new Alloy project with PurgeTSS already set up.
-- `brand`: Generates the Titanium branding set (launcher icons, adaptive icons, iOS 18+ Dark/Tinted, marketplace artwork, optional Android splash assets) from one main logo, with optional Android-specific logo overrides when you need them.
+- `brand`: Generates the Titanium branding set from one main logo: launcher icons, adaptive icons, iOS 18+ Dark/Tinted variants, marketplace artwork, and optional Android splash assets. Android-specific logo overrides are available when needed.
 - `images`: Generates multi-density UI images (Android `res-*` densities, iPhone `@1x`/`@2x`/`@3x` scales) from sources in `./purgetss/images/`. Works on both Alloy and Classic projects.
 
 ## Development commands
@@ -25,7 +25,7 @@ This page lists the commands available in PurgeTSS.
 
 ## Utility commands
 - `shades`: Generates shades and tints for a color and writes the palette to `config.cjs`.
-- `semantic`: Generates Titanium semantic colors (Light/Dark mode) into `app/assets/semantic.colors.json`. Two modes: tonal palette (one base hex → 11 shades with mirror inversion) and single purpose-based color (explicit light + dark + optional alpha).
+- `semantic`: Generates Titanium semantic colors (Light/Dark mode) into `app/assets/semantic.colors.json`. It supports tonal palettes (one base hex -> 11 shades with mirror inversion) and single purpose-based colors (explicit light + dark + optional alpha).
 - `color-module`: Creates `./app/lib/purgetss.colors.js` with the colors defined in `config.cjs`.
 - `module`: Installs `purgetss.ui.js` in the `lib` folder.
 
@@ -130,7 +130,7 @@ If a project with the same name already exists, the command will prompt you to c
 
 ### Requirements
 
-Ensure that `app.idprefix` and `app.workspace` are configured in Titanium's `config.json`.
+Make sure `app.idprefix` and `app.workspace` are configured in Titanium's `config.json`.
 
 ```bash
 # A name in reverse domain name format.
@@ -159,7 +159,7 @@ Adds linting and editor support to an existing project.
 > purgetss c 'Name of the Project' [-d]
 ```
 
-This option installs ESLint for code quality, Tailwind CSS for utility classes, and setup files for Visual Studio Code (VSCode).
+This option installs ESLint, Tailwind CSS, and setup files for Visual Studio Code (VSCode).
 
 Recommended VSCode extensions:
 
@@ -189,12 +189,12 @@ Running `purgetss create "Name of the Project" [--dependencies --vendor=fa,mi,ms
 
 ## `brand` command
 
-Generates the Titanium branding set (launcher icons, adaptive icons, iOS 18+ Dark/Tinted variants, marketplace artwork, optional notification/splash icons) from a main logo image. If you need it, you can also provide separate Android artwork for the launcher icon and the Android 12+ splash icon. Alloy and Classic projects are auto-detected.
+Generates the Titanium branding set from a main logo image: launcher icons, adaptive icons, iOS 18+ Dark/Tinted variants, marketplace artwork, and optional notification/splash icons. You can also provide separate Android artwork for the launcher icon and the Android 12+ splash icon. Alloy and Classic projects are detected automatically.
 
 > 💡 **TIP**
 >
 > Full guide
-> This is a quick reference. See [**App icons and branding**](app-assets/app-icons-and-branding) for the complete guide: workflow, padding guidance, Android dark mode, iOS 18+ variants, and troubleshooting.
+> This is a quick reference. See [App icons and branding](app-assets/app-icons-and-branding) for the full guide: workflow, padding guidance, Android dark mode, iOS 18+ variants, and troubleshooting.
 > It also includes the full `brand:` config reference.
 
 
@@ -222,47 +222,47 @@ module.exports = {
 
 ### Options
 
-**Project & output**
+Project and output
 
-- `--project <path>` — project root (defaults to cwd).
-- `--dry-run` — preview what would be generated without writing any files.
-- `--output <dir>` — stage into `<dir>` instead of writing in place.
-- `-y, --yes` — skip the overwrite confirmation prompt for this invocation.
+- `--project <path>`: project root (defaults to cwd).
+- `--dry-run`: preview what would be generated without writing any files.
+- `--output <dir>`: stage into `<dir>` instead of writing in place.
+- `-y, --yes`: skip the overwrite confirmation prompt for this invocation.
 
-**Visual customization**
+Visual customization
 
-- `--bg-color <hex>` — background color for Android adaptive + iOS/marketplace flatten.
-- `--padding <n>` — shortcut: sets both Android paddings to the same value for one run.
-- `--android-adaptive-padding <n>` — adaptive icon safe-zone % (default `19`).
-- `--android-legacy-padding <n>` — legacy `ic_launcher.png` padding % (default `10`).
-- `--ios-padding <n>` — iOS aesthetic padding % (range `2-8`, default `4`).
+- `--bg-color <hex>`: background color for Android adaptive + iOS/marketplace flatten.
+- `--padding <n>`: shortcut that sets both Android paddings to the same value for one run.
+- `--android-adaptive-padding <n>`: adaptive icon safe-zone % (default `19`).
+- `--android-legacy-padding <n>`: legacy `ic_launcher.png` padding % (default `10`).
+- `--ios-padding <n>`: iOS aesthetic padding % (range `2-8`, default `4`).
 
-**Optional asset types**
+Optional asset types
 
-- `--notification` — also emit `ic_stat_notify.png × 5`.
-- `--splash` — also emit `splash_icon.png × 5`.
+- `--notification`: also emit `ic_stat_notify.png × 5`.
+- `--splash`: also emit `splash_icon.png × 5`.
 
-**Logo variants & overrides**
+Logo variants and overrides
 
-- `--icon-logo <path>` — override `purgetss/brand/logo-icon.{svg,png}` for Android launcher icons.
-- `--monochrome-logo <path>` — override `purgetss/brand/logo-mono.{svg,png}`.
-- `--dark-logo <path>` — override `purgetss/brand/logo-dark.{svg,png}`.
-- `--dark-bg-color <hex>` — opaque dark bg for `DefaultIcon-Dark.png` (default: transparent per Apple HIG).
-- `--splash-logo <path>` — override `purgetss/brand/logo-splash.{svg,png}` for Android 12+ splash artwork.
-- `--tinted-logo <path>` — override `purgetss/brand/logo-tinted.{svg,png}`.
+- `--icon-logo <path>`: override `purgetss/brand/logo-icon.{svg,png}` for Android launcher icons.
+- `--monochrome-logo <path>`: override `purgetss/brand/logo-mono.{svg,png}`.
+- `--dark-logo <path>`: override `purgetss/brand/logo-dark.{svg,png}`.
+- `--dark-bg-color <hex>`: opaque dark bg for `DefaultIcon-Dark.png` (default: transparent per Apple HIG).
+- `--splash-logo <path>`: override `purgetss/brand/logo-splash.{svg,png}` for Android 12+ splash artwork.
+- `--tinted-logo <path>`: override `purgetss/brand/logo-tinted.{svg,png}`.
 
-- `--no-dark` — skip `DefaultIcon-Dark.png`.
-- `--no-tinted` — skip `DefaultIcon-Tinted.png`.
+- `--no-dark`: skip `DefaultIcon-Dark.png`.
+- `--no-tinted`: skip `DefaultIcon-Tinted.png`.
 
-**Legacy cleanup**
+Legacy cleanup
 
-- `--cleanup-legacy` — remove obsolete branding artifacts (reads `tiapp.xml` for safety rules).
-- `--aggressive` — with `--cleanup-legacy`, also remove `ldpi` density folders.
+- `--cleanup-legacy`: remove obsolete branding artifacts (reads `tiapp.xml` for safety rules).
+- `--aggressive`: with `--cleanup-legacy`, also remove `ldpi` density folders.
 
-**Diagnostics**
+Diagnostics
 
-- `--notes` — print full `tiapp.xml` snippets + padding tuning guide.
-- `--debug` — print extra diagnostics.
+- `--notes`: print full `tiapp.xml` snippets + padding tuning guide.
+- `--debug`: print extra diagnostics.
 
 > ℹ️ **INFO**
 >
@@ -289,7 +289,7 @@ module.exports = {
 - `splash_icon.png` when you pass `--splash` and want custom Android 12+ splash artwork
 - `default.png` as the older Titanium Android splash fallback
 
-The recommended workflow is still convention-first:
+The recommended workflow is convention-first:
 
 - put your files in `purgetss/brand/`
 - let auto-discovery pick them up
@@ -299,12 +299,12 @@ The recommended workflow is still convention-first:
 
 ## `images` command
 
-Generates multi-density variants of your UI images (buttons, illustrations, logos, screen graphics) from a single high-resolution source per image. Alloy and Classic projects are auto-detected.
+Generates multi-density variants of your UI images from one high-resolution source per image. That includes buttons, illustrations, logos, and screen graphics. Alloy and Classic projects are detected automatically.
 
 > 💡 **TIP**
 >
 > Full guide
-> This is a quick reference. See [**Multi-density images**](app-assets/multi-density-images) for the complete guide — 4× source convention, re-processing single files, format conversion, and troubleshooting.
+> This is a quick reference. See [Multi-density images](app-assets/multi-density-images) for the full guide: 4× source convention, single-file regeneration, format conversion, and troubleshooting.
 
 
 ```bash
@@ -313,29 +313,33 @@ Generates multi-density variants of your UI images (buttons, illustrations, logo
 
 ### Options
 
-**Source selection**
+Source selection
 
-- `[source]` (positional) — optional path to override auto-discovery. Resolves first against `purgetss/images/` (short paths like `buttons/btn.png`), then against cwd.
+- `[source]` (positional): optional path to override auto-discovery. Resolves first against `purgetss/images/` (short paths like `buttons/btn.png`), then against cwd.
 
-**Platform filter**
+Platform filter
 
-- `--android` — only Android density variants. Mutually exclusive with `--ios`.
-- `--ios` — only iPhone scale variants. Mutually exclusive with `--android`.
+- `--android`: only Android density variants. Mutually exclusive with `--ios`.
+- `--ios`: only iPhone scale variants. Mutually exclusive with `--android`.
 
-**Output format**
+Output format
 
-- `--format <ext>` — convert all outputs to: `webp`, `jpeg`, `png`, `avif`, `gif`, `tiff`. Default: keep source format.
-- `--quality <n>` — quality `0-100` for lossy formats. Default `85`.
+- `--format <ext>`: convert all outputs to `webp`, `jpeg`, `png`, `avif`, `gif`, or `tiff`. Default: keep source format.
+- `--quality <n>`: quality `0-100` for lossy formats. Default `85`.
 
-**Project & output**
+Sizing
 
-- `--dry-run` — preview without writing any files.
-- `--project <path>` — project root (defaults to cwd).
-- `-y, --yes` — skip the overwrite confirmation prompt for this invocation.
+- `--width <n>`: pin Android `mdpi` (= iPhone `@1x`) to `<n>` pixels wide. Larger scales derive as ×1.5, ×2, ×3, ×4 from that base; height stays proportional to the source's aspect ratio. Accepts integers in `[1, 8192]`. Use it for SVG sources from vector editors with disproportionate viewBoxes, such as Affinity or Illustrator. Without it, every scale derives from the source's natural pixel size as a 4× master, which can produce unexpected output when the viewBox does not match the intended display size.
 
-**Diagnostics**
+Project and output
 
-- `--debug` — print extra diagnostics.
+- `--dry-run`: preview without writing any files.
+- `--project <path>`: project root (defaults to cwd).
+- `-y, --yes`: skip the overwrite confirmation prompt for this invocation.
+
+Diagnostics
+
+- `--debug`: print extra diagnostics.
 
 ### Examples
 
@@ -345,6 +349,7 @@ Generates multi-density variants of your UI images (buttons, illustrations, logo
 > purgetss images background/                            # re-process one subfolder
 > purgetss images --android                              # only Android densities
 > purgetss images --format webp --quality 90             # convert all outputs to WebP
+> purgetss images logo.svg --width 256                   # pin SVG output to 256 px @1x/mdpi
 > purgetss images --dry-run                              # preview
 ```
 
@@ -357,7 +362,7 @@ Generates multi-density variants of your UI images (buttons, illustrations, logo
 
 ## `install-dependencies` command
 
-This command installs dev dependencies and configuration files in an existing PurgeTSS project, and sets up Visual Studio Code (VSCode) support.
+This command installs dev dependencies and configuration files in an existing PurgeTSS project. It also sets up Visual Studio Code (VSCode) support.
 
 ```bash
 > purgetss install-dependencies
@@ -376,7 +381,7 @@ This command installs dev dependencies and configuration files in an existing Pu
 
 ## `icon-library` command
 
-The `icon-library` command copies the free font files for Font Awesome, Material Icons, Material Symbols, and/or Framework7 Icons into `./app/assets/fonts`.
+The `icon-library` command copies the free font files for Font Awesome, Material Icons, Material Symbols, and Framework7 Icons into `./app/assets/fonts`.
 
 ```bash
 > purgetss icon-library [--vendor=fa,mi,ms,f7] [--module] [--styles]
@@ -385,11 +390,11 @@ The `icon-library` command copies the free font files for Font Awesome, Material
 > purgetss il [-v=fa,mi,ms,f7] [-m] [-s]
 ```
 
-### Options and Flags
+### Options and flags
 
-  - `-v, --vendor [fa,mi,ms,f7]` to copy specific font vendors
-  - `-m, --module` to copy the corresponding CommonJS module into the `./app/lib/` folder
-  - `-s, --styles` to copy the corresponding `tss` files into the `./purgetss/styles/` folder for your review
+- `-v, --vendor [fa,mi,ms,f7]`: copy specific font vendors.
+- `-m, --module`: copy the corresponding CommonJS module into `./app/lib/`.
+- `-s, --styles`: copy the corresponding `tss` files into `./purgetss/styles/` for review.
 
 `./app/assets/fonts/`
 ```bash
@@ -407,7 +412,7 @@ MaterialSymbolsRounded-Regular.ttf
 MaterialSymbolsSharp-Regular.ttf
 ```
 
-After copying the fonts, you can use them in Buttons and Labels. For Font Awesome, for example, set the font family to `fa` (Solid icons) and use a class like `fa-home`.
+After copying the fonts, you can use them in Buttons and Labels. For Font Awesome, set the font family to `fa` (Solid icons) and use a class like `fa-home`.
 
 ### Available font classes
 
@@ -435,7 +440,7 @@ Available names and aliases:
 
 ### CommonJS module
 
-You can use the `--module` option to copy the corresponding CommonJS module into the `./app/lib/` folder.
+Use `--module` to copy the corresponding CommonJS module into `./app/lib/`.
 
 ```bash
 > purgetss icon-library --module [--vendor="fontawesome, materialicons, materialsymbols, framework7"]
@@ -457,7 +462,7 @@ All prefixes are stripped from their class names and camel-cased. For example:
 
 If you have a [Font Awesome Pro account](https://fontawesome.com/pro), you can generate a custom `./purgetss/styles/fontawesome.tss` file with the Pro-only classes (except duotone icons; see note below).
 
-After setting the [@fortawesome scope](https://fontawesome.com/how-to-use/on-the-web/setup/using-package-managers#installing-pro) with your token, install it in your project's root folder using `npm init` and `npm install --save-dev @fortawesome/fontawesome-pro` (current version 7.1.0).
+After setting the [@fortawesome scope](https://fontawesome.com/how-to-use/on-the-web/setup/using-package-managers#installing-pro) with your token, install it in your project's root folder with `npm init` and `npm install --save-dev @fortawesome/fontawesome-pro` (current version 7.1.0).
 
 To generate a new `purgetss/styles/fontawesome.tss`, run `purgetss build`. It also copies the Pro font files into `./app/assets/fonts` if needed.
 
@@ -488,7 +493,7 @@ Then run `purgetss build` to generate your custom `fontawesome.tss` file and tes
 
 ### Font example file
 
-To use this file, follow these steps:
+To use this file:
 
 - Copy the content of `index.xml` into a new Alloy project.
 - Install the official icon font files using `purgetss icon-library`.
@@ -653,12 +658,10 @@ purgetss
       └─ DancingScript-SemiBold.ttf
 ```
 
-Subfolders don't change the output -- you get the same `fonts.tss` as the flat layout above.
+Subfolders do not change the output. You get the same `fonts.tss` as the flat layout above.
 
 > 💡 **TIP**
 >
-> Tip
-> 
 > ### Renaming `fontFamily` classes
 > 
 > To use a shorter or different class name, rename the font file.
@@ -749,9 +752,9 @@ purgetss
 - `-m, --module`: Generate a CommonJS module in `./app/lib/`.
 - `-f, --filename`: Use filenames as both font class names and icon prefixes (replaces the old `-p` flag).
 
-### CommonJS Module
+### CommonJS module
 
-You can use the `--module` option to generate a CommonJS module called `purgetss-fonts.js` in `./app/lib/`.
+Use `--module` to generate a CommonJS module called `purgetss-fonts.js` in `./app/lib/`.
 
 To avoid conflicts with other icon libraries, PurgeTSS keeps each icon's prefix.
 
@@ -795,11 +798,9 @@ exports.families = families;
 
 > 💡 **TIP**
 >
-> Tip
-> 
 > ### Using filenames for class names and icon prefixes
 > 
-> The `--filename` option uses the style's filename as both the font class name and the icon prefix in `fonts.tss` and `purgetss.fonts.js`.
+> The `--filename` option uses the style filename as both the font class name and the icon prefix in `fonts.tss` and `purgetss.fonts.js`.
 > 
 > `./purgetss/fonts/`
 ```bash
@@ -884,8 +885,8 @@ The `shades` command generates shades and tints for a given color and writes the
 
 ### Arguments
 
-- `[hexcode]`: The base hexcode value. *Omit this to create a random color.*
-- `[name]`: The name of the color. *Omit this, and a name based on the color's hue will be automatically selected.*
+- `[hexcode]`: the base hexcode value. Omit this to create a random color.
+- `[name]`: the color name. Omit this and PurgeTSS chooses a name based on the color's hue.
 
 ### Options
 
@@ -900,12 +901,12 @@ The `shades` command generates shades and tints for a given color and writes the
 > 💡 **TIP**
 >
 > Need Titanium semantic colors (Light/Dark mode)?
-> Use the dedicated [`semantic` command](#semantic-command) — it writes to `app/assets/semantic.colors.json` and generates either an 11-step tonal palette (with mirror inversion) or a single purpose-based color with explicit per-mode hex and optional alpha.
+> Use the dedicated [`semantic` command](#semantic-command). It writes to `app/assets/semantic.colors.json` and generates either an 11-step tonal palette with mirror inversion or a single purpose-based color with explicit per-mode hex and optional alpha.
 
 
 > ℹ️ **INFO**
 >
-> More than 66% of `utilities.tss` classes are tied to color properties, so `shades` is a practical way to extend your palette.
+> More than 66% of `utilities.tss` classes are tied to color properties, so `shades` is a practical way to extend a palette.
 
 
 Basic usage:
@@ -1058,13 +1059,13 @@ To print a Titanium `config.json`-compatible structure to the console, use `--js
 
 > ℹ️ **INFO**
 >
-> `shades` was the first command that wrote to `config.cjs`. If you run into issues, please report them.
+> `shades` was the first command that wrote to `config.cjs`. Please report any issues you run into.
 
 
 
 ## `semantic` command
 
-The `semantic` command generates [Titanium semantic colors](best-practices/semantic-colors) into `app/assets/semantic.colors.json`, with Light/Dark mode support built in. It has two modes, switched by `--single`.
+The `semantic` command generates [Titanium semantic colors](best-practices/semantic-colors) into `app/assets/semantic.colors.json`, with Light/Dark mode support built in. Use `--single` to switch modes.
 
 ```bash
 > purgetss semantic [hexcode] [name]
@@ -1072,7 +1073,7 @@ The `semantic` command generates [Titanium semantic colors](best-practices/seman
 
 ### Palette mode (no `--single`)
 
-One base hex becomes an 11-shade tonal palette with **mirror-by-index Light/Dark inversion** anchored at shade `500`. The command writes both files in one step: the JSON gets 11 entries, and `config.cjs` gets the family mapped to those semantic keys.
+One base hex becomes an 11-shade tonal palette with mirror-by-index Light/Dark inversion anchored at shade `500`. The command writes both files in one step: the JSON gets 11 entries, and `config.cjs` gets the family mapped to those semantic keys.
 
 ```bash
 > purgetss semantic '#15803d' amazon
@@ -1110,7 +1111,7 @@ Classes like `bg-amazon-50`, `text-amazon-500`, `border-amazon-950` flip tonal c
 
 ### Single mode (`--single`)
 
-This mode uses explicit per-mode hex values for **purpose-based** semantic colors such as `surfaceColor`, `textColor`, `borderColor`, or `overlayColor`. It writes the JSON entry **and** auto-maps it to a class in `config.cjs` by stripping the conventional `Color` suffix.
+This mode uses explicit per-mode hex values for purpose-based semantic colors such as `surfaceColor`, `textColor`, `borderColor`, or `overlayColor`. It writes the JSON entry and maps it to a class in `config.cjs` by stripping the conventional `Color` suffix.
 
 ```bash
 > purgetss semantic --single '#F9FAFB' surfaceColor       --dark '#0f172a'
@@ -1120,7 +1121,7 @@ This mode uses explicit per-mode hex values for **purpose-based** semantic color
 > purgetss semantic --single '#000000' overlayColor       --alpha 50
 ```
 
-The name is preserved verbatim as the JSON key, including camelCase. When `--dark` is omitted, it defaults to the light hex. That is useful for overlays or glass surfaces where alpha is the only variation. Each command logs the mapping it wrote so you can spot it quickly:
+The name is preserved verbatim as the JSON key, including camelCase. When `--dark` is omitted, it defaults to the light hex. That is useful for overlays or glass surfaces where alpha is the only variation. Each command logs the mapping it wrote:
 
 ```text
 ::PurgeTSS:: "surfaceColor" saved to app/assets/semantic.colors.json and mapped to class surface in config.cjs.
@@ -1180,23 +1181,23 @@ theme: {
 }
 ```
 
-The next `purgetss build` will pick up the renamed classes. Editing one line is faster than typing the whole mapping from scratch.
+The next `purgetss build` will pick up the renamed classes. Editing one line is usually faster than typing the whole mapping from scratch.
 
 ### Smart in-place updates
 
-If a `--single` name matches an existing palette shade, for example `pt semantic --single '#000' amazon500` while palette `amazon` already exists, PurgeTSS narrows the operation to an in-place JSON value edit. The entry stays in its original position, and `config.cjs` is left untouched because the palette already maps to that key.
+If a `--single` name matches an existing palette shade, PurgeTSS narrows the operation to an in-place JSON value edit. For example, `pt semantic --single '#000' amazon500` edits `amazon500` when the `amazon` palette already exists. The entry stays in its original position, and `config.cjs` is left untouched because the palette already maps to that key.
 
 ```bash
 > purgetss semantic --single '#ff0000' amazon500 --alpha 80
 
-::PurgeTSS:: amazon500 updated in app/assets/semantic.colors.json — palette amazon already references this key, config.cjs left unchanged.
+::PurgeTSS:: amazon500 updated in app/assets/semantic.colors.json - palette amazon already references this key, config.cjs left unchanged.
 ```
 
 That is the right behavior: you are editing one shade of an existing palette, not creating a new top-level color called `amazon500`.
 
 ### Re-running replaces the family
 
-Re-running on the same family fully replaces it. Before writing, PurgeTSS strips every prior key that belonged to that family, the bare name plus the 11 shade keys, and then writes the new entries. Unrelated palettes and manually-defined entries such as `textSecondaryColor` stay untouched. Switching a family between palette and single forms works cleanly, with no stale keys left behind.
+Re-running on the same family replaces it. Before writing, PurgeTSS strips every prior key that belonged to that family, including the bare name and the 11 shade keys, then writes the new entries. Unrelated palettes and manually-defined entries such as `textSecondaryColor` stay untouched. Switching a family between palette and single forms does not leave stale keys behind.
 
 ### Options
 
@@ -1204,7 +1205,7 @@ Re-running on the same family fully replaces it. Before writing, PurgeTSS strips
 - `-d, --dark <hex>`: With `--single`, the dark-mode hex (defaults to the light value).
 - `-a, --alpha <0-100>`: With `--single`, wraps both modes in `{ color, alpha }` per the Titanium spec. Range `0.0–100.0`, integer or float.
 - `-n, --name <name>`: Specify the name (alternative to the positional argument).
-- `-r, --random`: Palette mode — use a random base color.
+- `-r, --random`: In palette mode, use a random base color.
 - `-o, --override`: Place the mapping in `theme.colors` instead of `theme.extend.colors`.
 - `-q, --quotes`: Keep double quotes in `config.cjs`.
 - `-l, --log`: Preview the JSON without writing any files.
@@ -1266,7 +1267,7 @@ module.exports = {
 }
 ```
 
-This is handy if you want to use these colors in code and avoid hardcoding values in multiple places.
+Use this when you want to reference configured colors from code instead of hardcoding values in multiple places.
 
 
 ## `build` command
@@ -1294,7 +1295,7 @@ The `watch` command runs PurgeTSS on each project compile. You do not need to ru
 > purgetss w
 ```
 
-This works well with LiveView since it re-runs on changes such as adding or removing styles in views.
+This works well with LiveView because it re-runs after changes such as adding or removing styles in views.
 
 The command will install a task in the `alloy.jmk` file to enable this behavior:
 
@@ -1306,7 +1307,7 @@ task('pre:compile', function(event, logger) {
 
 > ℹ️ **INFO**
 >
-> About the `watch` command
+> About `watch`
 > 
 > This feature works with standard Alloy projects compiled using `ti build`. It has not been tested with project types built using Webpack or Vue.
 
@@ -1333,7 +1334,7 @@ The `module` command installs `purgetss.ui.js` in the `lib` folder.
 
 The PurgeTSS module includes:
 
-- Animation: Methods for playing or applying basic animations and transformations to Alloy objects.
+- Animation methods for playing or applying basic animations and transformations to Alloy objects.
 
 > 💡 **TIP**
 >

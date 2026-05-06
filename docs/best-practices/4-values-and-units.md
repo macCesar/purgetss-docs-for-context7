@@ -4,13 +4,13 @@ PurgeTSS writes plain numeric values into your TSS files. Titanium decides how t
 
 ## The short version
 
-Numeric values produced by PurgeTSS utility classes are **unitless**. When PurgeTSS compiles `rounded-lg` to:
+Numeric values produced by PurgeTSS utility classes are unitless. When PurgeTSS compiles `rounded-lg` to:
 
 ```css
 '.rounded-lg': { borderRadius: 8 }
 ```
 
-the `8` is **not a pixel value**. Titanium reads it at runtime using the unit declared in `tiapp.xml`:
+the `8` is not a pixel value. Titanium reads it at runtime using the unit declared in `tiapp.xml`:
 
 ```xml
 <ti:app>
@@ -18,7 +18,7 @@ the `8` is **not a pixel value**. Titanium reads it at runtime using the unit de
 </ti:app>
 ```
 
-The Alloy project template has used `dp` by default for years, so most PurgeTSS projects are working with **density-independent pixels**, not raw pixels. In practice, `borderRadius: 8` usually means `8dp`, not `8px`.
+The Alloy project template has used `dp` by default for years, so most PurgeTSS projects use density-independent pixels, not raw pixels. In practice, `borderRadius: 8` usually means `8dp`, not `8px`.
 
 ## Why this matters
 
@@ -26,7 +26,7 @@ Saying `rounded-lg` gives you "8 pixels" is only correct if your `tiapp.xml` exp
 
 A more accurate way to describe it is:
 
-> `rounded-lg` applies `borderRadius: 8` — which Titanium interprets as **8 units of `ti.ui.defaultunit`**, defaulting to `dp` on standard Alloy projects.
+> `rounded-lg` applies `borderRadius: 8`, which Titanium interprets as 8 units of `ti.ui.defaultunit`, defaulting to `dp` on standard Alloy projects.
 
 This applies to every utility class that sets a dimension:
 - Spacing: `m-*`, `p-*`, `mt-*`, `mb-*`, `mx-*`, `my-*`, `top-*`, `left-*`, `right-*`, `bottom-*`
@@ -102,8 +102,8 @@ If that property is missing, Titanium falls back to `system`. That means iOS and
 
 ## Summary
 
-- PurgeTSS writes **unitless numeric values** into `app.tss`.
+- PurgeTSS writes unitless numeric values into `app.tss`.
 - Titanium resolves those values using `ti.ui.defaultunit` in `tiapp.xml`.
-- In most Alloy projects, that unit is `dp`, **not raw pixels**.
+- In most Alloy projects, that unit is `dp`, not raw pixels.
 - Values ending in `-px` (written as quoted strings) force raw pixels regardless of the project setting.
 - Percentage-based and `auto`/`screen` utilities are unit-independent.

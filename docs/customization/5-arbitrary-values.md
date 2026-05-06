@@ -4,13 +4,30 @@ When you need a one-off value that is not in the defaults, use arbitrary values 
 
 > ℹ️ **INFO**
 >
-> To generate an arbitrary style, use parentheses notation with almost any default utility class.
+> Use parentheses notation with almost any default utility class to generate an arbitrary style.
 > 
-> You cannot use square bracket notation because Titanium handles platform and conditional statements in `.tss` files differently.
+> Square bracket notation is not supported because Titanium already uses brackets for platform and conditional statements in `.tss` files.
 
+
+## Class syntax pre-validation
+
+Before purging, PurgeTSS scans class names from XML views and JS controllers for common authoring mistakes. When it finds one, it stops with a structured `Class Syntax Error` block that includes the file, line, offending content, and a concrete `Fix:` suggestion. If there are multiple errors, PurgeTSS reports them in the same run so you can fix them together.
+
+Five patterns are detected:
+
+| Pattern                       | Wrong        | Right        | Reason                                                    |
+| ----------------------------- | ------------ | ------------ | --------------------------------------------------------- |
+| Inverted negative sign        | `top-(-10)`  | `-top-(10)`  | The `-` prefix goes before the rule, not inside the value |
+| Tailwind-style brackets       | `top-[10px]` | `top-(10px)` | PurgeTSS uses parentheses for arbitrary values            |
+| Empty parentheses             | `wh-()`      | `wh-(10)`    | Add a value                                               |
+| Whitespace inside parentheses | `wh-( 200 )` | `wh-(200)`   | No spaces between `(` and the value                       |
+| Redundant `px` unit           | `top-(10px)` | `top-(10)`   | PurgeTSS treats unit-less arbitrary values as pixels      |
+
+Generic unknown classes are not flagged by this validator. Typos, custom utilities that are not declared yet, and vendor classes not enabled in `config.cjs` still flow into the `// Unused or unsupported classes` comment block in `app.tss`, as before. The validator only catches narrow, actionable mistakes so it does not add noise while you are still sketching out class names.
 
 ## Color properties
-You can set arbitrary color values for all available color properties using `hex`, `rgb`, or `rgba` values, directly in XML files or in `config.cjs`.
+
+You can set arbitrary color values with `hex`, `rgb`, or `rgba` values, either in XML files or in `config.cjs`.
 
 `Arbitrary values for color properties`
 ```xml
@@ -45,7 +62,8 @@ You can set arbitrary color values for all available color properties using `hex
 ```
 
 ### List of color properties
-You can set an arbitrary value for any of the following color properties:
+
+These color properties accept arbitrary values:
 
 - `active-tint-` (*hex-rgb-or-rgba-value*)
 - `active-title-` (*hex-rgb-or-rgba-value*)
@@ -95,7 +113,8 @@ You can set an arbitrary value for any of the following color properties:
 - `track-tint-` (*hex-rgb-or-rgba-value*)
 
 ## Spacing properties
-You can set arbitrary values for most size and dimension properties using `rem`, `px`, or `pt` values, directly in XML files or in `config.cjs`.
+
+You can set arbitrary values for most size and dimension properties with `rem`, `px`, or `pt`, either in XML files or in `config.cjs`.
 
 `Arbitrary values for spacing properties`
 ```xml
@@ -203,7 +222,7 @@ You can set arbitrary values for most size and dimension properties using `rem`,
   - `padding-top-` (*any-size-value-and-unit*)
   - `padding-x-` (*any-size-value-and-unit*)
   - `padding-y-` (*any-size-value-and-unit*)
-- paging-control-h- (*any-size-value-and-unit*)
+- `paging-control-h-` (*any-size-value-and-unit*)
 - Border radius
   - `rounded-` (*any-size-value-and-unit*)
   - `rounded-b-` (*any-size-value-and-unit*)
@@ -222,9 +241,9 @@ You can set arbitrary values for most size and dimension properties using `rem`,
   - `x-offset-` (*any-size-value-and-unit*)
   - `y-offset-` (*any-size-value-and-unit*)
 
-
 ## Miscellaneous properties
-You can set arbitrary values for the following properties, like border radius and opacity.
+
+These miscellaneous properties also accept arbitrary values:
 
 ### List of miscellaneous properties
 
@@ -258,9 +277,9 @@ You can set arbitrary values for the following properties, like border radius an
 - `z-` (*number-value*)
 - `zoom-scale-` (*decimal-value*)
 
-
 ## Examples
-You can use any supported units depending on the property you are generating. Use `hex` or `rgba` values for any color property, or `rem` or `px` for position and sizing properties.
+
+Use any unit supported by the property you are generating. Use `hex` or `rgba` for color properties, and `rem` or `px` for position and sizing properties.
 
 ### Credit card
 
@@ -508,7 +527,7 @@ Try this example on an iPad or tablet.
 '.w-(80%)': { width: '80%' }
 ```
 
-Result
+Generated screen
 
 <div align="center">
 ![building-green](../images/building-green.png)

@@ -4,10 +4,10 @@ When you use Large Titles with a ScrollView inside a NavigationWindow or TabGrou
 
 ## The problem
 
-On iOS, enabling `largeTitleEnabled` alone can cause two issues:
+On iOS, enabling `largeTitleEnabled` by itself can cause two issues:
 
-1. **Content overlaps behind the nav bar.** The ScrollView starts at y=0, hidden behind the navigation bar.
-2. **Large title renders with a visible delay.** The nav bar area appears empty for a moment before the title draws.
+1. Content overlaps behind the nav bar. The ScrollView starts at y=0, hidden behind the navigation bar.
+2. The large title renders with a visible delay. The nav bar area appears empty for a moment before the title draws.
 
 ## The solution: 3 interdependent properties
 
@@ -17,9 +17,9 @@ On iOS, enabling `largeTitleEnabled` alone can cause two issues:
 | `extendEdges`                | `[Ti.UI.EXTEND_EDGE_ALL]` | Content extends behind bars, creating the blur/translucent effect |
 | `largeTitleEnabled`          | `true`                    | Shows the large title that collapses on scroll                    |
 
-**Without `autoAdjustScrollViewInsets`**, `extendEdges` pushes the content behind the nav bar without compensating the ScrollView insets.
+Without `autoAdjustScrollViewInsets`, `extendEdges` pushes the content behind the nav bar without compensating the ScrollView insets.
 
-**Without `extendEdges` + `autoAdjustScrollViewInsets`** (using only `largeTitleEnabled`), the large title renders with a visible delay: the empty nav bar area appears first, then the title draws. With all three properties, iOS calculates the full layout before displaying the window.
+Without `extendEdges` + `autoAdjustScrollViewInsets`, using only `largeTitleEnabled`, the large title renders with a visible delay: the empty nav bar area appears first, then the title draws. With all three properties, iOS calculates the layout before displaying the window.
 
 ## Configuring as global defaults
 
@@ -76,15 +76,15 @@ On iOS, TabGroup wraps each Tab in an implicit NavigationWindow. The three-prope
 </Alloy>
 ```
 
-## Controlling Large Title display
+## Controlling large title display
 
 `largeTitleDisplayMode` controls how the title behaves in the navigation stack:
 
 | Mode          | Constant                                       | Behavior                                           |
 | ------------- | ---------------------------------------------- | -------------------------------------------------- |
-| **Automatic** | `Ti.UI.iOS.LARGE_TITLE_DISPLAY_MODE_AUTOMATIC` | Inherits from previous window; collapses on scroll |
-| **Always**    | `Ti.UI.iOS.LARGE_TITLE_DISPLAY_MODE_ALWAYS`    | Title stays large regardless of scroll             |
-| **Never**     | `Ti.UI.iOS.LARGE_TITLE_DISPLAY_MODE_NEVER`     | Always uses standard title size                    |
+| Automatic | `Ti.UI.iOS.LARGE_TITLE_DISPLAY_MODE_AUTOMATIC` | Inherits from previous window; collapses on scroll |
+| Always    | `Ti.UI.iOS.LARGE_TITLE_DISPLAY_MODE_ALWAYS`    | Title stays large regardless of scroll             |
+| Never     | `Ti.UI.iOS.LARGE_TITLE_DISPLAY_MODE_NEVER`     | Always uses standard title size                    |
 
 In PurgeTSS, use the utility class `large-title-display-mode-never` on detail windows to show a standard-size title:
 

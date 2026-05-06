@@ -46,7 +46,7 @@ purgetss
 
 - `config.cjs` file
 
-  This is where you customize defaults or add your own classes. For details, see the [**Customization section**](customization/the-config-file).
+  This is where you customize defaults or add your own classes. For details, see the [customization section](customization/the-config-file).
 
 - `styles` folder
 
@@ -58,7 +58,7 @@ purgetss
 
   - `definitions.css` file
 
-    A CSS file that combines classes from `utilities.tss`, `_app.tss`, any `.tss` files in your project, and `fonts.tss`. It is used by the ["IntelliSense for CSS class names in HTML"](#vscode-extension) VS Code extension for autocomplete.
+    A CSS file that combines classes from `utilities.tss`, `_app.tss`, any `.tss` files in your project, and `fonts.tss`. The ["IntelliSense for CSS class names in HTML"](#vscode-extension) VS Code extension uses it for autocomplete.
 
 - `fonts` folder
 
@@ -68,13 +68,13 @@ purgetss
 >
 > Important
 > 
-> **PurgeTSS overwrites your existing `app.tss` file.**
+> PurgeTSS overwrites your existing `app.tss` file.
 > 
 > On the first run, your original `app.tss` is backed up to `_app.tss`.
 > 
 > From that point on, you add, delete, or update custom classes in `_app.tss`.
 > 
-> You can also move custom values into `config.cjs`. For details, see the [**Configuration section**](customization/the-config-file).
+> You can also move custom values into `config.cjs`. For details, see the [configuration section](customization/the-config-file).
 
 
 ## Example files
@@ -196,7 +196,7 @@ More examples in the [Utilities TSS Sample App](https://github.com/macCesar/util
 > - `ml-*` + `mr-*` or `mx-*` can stretch the component horizontally. Add `w-auto`.
 > - If margins affect both axes, use `wh-auto`.
 > 
-> This applies to **any component whose default size is `Ti.UI.SIZE`**. If you set opposite margins on the same axis (e.g., left and right), Titanium's composite layout uses those pins to calculate the dimension instead of the content — so the component stretches to fill its parent.
+> This applies to any component whose default size is `Ti.UI.SIZE`. If you set opposite margins on the same axis, such as left and right, Titanium's composite layout uses those pins to calculate the dimension instead of the content. The component then stretches to fill its parent.
 > 
 > Examples:
 > 
@@ -221,15 +221,15 @@ The `--flag` inside that comment is illegal. PurgeTSS stops with a pointer to th
 
 ```text
 XML comment contains illegal "--" sequence ("--flag")
-Fix: Replace "--" with "—" (em-dash) or reword the comment to avoid double dashes
+Fix: Replace "--" with an em dash or reword the comment to avoid double dashes
 ```
 
-Either swap `--` for an em-dash (`—`) or rephrase so the two dashes don't sit next to each other. Any XML parser would reject the original, so catching it up front is more helpful than a confusing TSS output later.
+Either swap `--` for an em dash or rephrase so the two dashes don't sit next to each other. Any XML parser would reject the original, so catching it up front is more helpful than a confusing TSS output later.
 
 
 ## VSCode extension
 
-If you're using [**Visual Studio Code**](https://code.visualstudio.com), install the [**IntelliSense for CSS class names in HTML**](https://marketplace.visualstudio.com/items?itemName=Zignd.html-css-class-completion) extension.
+If you're using [Visual Studio Code](https://code.visualstudio.com), install the [IntelliSense for CSS class names in HTML](https://marketplace.visualstudio.com/items?itemName=Zignd.html-css-class-completion) extension.
 
 It provides class name completion for the `XML` class attribute based on the `definitions.css` file created by PurgeTSS.
 

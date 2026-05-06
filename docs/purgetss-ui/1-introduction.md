@@ -1,19 +1,19 @@
 # Introduction
 
-## The UI Module
+## The UI module
 
 > ℹ️ **INFO**
 >
-> `purgetss.ui` is the runtime module included with PurgeTSS. It provides **Animation**, **Appearance management**, and **utility functions** — all accessible from a single `require('purgetss.ui')`.
+> `purgetss.ui` is the runtime module included with PurgeTSS. It provides animation, appearance management, and utility functions from a single `require('purgetss.ui')`.
 
 
 The module exports three areas of functionality:
 
 | Area | What it does |
 |------|-------------|
-| **Animation** | 2D Matrix animations and transformations on single elements, arrays, or children |
-| **[Appearance](appearance)** | Light/Dark/System mode switching with persistent user preference |
-| **Utilities** | `deviceInfo()` for platform diagnostics, `saveComponent()` for view snapshots |
+| Animation | 2D Matrix animations and transformations on single elements, arrays, or children |
+| [Appearance](appearance) | Light/Dark/System mode switching with persistent user preference |
+| Utilities | `deviceInfo()` for platform diagnostics, `saveComponent()` for view snapshots |
 
 ---
 
@@ -73,7 +73,7 @@ The module also exports two helper functions:
 ---
 
 ## Installation
-Use the **`purgetss module`** command to install the module in the `lib` folder.
+Use the `purgetss module` command to install the module in the `lib` folder.
 
 ```bash
 > purgetss module
@@ -82,11 +82,11 @@ Use the **`purgetss module`** command to install the module in the `lib` folder.
 > purgetss m
 ```
 
-## Animation Usage
-This is the simplest `Animation` object, with a set of **PurgeTSS** classes. You can create as many animation objects as you want, each with its own properties.
+## Animation usage
+This is the simplest `Animation` object, with a set of PurgeTSS classes. You can create as many animation objects as you want, each with its own properties.
 
 ```xml
 <Animation id="myAnimation" module="purgetss.ui" class="a-set-of-purgetss-classes-and-modifiers" />
 ```
 
-**You can use any position, size, color, transformation, and opacity classes from `utilities.tss`.**
+You can use any position, size, color, transformation, and opacity classes from `utilities.tss`.

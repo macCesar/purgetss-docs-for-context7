@@ -4,15 +4,15 @@
 
 > ℹ️ **INFO**
 >
-> Use `apply` to bundle classes into a new class, or to extract a repeated pattern into something reusable.
+> Use `apply` to bundle classes into a new class or pull a repeated pattern into one reusable name.
 
 
-- Set any ID, class, or Ti Element.
-- Use any of the default classes.
+- Target any ID, class, or Ti Element.
+- Use default classes.
 - Use arbitrary values.
-- Use any newly defined class in `config.cjs`.
-- Set a string of classes or an array of classes.
-- Combine it with any platform, device, or conditional-block properties.
+- Use classes defined in `config.cjs`.
+- Pass a string of classes or an array of classes.
+- Combine `apply` with platform, device, or conditional blocks.
 
 ## Set any ID, class, or Ti Element
 
@@ -76,7 +76,7 @@ theme: {
 
 ## Use arbitrary values
 
-You can use [**Arbitrary values**](arbitrary-values) to define your custom classes.
+You can use [arbitrary values](arbitrary-values) inside custom classes.
 
 `./purgetss/config.cjs`
 ```javascript
@@ -99,7 +99,7 @@ theme: {
 
 ## Use newly defined classes in `config.cjs`
 
-In the next example, we create `corporate` color classes so we can use them in the `apply` directive with `bg-corporate-500`, `text-corporate-100`, and `border-corporate-200`.
+In this example, `corporate` color classes are defined first, then reused inside `apply` with `bg-corporate-500`, `text-corporate-100`, and `border-corporate-200`.
 
 `./purgetss/config.cjs`
 ```javascript
@@ -107,7 +107,7 @@ In the next example, we create `corporate` color classes so we can use them in t
 theme: {
   extend: {
     colors: {
-      // New color values that will generate bg-colors, text-colors, border-colors classes.
+      // Generates bg-, text-, and border-color classes.
       corporate: {
         100: '#dddfe1', 200: '#babfc4', 500: '#53606b'
       }
@@ -117,7 +117,7 @@ theme: {
     apply: 'wh-auto font-bold border-2 rounded my-0.5'
   },
   '.btn-corporate': {
-    // Newly created classes ( see extend.colors.corporate )
+    // Classes from extend.colors.corporate
     apply: 'bg-corporate-500 text-corporate-100 border-corporate-200'
   }
 }
@@ -142,7 +142,7 @@ theme: {
 '.border-corporate-100': { borderColor: '#dddfe1' }
 '.border-corporate-200': { borderColor: '#babfc4' }
 '.border-corporate-500': { borderColor: '#53606b' }
-/* And the rest of color properties! */
+/* Other color properties are generated too. */
 ```
 
 ## Set a string of classes or an array of classes
@@ -252,6 +252,33 @@ Window: { default: { apply: 'exit-on-close-false bg-blue-500' } }
 
 Use the explicit `default:` wrapper when you also need platform blocks (`ios:`, `android:`) next to it. For the common case of one bundle of defaults, the shorthand reads better.
 
+### Extend mode vs replace mode
+
+PurgeTSS follows the Tailwind convention for these three Ti Elements:
+
+- `theme.extend.Window` (or `View` / `ImageView`): your customization merges with the framework defaults. The white `backgroundColor`, `Ti.UI.SIZE` width/height, and iOS `hires: true` stay in place unless you override them with `apply`.
+- `theme.Window` (top level, no `extend`): replace mode. Your config becomes the source of truth and the framework defaults are skipped.
+
+Use replace mode when you want full control and do not want a preset mixed in. A common case is a Window declared at `theme.Window` with a `backgroundGradient`, where the default white `backgroundColor` would cover the gradient:
+
+`./purgetss/config.cjs - replace mode`
+```javascript
+module.exports = {
+  theme: {
+    Window: {
+      apply: 'bg-gradient-to-b from-blue-500 to-purple-600'
+    }
+  }
+}
+```
+
+`./purgetss/styles/utilities.tss`
+```css
+'Window': { backgroundGradient: { type: 'linear', colors: [...], startPoint: ..., endPoint: ... } }
+```
+
+Note the missing `backgroundColor: '#FFFFFF'`. Replace mode skipped the framework default. If you had used `theme.extend.Window` here, the white `backgroundColor` would still be merged in and could cover the gradient.
+
 ### Apply wins over static defaults
 
 If `apply` sets a property that the component already has as a built-in default, the applied value replaces the original instead of both ending up in the final TSS:
@@ -274,13 +301,13 @@ module.exports = {
 'Window': { backgroundColor: '#3b82f6' }
 ```
 
-Without the dedup, both `backgroundColor` entries would land in the file; the last one wins at runtime anyway, but reading the TSS with two copies of the same property is confusing. The builder keeps only the applied value.
+Without the dedup, both `backgroundColor` entries would land in the file. The last one wins at runtime, but two copies of the same property make the TSS harder to read. The builder keeps only the applied value.
 
 ## Platform-specific classes
 
-Several classes in `utilities.tss` are platform-specific (e.g., `clip-enabled`, `status-bar-style-light-content`). These only exist with a `[platform=ios]` or `[platform=android]` suffix.
+Several classes in `utilities.tss` are platform-specific, such as `clip-enabled` and `status-bar-style-light-content`. These only exist with a `[platform=ios]` or `[platform=android]` suffix.
 
-When you use these classes inside a platform block (`ios:` or `android:`), PurgeTSS automatically finds the platform-specific version -- no prefix needed:
+When you use these classes inside a platform block (`ios:` or `android:`), PurgeTSS finds the platform-specific version. No prefix is needed:
 
 `./purgetss/config.cjs`
 ```javascript
@@ -301,12 +328,12 @@ module.exports = {
 '.my-view[platform=ios]': { backgroundColor: '#22c55e', clipMode: Ti.UI.iOS.CLIP_MODE_ENABLED, width: 128, height: 128 }
 ```
 
-The `ios:` / `android:` prefix still works from a non-platform block (e.g., `default`), but use it with caution:
+The `ios:` / `android:` prefix still works from a non-platform block, such as `default`, but use it with caution:
 
 > 🚨 **WARNING**
 >
 > Cross-platform apps
-> Using `ios:` or `android:` in a `default` block applies the property on **all platforms**. Some iOS-only or Android-only properties can cause errors on the other platform at compile time or when the view opens. For cross-platform apps, always use platform blocks instead.
+> Using `ios:` or `android:` in a `default` block applies the property on all platforms. Some iOS-only or Android-only properties can cause errors on the other platform at compile time or when the view opens. For cross-platform apps, use platform blocks instead.
 
 
 `./purgetss/config.cjs`
@@ -331,7 +358,7 @@ module.exports = {
 
 ### Classes outside platform blocks
 
-If a platform-specific class is used outside a platform block (without the `ios:` or `android:` prefix), PurgeTSS won't find it because it only exists with the platform suffix in `utilities.tss`:
+If a platform-specific class is used outside a platform block, without the `ios:` or `android:` prefix, PurgeTSS will not find it because it only exists with the platform suffix in `utilities.tss`:
 
 `./purgetss/config.cjs`
 ```javascript

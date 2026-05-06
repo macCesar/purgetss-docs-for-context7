@@ -2,7 +2,7 @@
 
 > ℹ️ **INFO**
 >
-> Add an opacity modifier to any available color property by appending a value between 0 and 100 after a slash (`/`).
+> Add opacity to any color class by appending a value from 0 to 100 after a slash (`/`).
 
 
 ## In your XML files
@@ -24,7 +24,8 @@
 ```
 
 ## In the `apply` directive
-You can also use color opacity modifiers in the `apply` directive in the `config.cjs` file.
+
+Opacity modifiers also work inside `apply` in `config.cjs`.
 
 `./purgetss/config.cjs`
 ```js
@@ -53,11 +54,13 @@ module.exports = {
 /* backgroundColor Property */
 '.bg-primary': { backgroundColor: '#ce10cc' }
 ...
-/* And the rest of color properties! */
+/* Other color properties are generated too. */
 ```
 
-> ⚠️ **CAUTION**
->
-> Semantic colors
-> Semantic colors can't be modified with the opacity modifier because they are defined as an object with light and dark values.
+## Semantic colors
 
+Opacity modifiers also work on classes that resolve to a [semantic color](../best-practices/2-semantic-colors.md). For example, `bg-surface/65` works when `surface` maps to `surfaceColor` in `semantic.colors.json`.
+
+PurgeTSS creates a derived semantic key (`surfaceColor_65`) with the original `light` and `dark` hex values plus the requested alpha for both modes. It writes that key back to `semantic.colors.json` and emits the rule against the derived key. Light/Dark switching still works.
+
+See [Opacity modifier auto-derivation](../best-practices/2-semantic-colors.md#opacity-modifier-auto-derivation) for the full behavior, including the rebuild requirement for new alpha entries and conflict handling.

@@ -1,6 +1,6 @@
 # Platform and device modifiers
 
-Platform and device modifiers (also called variants or prefixes) apply styles conditionally based on platform (iOS or Android) and device type (tablet or handheld):
+Platform and device modifiers, also called variants or prefixes, apply styles only on the matching platform or device type.
 
 - Platform modifiers:
   - `ios:`
@@ -10,14 +10,14 @@ Platform and device modifiers (also called variants or prefixes) apply styles co
   - `tablet:`
   - `handheld:`
 
-For example, you can set different background colors and font sizes per platform and device, and combine them with arbitrary values. Examples: `ios:bg-(#53606b)`, `ios:text-(20px)`, `android:bg-(#8fb63e)`, and `android:text-(24px)`.
+You can set different background colors and font sizes per platform or device, and you can use arbitrary values when the preset scale does not fit: `ios:bg-(#53606b)`, `ios:text-(20px)`, `android:bg-(#8fb63e)`, and `android:text-(24px)`.
 
 `index.xml`
 ```xml
 <Alloy>
   <Window class="tablet:bg-green-500 handheld:bg-blue-500">
     <View class="h-32 tablet:bg-green-100 handheld:bg-blue-100">
-      <Label class="w-screen h-auto text-center ios:text-blue-800 ios:text-xl android:text-green-800 android:text-2xl">This is a Test</Label>
+      <Label class="w-screen h-auto text-center ios:text-blue-800 ios:text-xl android:text-green-800 android:text-2xl">This is a test</Label>
     </View>
   </Window>
 </Alloy>

@@ -1,4 +1,4 @@
-# The `draggable` Method
+# The `draggable` method
 
 - The `draggable` method makes one or more views draggable.
 - Use `drag:` and `drop:` modifiers for basic drag/drop animations.
@@ -14,7 +14,7 @@ $.draggableAnimation.draggable('A View or an array of Views')
 >
 > You can create a blank Animation object or reuse an existing one to call `draggable` on a view or array of views.
 > 
-> When you use an Animation object with an array of views, it manages zIndex for each draggable element.
+> When an Animation object receives an array of views, it manages zIndex for each draggable element.
 
 
 ### Draggable example
@@ -46,7 +46,7 @@ $.draggableAnimation.draggable([$.red, $.green, $.blue])
 ![Draggable Method](../images/draggable-method.gif)
 </div>
 
-*Low framerate gif.*
+*Low framerate GIF.*
 
 ## `drag` and `drop` modifiers
 - The `drag:` and `drop:` modifiers set basic animations while dragging and dropping.
@@ -60,7 +60,7 @@ $.draggableAnimation.draggable([$.red, $.green, $.blue])
 > In particular, we do not apply `size`, `scale`, or `anchorPoint` transformations.
 
 
-### Drag and Drop example
+### Drag and drop example
 `index.xml`
 ```xml
 <Alloy>
@@ -86,9 +86,9 @@ $.draggableAnimation.draggable([$.red, $.green, $.blue])
 ![Drag and Drop Modifiers](../images/drag-drop-modifiers.gif)
 </div>
 
-*Low framerate gif.*
+*Low framerate GIF.*
 
-## `draggingType` Property
+## `draggingType` property
 Use `drag-animate` (default) or `drag-apply` to control how `drag:` and `drop:` modifiers are applied. `drag-animate` animates the properties, `drag-apply` applies them immediately.
 
 `utilities.tss`
@@ -99,7 +99,7 @@ Use `drag-animate` (default) or `drag-apply` to control how `drag:` and `drop:` 
 .drag-animate { draggingType: 'animate' }
 ```
 
-### Dragging Type example
+### Dragging type example
 In this example, the `Animation` object sets the global dragging type to `drag-apply`, but the green square overrides it to `drag-animate`.
 
 `index.xml`
@@ -111,7 +111,7 @@ In this example, the `Animation` object sets the global dragging type to `drag-a
 
     <Label text="draggingType Example:\ndrag-apply drag:duration-500 drag:opacity-50 drop:opacity-100" class="mt-16 text-center" />
 
-    <!-- No local modifiers, will be using the global modifiers -->
+    <!-- No local modifiers, uses the global modifiers -->
     <Label id="red" class="ml-4 h-32 w-32 rounded-lg bg-red-500 text-center text-xs text-white" text="No local modifiers" />
 
     <!-- drag-animate drag:bg-green-800 drop:bg-green-500 -->
@@ -127,7 +127,7 @@ In this example, the `Animation` object sets the global dragging type to `drag-a
 ![Dragging Type](../images/draggingType.gif)
 </div>
 
-*Low framerate gif.*
+*Low framerate GIF.*
 
 ## `bounds` modifier
 - Use `bounds` with `horizontal-constraint` or `vertical-constraint` to limit movement within a parent view.
@@ -172,7 +172,7 @@ $.draggableAnimation.draggable($.card)
 ![Local Bounds](../images/local-bounds.gif)
 </div>
 
-*Low framerate gif.*
+*Low framerate GIF.*
 
 ### Bounds example 2
 Here the boundaries are set globally in `draggableAnimation`, so every card uses the same values.
@@ -234,9 +234,9 @@ $.draggableAnimation.draggable([$.card, $.card2, $.card3])
 ![Global Bounds](../images/global-bounds.gif)
 </div>
 
-*Low framerate gif.*
+*Low framerate GIF.*
 
-## `vertical` and `horizontal` Constraints
+## `vertical` and `horizontal` constraints
 Add `vertical-constraint` or `horizontal-constraint` to restrict movement while dragging.
 
 ```css
@@ -280,7 +280,7 @@ $.draggableAnimation.draggable($.card)
 ![Horizontal Constraint](../images/horizontal-constraint.gif)
 </div>
 
-*Low framerate gif.*
+*Low framerate GIF.*
 
 ## The `undraggable` method
 
@@ -301,7 +301,7 @@ This method:
 
 ### Real-world use cases
 
-**Lock a piece after correct placement (puzzle game):**
+Lock a piece after correct placement in a puzzle game:
 
 ```javascript
 // When the piece lands on the correct slot
@@ -311,7 +311,7 @@ if (source.valor === target.valor) {
 }
 ```
 
-**Toggle between edit and presentation mode:**
+Toggle between edit and presentation mode:
 
 ```javascript
 function enterEditMode() {
@@ -324,7 +324,7 @@ function enterPresentationMode() {
 }
 ```
 
-**Clean up when closing a Window (prevent memory leaks):**
+Clean up when closing a Window to prevent memory leaks:
 
 ```javascript
 function onClose() {
@@ -355,22 +355,22 @@ $.draggableAnimation.detectCollisions(views, onHover, onDrop)
 
 Collision is based on center-point hit testing: the center of the dragged view is checked against the `rect` bounds of each registered view.
 
-**`dragCB(source, target)`** is called during drag:
+`dragCB(source, target)` is called during drag:
 - `target` is the view under the drag center, or `null` when leaving all targets
 - Use this to show visual feedback (highlights, borders, scaling)
 
-**`dropCB(source, target)`** is called on drop:
+`dropCB(source, target)` is called on drop:
 - `target` is the view where the source was released
 - Snap behavior on drop depends on the classes applied to the `<Animation>` object (see below)
 
 ### Snap classes
 
-Both snap behaviors are **off by default** — opt-in via classes on the `<Animation>` object:
+Both snap behaviors are off by default. Opt in with classes on the `<Animation>` object:
 
 | Class         | TSS Rule                                          | Behavior                                                                          |
 | ------------- | ------------------------------------------------- | --------------------------------------------------------------------------------- |
-| `snap-back`   | `animationProperties: { snap: { back: true } }`   | View returns to its origin position when dropped **outside** any collision target |
-| `snap-center` | `animationProperties: { snap: { center: true } }` | View auto-centers on the target when dropped **on** it (uses `snapTo` internally) |
+| `snap-back`   | `animationProperties: { snap: { back: true } }`   | View returns to its origin position when dropped outside any collision target |
+| `snap-center` | `animationProperties: { snap: { center: true } }` | View auto-centers on the target when dropped on it (uses `snapTo` internally) |
 
 You can use both together:
 
@@ -379,9 +379,9 @@ You can use both together:
 <Animation id="myAnim" module="purgetss.ui" class="snap-back snap-center duration-200" />
 ```
 
-**Without `snap-back`**: the view stays wherever you drop it, even if no target was hit.
+Without `snap-back`, the view stays wherever you drop it, even if no target was hit.
 
-**Without `snap-center`**: the view stays at the exact drop position on the target (no centering).
+Without `snap-center`, the view stays at the exact drop position on the target, with no centering.
 
 ### Collision detection example
 
@@ -428,9 +428,9 @@ $.myAnimation.detectCollisions(views,
 )
 ```
 
-### Real-world use case: Drag-to-swap grid
+### Real-world use case: drag-to-swap grid
 
-A 3x3 grid where dragging a card onto another swaps their positions — combining `draggable`, `detectCollisions`, and `swap`:
+A 3x3 grid where dragging a card onto another swaps their positions. This combines `draggable`, `detectCollisions`, and `swap`:
 
 `grid.xml`
 ```xml
@@ -497,4 +497,4 @@ function onClose() {
 }
 ```
 
-Three calls: `draggable`, `detectCollisions`, and `swap` inside the drop callback. The `lastTarget` tracking ensures only the current hover target is highlighted, and the `if (target)` guard prevents errors when dropping outside any card.
+The flow uses three calls: `draggable`, `detectCollisions`, and `swap` inside the drop callback. `lastTarget` tracks the current hover target, and the `if (target)` guard prevents errors when dropping outside any card.
