@@ -423,6 +423,38 @@ module.exports = {
 
 The nested keys are combined with the parent key to form class names like `bg-tahiti-400` or `text-tahiti-400`.
 
+### Nesting beyond one level
+
+`theme` and `theme.extend` values are walked recursively, so you can group categories more than one level deep. Each level flattens into a kebab-case suffix on the generated class names:
+
+`./purgetss/config.cjs`
+```javascript
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          primary: {
+            500: '#0ea5e9',
+            900: '#0c4a6e'
+          },
+          accent: '#f97316'
+        }
+      }
+    }
+  }
+}
+```
+
+`Generated classes`
+```css
+'.bg-brand-primary-500': { backgroundColor: '#0ea5e9' }
+'.bg-brand-primary-900': { backgroundColor: '#0c4a6e' }
+'.bg-brand-accent': { backgroundColor: '#f97316' }
+```
+
+The same flattening applies to other property categories that accept nested objects, including `backgroundGradient` and `backgroundSelectedGradient`. One-level configs behave the same as before.
+
 ### Override a default color
 
 If you want to override one of the default colors but keep the rest, provide the new values in `theme.extend.colors`.
