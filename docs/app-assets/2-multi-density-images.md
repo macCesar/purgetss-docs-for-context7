@@ -269,6 +269,131 @@ WebP usually produces files that are about 25-35% smaller than JPEG at similar v
 
 Keep `--format null` (the default) when you need to stay in the same format as the source, for example PNG with alpha that shouldn't be flattened.
 
+## Applying opacity to all densities
+
+`--opacity <n>` multiplies the alpha channel of every generated density by `n/100`. Useful for placeholder or default images that render at reduced opacity (loading states, "image is loading" overlays, watermarks rendered behind content).
+
+The transformation is applied **before** resize, so each density variant inherits the same proportional transparency:
+
+```bash
+> purgetss images logo.svg --opacity 50 --format png
+```
+
+Generates 8 PNGs (5 Android densities + 3 iPhone scales) where each pixel's alpha equals `original_alpha × 0.5`. Fully opaque source pixels become 50% transparent; already-transparent areas (background, antialiased edges) stay transparent.
+
+### Validation
+
+`--opacity` accepts integers in `[0, 100]`:
+
+```bash
+> purgetss images logo.svg --opacity 150
+Invalid --opacity '150'. Must be an integer between 0 and 100.
+```
+
+`--opacity 100` is a no-op — the compositing pass is skipped entirely. `--opacity 0` produces a fully transparent output (technically valid but visually empty).
+
+### Format compatibility
+
+Opacity requires an output format that supports an alpha channel:
+
+- `png`, `webp`, `avif`, `tiff`, `gif`: alpha preserved.
+- `jpeg`: JPEG does not support alpha. The existing flatten-on-white step composites the semi-transparent image onto white before writing, so `--opacity 50 --format jpeg` produces a 50%-faded version on white, not a transparent JPEG.
+
+For placeholders meant to layer over arbitrary backgrounds, prefer `--format png` or `--format webp`.
+
+## Adding breathing room with `--padding`
+
+`--padding <n>` shrinks the rendered image inside each density canvas by `n%` symmetric borders. Useful when the source logo has no built-in padding and you want a placeholder with breathing room — without editing the source asset.
+
+```bash
+> purgetss images purgetss/brand/logo.png --padding 15 --format png
+```
+
+Each density's output canvas keeps the same dimensions it would have without `--padding`, but the rendered image takes only `(1 − 2 × 0.15) = 70%` of that canvas (centered). The remaining 30% of the canvas (15% on each side) is transparent.
+
+For a `mdpi` output of 256×256, the rendered image becomes a 179×179 block centered inside the 256×256 transparent canvas. For `xxxhdpi` at 1024×1024, it becomes 716×716 inside 1024×1024. The visual ratio is identical at every density.
+
+### Validation
+
+`--padding` accepts integers in `[0, 40]`:
+
+```bash
+> purgetss images logo.png --padding 50
+Invalid --padding '50'. Must be an integer between 0 and 40.
+
+> purgetss images logo.png --padding -5
+Invalid --padding '-5'. Must be an integer between 0 and 40.
+```
+
+`--padding 0` is a no-op (skipped — no extend pass).
+
+### Combining with `--opacity`
+
+The two flags compose naturally for placeholder images:
+
+```bash
+> purgetss images purgetss/brand/logo.png \
+    --opacity 30 \
+    --padding 15 \
+    --output 'logos/default-image' \
+    --format png
+```
+
+Generates the 8 multi-density variants where each output is the source logo at 70% × 70% of the canvas, semi-transparent at 30% alpha, written under `images/logos/default-image.{png,@2x.png,@3x.png}` (iPhone) and `images/res-*/logos/default-image.png` (Android).
+
+### Padding vs source-baked padding
+
+If your source logo already has the breathing room you want baked in, you don't need `--padding` — it would compound the existing padding. Use `--padding` when:
+
+- The source is edge-to-edge (no built-in margin)
+- You're sourcing from `purgetss/brand/logo.svg` (which is meant to fill icon canvases tightly via `brand`'s own padding controls) and need a different visual ratio for an ImageView placeholder
+- You want different placeholders from the same source at different paddings
+
+## Renaming the output with `--output`
+
+By default, the output basename comes from the source filename and the subfolder mirrors the source's location inside `purgetss/images/`. When you want a different output path — for example, sourcing a logo from `purgetss/brand/` and writing it as a placeholder under `images/logos/` — `--output <relpath>` overrides both:
+
+```bash
+> purgetss images purgetss/brand/logo.svg --opacity 50 --output 'logos/loading-placeholder' --format png
+```
+
+Generates:
+
+```text
+app/assets/iphone/images/logos/loading-placeholder.png         (@1x)
+app/assets/iphone/images/logos/loading-placeholder@2x.png
+app/assets/iphone/images/logos/loading-placeholder@3x.png
+app/assets/android/images/res-mdpi/logos/loading-placeholder.png
+app/assets/android/images/res-hdpi/logos/loading-placeholder.png
+app/assets/android/images/res-xhdpi/logos/loading-placeholder.png
+app/assets/android/images/res-xxhdpi/logos/loading-placeholder.png
+app/assets/android/images/res-xxxhdpi/logos/loading-placeholder.png
+```
+
+The full multi-density pattern is preserved — `--output` only renames the basename and rewrites the subpath. The Android density folder (`res-*`) still comes first; your subpath sits inside it.
+
+### Constraints
+
+- **No extension** — pass the basename only. The extension comes from `--format` if set, otherwise from the source extension (or PNG when source is SVG, since Sharp can't write SVG). Any extension passed in `--output` is stripped.
+- **Relative path only** — must stay inside the project images folder. Absolute paths (`/tmp/foo`) and paths containing `..` are rejected.
+- **Single source only** — `--output` cannot apply when the source is a directory (one basename can't apply to multiple files). Pass a single file as the source, or drop `--output`.
+
+### Common use case: ImageView placeholder
+
+For a default ImageView placeholder while remote images load:
+
+```bash
+> purgetss images purgetss/brand/logo.svg --opacity 30 --output 'logos/default-image' --format png
+```
+
+Then in your XML:
+
+```xml
+<ImageView defaultImage="/images/logos/default-image.png" image="{remoteUrl}" />
+```
+
+Titanium auto-picks the correct density at runtime based on the device.
+
 ## Full pipeline alongside `build`
 
 A normal app workflow looks like this:
