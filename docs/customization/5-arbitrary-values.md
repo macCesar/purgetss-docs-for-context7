@@ -18,7 +18,7 @@ Five patterns are detected:
 | Pattern                       | Wrong        | Right        | Reason                                                    |
 | ----------------------------- | ------------ | ------------ | --------------------------------------------------------- |
 | Inverted negative sign        | `top-(-10)`  | `-top-(10)`  | The `-` prefix goes before the rule, not inside the value |
-| Tailwind-style brackets       | `top-[10px]` | `top-(10px)` | PurgeTSS uses parentheses for arbitrary values            |
+| Square brackets               | `top-[10px]` | `top-(10px)` | PurgeTSS uses parentheses for arbitrary values            |
 | Empty parentheses             | `wh-()`      | `wh-(10)`    | Add a value                                               |
 | Whitespace inside parentheses | `wh-( 200 )` | `wh-(200)`   | No spaces between `(` and the value                       |
 | Redundant `px` unit           | `top-(10px)` | `top-(10)`   | PurgeTSS treats unit-less arbitrary values as pixels      |
@@ -40,9 +40,9 @@ You can set arbitrary color values with `hex`, `rgb`, or `rgba` values, either i
 
 `Generated classes`
 ```css
-/* PurgeTSS v7.2.7 */
-/* Created by César Estrada */
-/* https://github.com/macCesar/purgeTSS */
+// PurgeTSS v7.10.2
+// Created by César Estrada
+// https://purgetss.com
 
 /* Ti Elements */
 'Window': { backgroundColor: '#FFFFFF' }
@@ -127,9 +127,9 @@ You can set arbitrary values for most size and dimension properties with `rem`, 
 
 `Generated classes`
 ```css
-/* PurgeTSS v7.2.7 */
-/* Created by César Estrada */
-/* https://github.com/macCesar/purgeTSS */
+// PurgeTSS v7.10.2
+// Created by César Estrada
+// https://purgetss.com
 
 /* Ti Elements */
 'Window': { backgroundColor: '#FFFFFF' }
@@ -309,9 +309,9 @@ Use any unit supported by the property you are generating. Use `hex` or `rgba` f
 
 `app.tss`
 ```css
-/* PurgeTSS v7.2.7 */
-/* Created by César Estrada */
-/* https://github.com/macCesar/purgeTSS */
+// PurgeTSS v7.10.2
+// Created by César Estrada
+// https://purgetss.com
 
 /* Ti Elements */
 'View': { width: Ti.UI.SIZE, height: Ti.UI.SIZE }
@@ -396,9 +396,9 @@ Try this example on an iPad or tablet.
 
 `app.tss`
 ```css
-// PurgeTSS v7.1.0
+// PurgeTSS v7.10.2
 // Created by César Estrada
-// https://github.com/macCesar/purgeTSS
+// https://purgetss.com
 
 // Ti Elements
 'ImageView[platform=ios]': { hires: true }
@@ -487,9 +487,9 @@ Try this example on an iPad or tablet.
 
 `app.tss`
 ```css
-/* PurgeTSS v7.2.7 */
-/* Created by César Estrada */
-/* https://github.com/macCesar/purgeTSS */
+// PurgeTSS v7.10.2
+// Created by César Estrada
+// https://purgetss.com
 
 /* Ti Elements */
 'View': { width: Ti.UI.SIZE, height: Ti.UI.SIZE }

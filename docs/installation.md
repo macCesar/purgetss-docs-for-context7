@@ -62,7 +62,7 @@ purgetss
 
 - `fonts` folder
 
-  Place icon, serif, sans-serif, or monospace font files here. See the [build-fonts command](commands#build-fonts-command) for instructions.
+  Place icon, serif, sans-serif, or monospace font files here. See the [Custom fonts page](customization/custom-fonts) for instructions.
 
 > ⚠️ **CAUTION**
 >
@@ -133,9 +133,9 @@ To use the example files:
 
 `app.tss after purging`
 ```css
-/* PurgeTSS v7.2.7 */
-/* Created by César Estrada */
-/* https://github.com/macCesar/purgeTSS */
+// PurgeTSS v7.10.2
+// Created by César Estrada
+// https://purgetss.com
 
 /* _app.tss styles */
 '.bg-primary': {
