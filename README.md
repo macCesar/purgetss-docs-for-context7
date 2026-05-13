@@ -44,7 +44,8 @@ What it does:
   - [The `opacity` Modifier](./docs/customization/4-Opacity.md)
   - [Arbitrary Values](./docs/customization/5-arbitrary-values.md)
   - [Platform and Device Modifiers](./docs/customization/6-platform-and-device-modifiers.md)
-  - [Icon Fonts Libraries](./docs/customization/7-icon-fonts-libraries.md)
+  - [Custom Fonts](./docs/customization/7-custom-fonts.md)
+  - [Icon Fonts Libraries](./docs/customization/8-icon-fonts-libraries.md)
 - The UI Module
   - [Introduction](./docs/purgetss-ui/1-introduction.md)
   - [The `play` Method](./docs/purgetss-ui/2-the-play-method.md)
@@ -66,6 +67,24 @@ What it does:
 ---
 
 ## Changelog
+
+### v7.10.2
+
+- Configs written before v7.7.0 (the `brand:` regroup) now auto-migrate in memory on every run. The legacy flat layout (`brand.padding: <number>`, `brand.iosPadding`, `brand.bgColor`, `brand.darkBgColor`, top-level `brand.notification`/`brand.splash`) used to crash auto-purge with `TypeError: Cannot create property 'ios' on number '15'`; `getConfigFile()` now normalizes them to the grouped layout (`brand.padding.{ios, androidLegacy, androidAdaptive}`, `brand.android.*`, `brand.ios.darkBackground`, `brand.colors.background`) before applying defaults. When both legacy and new keys coexist, the new key wins. A one-time deprecation notice per session lists the migrated keys. See [Upgrading from pre-7.7.0 configs](./docs/app-assets/1-app-icons-and-branding.md#upgrading-from-pre-770-configs).
+- Internal fix: `logger.warning` and `logger.success` are now defined. Across `brand`, `images`, `cleanup-legacy`, and `svg-utils`, ~30 callsites of `logger.warning` and ~10 of `logger.success` referenced methods that did not exist on the logger object — any opt-in command path that hit one of those calls used to throw `TypeError: logger.warning is not a function`. The auto-purge entry point most users hit did not reach those callsites, so the bug stayed latent until commands like `purgetss brand` or `purgetss images` were run.
+
+### v7.10.1
+
+- User-visible references to "Tailwind" in copy that did not document a functional integration were dropped. The Class Syntax Error block now reports `'Square brackets "[ ]" are not supported'` instead of `'Tailwind-style brackets "[ ]" are not supported'`; the promotional `<Label>` injected into new projects by `purgetss create` changed from `"Tailwind-inspired utility classes for Titanium/Alloy"` to `"Utility-first styling for Titanium/Alloy"`. All functional integrations stay: the `tailwindcss@3` dependency installed by `install-dependencies` (drives both the `defaultColors`/`defaultTheme` palette base AND the VSCode IntelliSense extension), the `--tailwind` flag on `purgetss shades`, and the recommended `Tailwind CSS IntelliSense` / `Tailwind Raw Reorder (v4)` VSCode extensions.
+
+### v7.10.0
+
+- `purgetss images` got three CLI-only flags. `--opacity <n>` (integer `0-100`) multiplies the alpha channel of every generated density by `n/100` — useful for placeholder or default ImageView images that render at reduced opacity. `--padding <n>` (integer `0-40`) shrinks the rendered image inside each density canvas by symmetric percentage borders, preserving canvas size with transparent fill — useful for breathing room around an unpadded logo. `--output <relpath>` overrides the basename and subpath relative to each platform's `images/` root, so a logo from `purgetss/brand/` can be written as `images/logos/loading.png` across all densities in a single command. Combines naturally for "transparent placeholder with padding under a custom path". See [Multi-density images — opacity, padding, output](./docs/app-assets/2-multi-density-images.md).
+- `purgetss brand` now generates `MarketplaceArtworkFeature.png` (1024×500 Google Play Feature Graphic) alongside the existing iTunesConnect and MarketplaceArtwork submission assets. Auto-discovers `purgetss/brand/logo-feature.{svg,png}` or reuses the master logo if not provided. Default vertical padding is `12%`; override with `--feature-graphic-padding <n>` (range `0-40`), config `brand.padding.featureGraphic`, or CLI `--feature-logo <path>` for a dedicated source. Submission artwork only — written to project root for upload to the Play Console, not bundled into the APK.
+- Arbitrary nesting depth in `config.cjs` `theme` objects. Property emission now walks nested values recursively instead of stopping at level 2, so `theme.extend.colors.brand.primary.500` flattens to `brand-primary-500` instead of being silently dropped. Same for `backgroundGradient` and `backgroundSelectedGradient`. Default modifier keys (`default`, `global`, `DEFAULT`) collapse without contributing to the suffix.
+- Fix: `apply:` now resolves built-in icon font classes (`fas`, `fab`, `fa-*`, `mi-*`, `ms-*`, `f7-*`) from `dist/` for projects that don't run `build-fonts`. Previously those classes were silently dropped from generated rules — `apply: 'fas fa-times-circle wh-12 ...'` produced everything except the FontAwesome family and the icon glyph.
+- Fix: `borderRadius: [...]` arrays no longer get truncated when combined with other utilities in an `apply:` string. The post-merge dedup step (from v7.9.0) tracked depth on `{}` only, so `borderRadius: [0, 0, 0, 16]` (emitted by directional `rounded-{t,b,l,r,tl,tr,bl,br}-*` utilities) was split on its internal commas. The depth tracker now respects `[]` alongside `{}`.
+- Fix: `brand --padding <n>` shortcut now applies to BOTH Android paddings as the help text always promised. Previously the shortcut only fed `androidAdaptivePadding` while `androidLegacyPadding` fell through to its own config value, so `purgetss brand --padding 17` actually produced `androidAdaptive=17, androidLegacy=10`.
 
 ### v7.9.0
 
