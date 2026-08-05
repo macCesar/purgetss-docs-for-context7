@@ -74,7 +74,7 @@ $.myAnimation.close($.myView, (e) => {
 })
 ```
 
-The callback receives the same enriched event object as `play`. See [Callback event object](the-play-method#callback-event-object) for the property reference.
+The callback receives the same enriched event object as `play`. See [Callback event object](./2-the-play-method.md#callback-event-object) for the property reference.
 
 In this example, `myView` uses the properties under `close`, making it fully transparent.
 

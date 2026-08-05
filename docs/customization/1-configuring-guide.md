@@ -507,7 +507,7 @@ This generates classes like `bg-regal-blue` alongside the default colors.
 >
 > You can use the `shades` command to generate a range of shades for a color and add them to `config.cjs`.
 > 
-> For details, see the [shades command](../Commands.md#shades-command).
+> For details, see the [shades command](../commands.md#shades-command).
 
 
 ## Customize spacing

@@ -46,7 +46,7 @@ purgetss
 
 - `config.cjs` file
 
-  This is where you customize defaults or add your own classes. For details, see the [customization section](customization/the-config-file).
+  This is where you customize defaults or add your own classes. For details, see the [customization section](./customization/1-configuring-guide.md).
 
 - `styles` folder
 
@@ -62,7 +62,7 @@ purgetss
 
 - `fonts` folder
 
-  Place icon, serif, sans-serif, or monospace font files here. See the [Custom fonts page](customization/custom-fonts) for instructions.
+  Place icon, serif, sans-serif, or monospace font files here. See the [Custom fonts page](./customization/7-custom-fonts.md) for instructions.
 
 > ⚠️ **CAUTION**
 >
@@ -74,7 +74,7 @@ purgetss
 > 
 > From that point on, you add, delete, or update custom classes in `_app.tss`.
 > 
-> You can also move custom values into `config.cjs`. For details, see the [configuration section](customization/the-config-file).
+> You can also move custom values into `config.cjs`. For details, see the [configuration section](./customization/1-configuring-guide.md).
 
 
 ## Example files
@@ -86,7 +86,7 @@ To use the example files:
 - Compile your app as usual.
 - Use `liveview` for faster iteration.
 
-```xml title=index.xml
+```xml
 <Alloy>
   <Window class="bg-primary">
     <View class="h-auto w-10/12 rounded-lg bg-white">

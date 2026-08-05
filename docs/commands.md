@@ -105,7 +105,7 @@ module.exports = {
 > 
 > PurgeTSS looks for `./purgetss/config.cjs`. Each section is optional and can be customized. Missing sections use the default configuration.
 > 
-> For examples, see the [Configuration section](customization/the-config-file).
+> For examples, see the [Configuration section](./customization/1-configuring-guide.md).
 
 
 
@@ -197,7 +197,7 @@ Generates the Titanium branding set from a main logo image: launcher icons, adap
 > 💡 **TIP**
 >
 > Full guide
-> This is a quick reference. See [App icons and branding](app-assets/app-icons-and-branding) for the full guide: workflow, padding guidance, Android dark mode, iOS 18+ variants, and troubleshooting.
+> This is a quick reference. See [App icons and branding](./app-assets/1-app-icons-and-branding.md) for the full guide: workflow, padding guidance, Android dark mode, iOS 18+ variants, and troubleshooting.
 > It also includes the full `brand:` config reference.
 
 
@@ -303,7 +303,7 @@ The recommended workflow is convention-first:
 - use `config.cjs` only when you need a persistent override
 - use CLI flags only for one-off runs
 
-`brand.colors.background` is baked into the generated assets, but PurgeTSS does not automatically edit the iOS LaunchScreen or Android configuration. Run `purgetss brand --notes` to print the iOS snippet plus a complete launcher-only Android theme and Activity override with the current color. The Android snippet points its three launch-related theme attributes to one `splashscreen_background` resource, so the launch color is changed in a single line. See [Matching the launch background](app-assets/app-icons-and-branding#matching-the-launch-background) for the full setup and merge rules.
+`brand.colors.background` is baked into the generated assets, but PurgeTSS does not automatically edit the iOS LaunchScreen or Android configuration. Run `purgetss brand --notes` to print the iOS snippet plus a complete launcher-only Android theme and Activity override with the current color. The Android snippet points its three launch-related theme attributes to one `splashscreen_background` resource, so the launch color is changed in a single line. See [Matching the launch background](./app-assets/1-app-icons-and-branding.md#matching-the-launch-background) for the full setup and merge rules.
 
 
 ## `images` command
@@ -313,9 +313,9 @@ Generates multi-density variants of your UI images from one high-resolution sour
 > 💡 **TIP**
 >
 > Full guide
-> This is a quick reference. See [Multi-density images](app-assets/multi-density-images) for the full guide: 4× source convention, single-file regeneration, format conversion, and troubleshooting.
+> This is a quick reference. See [Multi-density images](./app-assets/2-multi-density-images.md) for the full guide: 4× source convention, single-file regeneration, format conversion, and troubleshooting.
 > 
-> For SVGs referenced from views or controllers, see [SVG-aware compile-time pipeline](app-assets/svg-pipeline). It runs with every `purgetss` command and rasterizes only the SVGs your views use.
+> For SVGs referenced from views or controllers, see [SVG-aware compile-time pipeline](./app-assets/3-svg-pipeline.md). It runs with every `purgetss` command and rasterizes only the SVGs your views use.
 
 
 ```bash
@@ -434,7 +434,7 @@ MaterialSymbolsSharp-Regular.ttf
 
 After copying the fonts, you can use them in Buttons and Labels. For Font Awesome, set the font family to `fa` (Solid icons) and use a class like `fa-home`.
 
-You do not need to copy any `.tss` file for this to work: PurgeTSS resolves the official icon classes at compile time and writes them to the generated `app/styles/app.tss` (not `purgetss/styles/utilities.tss`). See [Icon font libraries](customization/icon-fonts-libraries) for the full reference.
+You do not need to copy any `.tss` file for this to work: PurgeTSS resolves the official icon classes at compile time and writes them to the generated `app/styles/app.tss` (not `purgetss/styles/utilities.tss`). See [Icon font libraries](./customization/8-icon-fonts-libraries.md) for the full reference.
 
 ### Available font classes
 
@@ -496,7 +496,7 @@ The `build-fonts` command generates `./purgetss/styles/fonts.tss` from font file
 - `-m, --module`: generate a CommonJS module in `./app/lib/purgetss.fonts.js`.
 - `-f, --font-class-from-filename`: use the font's filename as the font class name and icon prefix instead of the font family name (replaces the old `-p` flag).
 
-For the full workflow with examples (Google Fonts, custom icon libraries, `--module` output, filename-based prefixes), see [Custom fonts](customization/custom-fonts).
+For the full workflow with examples (Google Fonts, custom icon libraries, `--module` output, filename-based prefixes), see [Custom fonts](./customization/7-custom-fonts.md).
 
 
 ## `shades` command
@@ -692,7 +692,7 @@ To print a Titanium `config.json`-compatible structure to the console, use `--js
 
 ## `semantic` command
 
-The `semantic` command generates [Titanium semantic colors](best-practices/semantic-colors) into `app/assets/semantic.colors.json`, with Light/Dark mode support built in. Use `--single` to switch modes.
+The `semantic` command generates [Titanium semantic colors](./best-practices/2-semantic-colors.md) into `app/assets/semantic.colors.json`, with Light/Dark mode support built in. Use `--single` to switch modes.
 
 ```bash
 > purgetss semantic [hexcode] [name]
@@ -967,7 +967,7 @@ The PurgeTSS module includes:
 >
 > To learn more
 > 
-> See the [The UI Module](purgetss-ui/introduction) documentation for details.
+> See the [The UI Module](./purgetss-ui/1-introduction.md) documentation for details.
 
 
 

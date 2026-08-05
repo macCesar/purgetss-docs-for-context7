@@ -21,7 +21,7 @@ $.myAnimation.sequence(views, callback)
 
 - The `open`/`close` state is toggled once for the entire sequence
 - Each view fully completes its animation before the next starts
-- The callback receives the same enriched event object as `play`. See [Callback event object](the-play-method#callback-event-object) for details
+- The callback receives the same enriched event object as `play`. See [Callback event object](./2-the-play-method.md#callback-event-object) for details
 
 ### Sequence example
 

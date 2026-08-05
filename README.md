@@ -32,17 +32,16 @@ What it does:
 
 ## Table of Contents
 
-- [Installation](./docs/Installation.md)
-- [Commands](./docs/Commands.md)
+- [Installation](./docs/installation.md)
+- [Commands](./docs/commands.md)
 - App Assets
   - [App icons and branding](./docs/app-assets/1-app-icons-and-branding.md)
   - [Multi-density images](./docs/app-assets/2-multi-density-images.md)
-  - [SVG-aware image pipeline](./docs/app-assets/3-svg-pipeline.md)
 - Customization
   - [The Config File](./docs/customization/1-configuring-guide.md)
   - [Custom Rules](./docs/customization/2-custom-rules.md)
   - [The `apply` Directive](./docs/customization/3-the-apply-directive.md)
-  - [The `opacity` Modifier](./docs/customization/4-Opacity.md)
+  - [The `opacity` Modifier](./docs/customization/4-opacity.md)
   - [Arbitrary Values](./docs/customization/5-arbitrary-values.md)
   - [Platform and Device Modifiers](./docs/customization/6-platform-and-device-modifiers.md)
   - [Custom Fonts](./docs/customization/7-custom-fonts.md)
@@ -64,7 +63,6 @@ What it does:
   - [Large Titles on iOS](./docs/best-practices/3-large-titles-on-ios.md)
   - [Values and Units](./docs/best-practices/4-values-and-units.md)
 - [Grid System](./docs/grid-system.md)
-- [Changelog](./docs/changelog.md)
 
 ---
 
@@ -88,4 +86,4 @@ What it does:
 - `parseTssMap()` dropped every property following an escaped quote, and classes carrying a nested object (`'.text-xs': { font: { fontSize: 12 } }`) never entered the TSS map at all — so the SVG pipeline resolved dimensions from an incomplete map.
 - Android `theme` values keep their quotes in custom rules: `theme: 'Theme.AppDerived.NoTitleBar'` used to be emitted unquoted, which Alloy cannot compile. Generated `dist/utilities.tss` is byte-identical to the previous release.
 
-→ See the [full changelog](changelog) for older releases (v7.11.1 and earlier).
+→ See the [full changelog](./docs/changelog.md) for older releases (v7.11.1 and earlier).

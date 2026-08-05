@@ -136,6 +136,17 @@ If you genuinely want a `.webp` of an SVG, reference it as `image="/.../foo.webp
 PurgeTSS keeps a cache at `purgetss/.cache/svg-images.json`:
 
 ```json
+{
+  "logos/logo.svg": {
+    "svgHash": "<sha1>",
+    "widthDp": 176,
+    "heightDp": null,
+    "targets": [
+      "app/assets/android/images/res-mdpi/logos/logo.png",
+      "app/assets/iphone/images/logos/logo@2x.png",
+      "..."
+    ]
+  }
 }
 ```
 

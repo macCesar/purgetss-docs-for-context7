@@ -12,7 +12,7 @@ The module exports three areas of functionality:
 | Area | What it does |
 |------|-------------|
 | Animation | 2D Matrix animations and transformations on single elements, arrays, or children |
-| [Appearance](appearance) | Light/Dark/System mode switching with persistent user preference |
+| [Appearance](./10-appearance.md) | Light/Dark/System mode switching with persistent user preference |
 | Utilities | `deviceInfo()` for platform diagnostics, `saveComponent()` for view snapshots |
 
 ---
@@ -41,7 +41,7 @@ When you call `play` on a View, it animates from its current state to the state 
 - `reorder`: Animate views to new positions based on index mapping.
 - `transition`: Animate multiple views to new layout configurations using Matrix2D (translate, rotate, scale).
 
-The `play`, `toggle`, `open`, `close`, `apply`, and `sequence` methods accept an optional callback. The callback receives an enriched event object, see [The `play` method](the-play-method#callback-event-object) for details.
+The `play`, `toggle`, `open`, `close`, `apply`, and `sequence` methods accept an optional callback. The callback receives an enriched event object, see [The `play` method](./2-the-play-method.md#callback-event-object) for details.
 
 ### Available modifiers
 - `open:`, `close:`, `complete:`: Set different properties for each state.

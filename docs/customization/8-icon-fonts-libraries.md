@@ -47,7 +47,7 @@ The complete class definitions live in the PurgeTSS `dist/` folder:
 
 ## Installing the icon fonts
 
-Run [`icon-library`](../commands#icon-library-command) to copy the `.ttf` files into `./app/assets/fonts/`. That is the only step you need. Once the fonts are in place, the icon classes from the table above work out of the box.
+Run [`icon-library`](../commands.md#icon-library-command) to copy the `.ttf` files into `./app/assets/fonts/`. That is the only step you need. Once the fonts are in place, the icon classes from the table above work out of the box.
 
 ```bash
 # All four families
@@ -253,4 +253,4 @@ Older versions of PurgeTSS bundled Bootstrap Icons, Boxicons, LineIcons, and Tab
 2. Place the `.ttf`/`.otf` and `.css` files into `./purgetss/fonts/<library>/`.
 3. Run `purgetss build-fonts`.
 
-For the underlying mechanics (how `build-fonts` reads the `.css`, options like `-m` and `-f`), see [Custom fonts](custom-fonts).
+For the underlying mechanics (how `build-fonts` reads the `.css`, options like `-m` and `-f`), see [Custom fonts](./7-custom-fonts.md).

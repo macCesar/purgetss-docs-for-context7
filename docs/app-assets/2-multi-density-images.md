@@ -13,7 +13,7 @@
 
 This page covers the `purgetss/images/` folder, the 4× master convention, single-file regeneration, and where the command fits in a normal build.
 
-For a terse reference of every flag, see the [`images` command reference](../commands#images-command).
+For a terse reference of every flag, see the [`images` command reference](../commands.md#images-command).
 
 ## Why multi-density?
 
@@ -195,7 +195,7 @@ images: {
 }
 ```
 
-Change only what should become a project default. CLI flags still win for one-off runs. `autoSync` and `files` are covered in the [Per-file overrides](#per-file-overrides-with-imagesfiles) and [SVG-aware compile-time pipeline](svg-pipeline) sections.
+Change only what should become a project default. CLI flags still win for one-off runs. `autoSync` and `files` are covered in the [Per-file overrides](#per-file-overrides-with-imagesfiles) and [SVG-aware compile-time pipeline](./3-svg-pipeline.md) sections.
 
 ## Per-file overrides with `images.files`
 
@@ -231,7 +231,7 @@ With the example above:
 
 SVGs in `files` always emit `.png`. PurgeTSS detects that the file is a vector source whose entry exists because the developer pinned it from a view/controller reference (`image="/.../foo.svg"`). Titanium's runtime only falls back from `.svg` references to `.png`, never `.webp`, `.jpeg`, or another format. Emitting anything else here would silently produce files Titanium cannot load. See the [Format conversion](#format-conversion) section for the matching warning on `images.format`.
 
-Set `autoSync: false` if you do not want the [SVG pipeline](svg-pipeline) writing into this section automatically. Your `images.files` entries are then yours to maintain.
+Set `autoSync: false` if you do not want the [SVG pipeline](./3-svg-pipeline.md) writing into this section automatically. Your `images.files` entries are then yours to maintain.
 
 ## Overwrite confirmation
 
@@ -340,7 +340,7 @@ Keep `--format null` (the default) when you need to stay in the same format as t
 > PurgeTSS protects you in two places:
 > 
 > - SVGs listed in `images.files` always emit `.png`, even with `format: 'webp'`. The output line says `png (forced; ignores format: webp)`.
-> - The post-purge [SVG pipeline](svg-pipeline) always emits `.png` regardless of `format`.
+> - The post-purge [SVG pipeline](./3-svg-pipeline.md) always emits `.png` regardless of `format`.
 > 
 > `format` only applies to raster sources and SVGs not listed in `files`, which are the ones you reference directly as `.webp` in XML instead of through `.svg`.
 
@@ -530,6 +530,6 @@ Shows every file that would be written without writing anything.
 
 ### Can I use this for app icons?
 
-No. App icons need a different pipeline: adaptive icons, mask safe zones, marketplace flattening, and iOS 18+ Dark/Tinted variants. Use [`purgetss brand`](./app-icons-and-branding) for the launcher icon.
+No. App icons need a different pipeline: adaptive icons, mask safe zones, marketplace flattening, and iOS 18+ Dark/Tinted variants. Use [`purgetss brand`](./1-app-icons-and-branding.md) for the launcher icon.
 
 `purgetss images` is for the UI assets inside your screens: buttons, backgrounds, illustrations, inline icons.

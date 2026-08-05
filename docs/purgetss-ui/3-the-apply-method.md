@@ -62,4 +62,4 @@ $.myAnimation.apply($.myView, (e) => {
 })
 ```
 
-When you pass an array of views, `index` and `total` work the same as with `play`. See [Callback event object](the-play-method#callback-event-object) for the property reference.
+When you pass an array of views, `index` and `total` work the same as with `play`. See [Callback event object](./2-the-play-method.md#callback-event-object) for the property reference.

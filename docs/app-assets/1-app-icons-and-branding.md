@@ -10,7 +10,7 @@
 
 This guide covers the `brand` workflow: setting up `purgetss/brand/`, tuning padding for your logo, handling dark mode on iOS 18+ and Android 13+, and fixing common rebuild issues.
 
-For a terse reference of every flag, see the [`brand` command reference](../commands#brand-command).
+For a terse reference of every flag, see the [`brand` command reference](../commands.md#brand-command).
 
 ## Quick start
 

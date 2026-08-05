@@ -98,7 +98,7 @@ The same lookup runs for `mi-*` (Material Icons), `ms-*` (Material Symbols), and
 
 ## Use arbitrary values
 
-You can use [arbitrary values](arbitrary-values) inside custom classes.
+You can use [arbitrary values](./5-arbitrary-values.md) inside custom classes.
 
 `./purgetss/config.cjs`
 ```javascript

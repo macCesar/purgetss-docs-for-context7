@@ -55,6 +55,11 @@ Each key is a color name. Each value is an object with `light` and `dark` hex va
 To include transparency, use the 8-digit hex format (`#RRGGBBAA`):
 
 ```json
+{
+  "overlayColor": {
+    "light": "#00000033",
+    "dark": "#00000066"
+  }
 }
 ```
 
@@ -327,7 +332,7 @@ Fill in intermediate stops (`100`, `300`, `400`, `600`, `700`, `900`) as needed.
 
 ### Generating semantic colors with the `semantic` command
 
-Writing 11 palette entries by hand is tedious. So is creating each purpose-based color one by one. The [`semantic`](../Commands.md#semantic-command) command handles both forms; `--single` chooses the purpose-based mode.
+Writing 11 palette entries by hand is tedious. So is creating each purpose-based color one by one. The [`semantic`](../commands.md#semantic-command) command handles both forms; `--single` chooses the purpose-based mode.
 
 #### Palette mode: generated tonal scale
 
