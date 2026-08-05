@@ -2,6 +2,26 @@
 
 All notable changes to PurgeTSS. For the canonical, full-detail log see [the project CHANGELOG on GitHub](https://github.com/macCesar/purgetss/blob/main/CHANGELOG.md).
 
+## v7.12.1
+
+- `purgetss brand --notes` now targets Titanium's launcher Activity instead of only the app theme. Titanium applies `Theme.Titanium` directly to the generated launcher Activity, so adding splash items only to the `<application>` theme could still leave Android 12+ using the SDK's default background. The notes now print a complete `splashscreen.xml` at the correct Alloy or Classic resource path, define a launcher-only `Theme.SplashScreen` derived from `Theme.Titanium`, and show how to merge that theme into the existing launcher Activity declaration without changing the app's current theme. `windowSplashScreenBackground`, `windowBackground` and `colorBackground` all reference one `splashscreen_background` resource, so the launch color is changed in one place. With `--splash` enabled, the same copy-ready style also includes `windowSplashScreenAnimatedIcon`.
+- Font Awesome Free updated to 7.3.1 — 23 new icon classes (`.fa-lotus`, `.fa-codeberg`, `.fa-copilot`, `.fa-substack`, `.fa-tesla`, `.fa-storybook`, `.fa-matrix`, `.fa-nextcloud`, `.fa-visual-studio`, …), none removed.
+- `sharp` updated to 0.35.3 and `glob` to 13.0.6.
+
+## v7.12.0
+
+- **Android launch background snippets in `purgetss brand --notes`.** The full notes covered the iOS launch image and the Android launcher icon, but never the color Android draws before Titanium creates the first Window — so a run that set a brand background still flashed the default theme color at launch. `--notes` now prints a step with both items to merge into the existing app theme: `android:windowSplashScreenBackground` (Android 12+ system splash) and `android:windowBackground` (native window), plus the reminder that `tiapp.xml` `<application>` must reference that theme with `android:theme="@style/YourExistingTheme"`.
+- `--notes` wording no longer names only `tiapp.xml`. The command edits neither `tiapp.xml` nor the Android theme resources, so the help text and the compact summary now read "platform launch/theme snippets".
+- `completions-v3.json` reports SDK 13.4.0.GA. Metadata label only — the properties map is unchanged.
+
+## v7.11.2
+
+- `images.files` sync silently gave up on any config with comments — including the one `purgetss init` generates. `matchBracket()` tracked quotes but not comments, so the apostrophe in the template's own comment opened a string that never closed, and every run printed `Could not insert <file> into images.files (section missing or unreadable)` while `files` stayed `[]`. The SVG pipeline still generated the PNGs, so only the write-back to `config.cjs` was lost.
+- `parseTssMap()` dropped every property following an escaped quote. A single `\'` in a value flipped the scanner into "inside a string" permanently, so `'.card': { title: 'it\'s here', width: 200 }` yielded no `width` at all and the SVG pipeline resolved dimensions from an incomplete map.
+- Classes carrying a nested object never entered the TSS map. The class body was delimited by `[^}]*`, which cannot see past an inner `}` — so `'.text-xs': { font: { fontSize: 12 } }`, and any custom class combining `font: { ... }` with `width`/`height`, was skipped entirely by the SVG pipeline. The body is now delimited by brace balancing.
+- Android `theme` values keep their quotes in custom rules. `'.welcome-window': { android: { theme: 'Theme.AppDerived.NoTitleBar' } }` used to emit an unquoted value that Alloy cannot compile, because any value containing `Theme` or `Titanium` was treated as a JavaScript expression. Detection is now anchored to the start of the value (`Alloy.`, `Ti.`, `Titanium.`, `L(`, plus constant array literals), so theme names stay strings while real expressions are still emitted raw. Generated `dist/utilities.tss` is byte-identical to the previous release.
+- E2E suites run against a disposable copy of `test-project/`. They used to execute the real CLI inside the versioned project, leaving the working tree dirty and — via a `rm -f purgetss/config.cjs` cleanup — dropping the `images.files` entries the SVG pipeline had synced.
+
 ## v7.11.1
 
 - Fixes for the SVG image pipeline from v7.11.0: width/height now cascade symmetrically (the unpinned side derives from the `viewBox` on every run instead of getting cemented in `config.cjs`), `syncConfigImages` mirrors the current run so shrinking a class actually shrinks the entry, and SVGs listed in `images.files` always emit PNG to match Titanium's runtime fallback.
