@@ -37,6 +37,7 @@ What it does:
 - App Assets
   - [App icons and branding](./app-assets/1-app-icons-and-branding.md)
   - [Multi-density images](./app-assets/2-multi-density-images.md)
+  - [SVG-aware image pipeline](./app-assets/3-svg-pipeline.md)
 - Customization
   - [The Config File](./customization/1-configuring-guide.md)
   - [Custom Rules](./customization/2-custom-rules.md)
@@ -63,6 +64,7 @@ What it does:
   - [Large Titles on iOS](./best-practices/3-large-titles-on-ios.md)
   - [Values and Units](./best-practices/4-values-and-units.md)
 - [Grid System](./grid-system.md)
+- [Changelog](./changelog.md)
 
 ---
 
