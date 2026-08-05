@@ -87,7 +87,9 @@ module.exports = {
   images: {
     quality: 85,             // JPEG/WebP/AVIF quality (0-100)
     format: null,            // null = keep original; 'webp' | 'jpeg' | 'png' to convert every image
-    confirmOverwrites: true  // prompt before overwriting files (set false to skip)
+    autoSync: true,          // false = SVG pipeline computes dims but doesn't write to images.files
+    confirmOverwrites: true, // prompt before overwriting files (set false to skip)
+    files: []                // per-file overrides: [{ filename: 'images/<sub>/<name>.<ext>', width, height? }]
   },
   theme: {
     extend: {}
@@ -264,7 +266,7 @@ Legacy cleanup
 
 Diagnostics
 
-- `--notes`: print full `tiapp.xml` snippets + padding tuning guide.
+- `--notes`: print the complete platform launch/theme setup + padding tuning guide.
 - `--debug`: print extra diagnostics.
 
 > ℹ️ **INFO**
@@ -301,6 +303,8 @@ The recommended workflow is convention-first:
 - use `config.cjs` only when you need a persistent override
 - use CLI flags only for one-off runs
 
+`brand.colors.background` is baked into the generated assets, but PurgeTSS does not automatically edit the iOS LaunchScreen or Android configuration. Run `purgetss brand --notes` to print the iOS snippet plus a complete launcher-only Android theme and Activity override with the current color. The Android snippet points its three launch-related theme attributes to one `splashscreen_background` resource, so the launch color is changed in a single line. See [Matching the launch background](app-assets/app-icons-and-branding#matching-the-launch-background) for the full setup and merge rules.
+
 
 ## `images` command
 
@@ -310,6 +314,8 @@ Generates multi-density variants of your UI images from one high-resolution sour
 >
 > Full guide
 > This is a quick reference. See [Multi-density images](app-assets/multi-density-images) for the full guide: 4× source convention, single-file regeneration, format conversion, and troubleshooting.
+> 
+> For SVGs referenced from views or controllers, see [SVG-aware compile-time pipeline](app-assets/svg-pipeline). It runs with every `purgetss` command and rasterizes only the SVGs your views use.
 
 
 ```bash
@@ -427,6 +433,8 @@ MaterialSymbolsSharp-Regular.ttf
 ```
 
 After copying the fonts, you can use them in Buttons and Labels. For Font Awesome, set the font family to `fa` (Solid icons) and use a class like `fa-home`.
+
+You do not need to copy any `.tss` file for this to work: PurgeTSS resolves the official icon classes at compile time and writes them to the generated `app/styles/app.tss` (not `purgetss/styles/utilities.tss`). See [Icon font libraries](customization/icon-fonts-libraries) for the full reference.
 
 ### Available font classes
 
