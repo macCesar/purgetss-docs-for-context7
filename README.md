@@ -37,7 +37,6 @@ What it does:
 - App Assets
   - [App icons and branding](./docs/app-assets/1-app-icons-and-branding.md)
   - [Multi-density images](./docs/app-assets/2-multi-density-images.md)
-  - [SVG-aware image pipeline](./docs/app-assets/3-svg-pipeline.md)
 - Customization
   - [The Config File](./docs/customization/1-configuring-guide.md)
   - [Custom Rules](./docs/customization/2-custom-rules.md)
@@ -64,27 +63,27 @@ What it does:
   - [Large Titles on iOS](./docs/best-practices/3-large-titles-on-ios.md)
   - [Values and Units](./docs/best-practices/4-values-and-units.md)
 - [Grid System](./docs/grid-system.md)
-- [Changelog](./docs/changelog.md)
 
 ---
 
 ## Changelog
 
-### v7.11.1
+### v7.12.1
 
-- Fixes for the SVG image pipeline from v7.11.0: width/height now cascade symmetrically (the unpinned side derives from the `viewBox` on every run instead of getting cemented in `config.cjs`), `syncConfigImages` mirrors the current run so shrinking a class actually shrinks the entry, and SVGs listed in `images.files` always emit PNG to match Titanium's runtime fallback.
-- `purgetss images` respects `--yes` for overwrite confirmations, and `syncConfigImages` no longer bumps `config.cjs` mtime on untouched runs (which was triggering needless `utilities.tss` rebuilds).
-- Restored `src/dev/builders/tailwind-builder.js` — it was the entry point for `npm run build:tailwind`, deleted as "orphan" by mistake in 7.11.0.
+- `purgetss brand --notes` now targets Titanium's launcher Activity instead of only the app theme. Titanium applies `Theme.Titanium` directly to the generated launcher Activity, so adding splash items only to the `<application>` theme could still leave Android 12+ using the SDK's default background. The notes now print a complete `splashscreen.xml` plus a launcher-only `Theme.SplashScreen` derived from `Theme.Titanium`, with the launch color defined in one place.
+- Font Awesome Free updated to 7.3.1 — 23 new icon classes (`.fa-lotus`, `.fa-codeberg`, `.fa-copilot`, `.fa-substack`, `.fa-tesla`, …), none removed.
+- `sharp` updated to 0.35.3 and `glob` to 13.0.6.
 
-### v7.11.0
+### v7.12.0
 
-- **SVG-aware compile-time image pipeline as a post-step of `purgetss`.** When views or controllers reference `image="/images/<sub>/<name>.svg"` alongside utility classes that resolve to numeric width/height (`w-32`, `w-(300)`, `h-auto`, …), purge now compiles those SVGs into the 8 Titanium density variants (5 Android + 3 iPhone PNGs) using dimensions resolved from `app.tss`. Titanium loads the generated `.png` automatically at runtime; the SVG attribute in your source is never rewritten. See [SVG-aware image pipeline](./docs/app-assets/3-svg-pipeline.md).
-- New `images.files` array in `config.cjs` to pin width/height per file, plus `images.autoSync` (default `true`) for devs who want to manage `images.files` by hand.
-- `config.cjs` syntax validator: type mismatches in known fields (`theme.fontFamily.*`, `theme.extend.fontFamily.*`) print a formatted `Config Syntax Error` block with file, JSON path, and a fix snippet — instead of cryptic downstream crashes like `rule.startsWith is not a function`.
+- **Android launch background snippets in `purgetss brand --notes`.** The notes covered the iOS launch image and the Android launcher icon, but never the color Android draws before Titanium creates the first Window — so a run that set a brand background still flashed the default theme color at launch. `--notes` now prints `android:windowSplashScreenBackground` (Android 12+ system splash) and `android:windowBackground` (native window) to merge into the existing app theme.
+- `--notes` wording no longer names only `tiapp.xml`: the command edits neither `tiapp.xml` nor the Android theme resources, so it now reads "platform launch/theme snippets".
+- `completions-v3.json` reports SDK 13.4.0.GA — metadata label only, the properties map is unchanged.
 
-### v7.10.2
+### v7.11.2
 
-- Configs written before v7.7.0 (the `brand:` regroup) now auto-migrate in memory on every run. The legacy flat layout used to crash auto-purge with `TypeError: Cannot create property 'ios' on number '15'`; `getConfigFile()` now normalizes them to the grouped layout before applying defaults. See [Upgrading from pre-7.7.0 configs](./docs/app-assets/1-app-icons-and-branding.md#upgrading-from-pre-770-configs).
-- Internal fix: `logger.warning` and `logger.success` are now defined — the ~40 callsites across `brand`, `images`, `cleanup-legacy`, and `svg-utils` no longer throw `TypeError: logger.warning is not a function` when those opt-in commands run.
+- `images.files` sync silently gave up on any config with comments — including the one `purgetss init` generates — because the scanner tracked quotes but not comments. Only the write-back to `config.cjs` was lost; the SVG pipeline still generated the PNGs.
+- `parseTssMap()` dropped every property following an escaped quote, and classes carrying a nested object (`'.text-xs': { font: { fontSize: 12 } }`) never entered the TSS map at all — so the SVG pipeline resolved dimensions from an incomplete map.
+- Android `theme` values keep their quotes in custom rules: `theme: 'Theme.AppDerived.NoTitleBar'` used to be emitted unquoted, which Alloy cannot compile. Generated `dist/utilities.tss` is byte-identical to the previous release.
 
-→ See the [full changelog](changelog) for older releases (v7.10.1 and earlier).
+→ See the [full changelog](changelog) for older releases (v7.11.1 and earlier).
