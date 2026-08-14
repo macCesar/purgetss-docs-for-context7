@@ -55,7 +55,7 @@ What it does:
 > ℹ️ **INFO**
 >
 > How this differs from the official icon fonts
-> Unlike the [official icon fonts](./8-icon-fonts-libraries.md), which PurgeTSS resolves automatically from its own bundled files and need no `.tss` in your project, custom fonts **do** generate `./purgetss/styles/fonts.tss`. That file is then folded into the generated `app/styles/app.tss` when you run `purgetss` (or compile your app) — that is where the final classes used by Alloy live.
+> Unlike the [official icon fonts](./8-icon-fonts-libraries.md), which PurgeTSS resolves automatically from its own bundled files and need no `.tss` in your project, custom fonts **do** generate `./purgetss/styles/fonts.tss`. That file is then folded into the generated `app/styles/app.tss` when you run `purgetss` (or compile your app). That is where the final classes used by Alloy live.
 
 
 After running `purgetss build-fonts` with the Bevan and Dancing Script example above:

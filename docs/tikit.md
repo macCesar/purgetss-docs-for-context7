@@ -16,7 +16,7 @@ TiKit is meant to help you move faster without fighting styling details.
 
 - Alerts, Avatars, Buttons, Cards, and Tabs with practical defaults.
 - Styled with PurgeTSS utility classes instead of large TSS files.
-- Dynamic updates -- change text, images, and icons without recreating the component.
+- Dynamic updates: change text, images, and icons without recreating the component.
 - Works with FontAwesome, Material Icons, and other icon fonts.
 - Customizable colors and styles via `classes` property.
 - You only pass what you need.
@@ -64,7 +64,7 @@ npm install -g purgetss
 
 ## Component Default Values
 
-TiKit components work out of the box with sensible defaults. Here's what each primary component uses when a property isn't specified:
+Every TiKit component has defaults. Here's what each primary component uses when a property isn't specified:
 
 | Component | Property  | Default Value                                                                  | Description                  |
 | --------- | --------- | ------------------------------------------------------------------------------ | ---------------------------- |
@@ -387,7 +387,7 @@ Colors: `black`, `dark`, `light`, and `white` themes that affect background and 
 
 Use this for code examples. Set `copy="true"` to add a copy button.
 
-Pro tip: For best results, install a monospaced font (like Fira Code or JetBrains Mono) and configure `font-mono` in your PurgeTSS config.
+Install a monospaced font, like Fira Code or JetBrains Mono, and configure `font-mono` in your PurgeTSS config.
 
 Localization: The copy button uses `L('copy', 'Copy')` for its title and `L('code_copied', 'Code copied!')` for the confirmation message. Add these keys to your `strings.xml` files for translation.
 

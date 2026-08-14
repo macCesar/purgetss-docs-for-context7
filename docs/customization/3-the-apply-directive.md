@@ -76,7 +76,7 @@ theme: {
 
 ## Use icon font classes
 
-Icon fonts bundled with PurgeTSS — FontAwesome, Material Icons, Material Symbols, and Framework7 — can be referenced inside `apply` without running `build-fonts` first. The directive resolves these classes against the bundled `dist/*.tss` files, so the font family and the glyph are merged into the generated rule alongside the rest of the utilities:
+Icon fonts bundled with PurgeTSS (FontAwesome, Material Icons, Material Symbols, and Framework7) can be referenced inside `apply` without running `build-fonts` first. The directive resolves these classes against the bundled `dist/*.tss` files, so the font family and the glyph are merged into the generated rule alongside the rest of the utilities:
 
 `./purgetss/config.cjs`
 ```javascript
@@ -94,7 +94,7 @@ module.exports = {
 '.close-button': { color: '#374151', textColor: '#374151', width: 48, height: 48, font: { fontFamily: 'FontAwesome7Free-Solid' }, text: '\uf057', title: '\uf057' }
 ```
 
-The same lookup runs for `mi-*` (Material Icons), `ms-*` (Material Symbols), and `f7-*` (Framework7) classes. If the project has its own `purgetss/styles/fontawesome.tss` (for example, FontAwesome Pro or Beta), that file takes precedence over the bundled default — matching the precedence order used when the same icon class appears directly in XML.
+The same lookup runs for `mi-*` (Material Icons), `ms-*` (Material Symbols), and `f7-*` (Framework7) classes. If the project has its own `purgetss/styles/fontawesome.tss` (for example, FontAwesome Pro or Beta), that file takes precedence over the bundled default, the same order that applies when the icon class appears directly in XML.
 
 ## Use arbitrary values
 

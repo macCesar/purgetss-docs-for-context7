@@ -47,7 +47,7 @@ The complete class definitions live in the PurgeTSS `dist/` folder:
 
 ## Installing the icon fonts
 
-Run [`icon-library`](../commands.md#icon-library-command) to copy the `.ttf` files into `./app/assets/fonts/`. That is the only step you need. Once the fonts are in place, the icon classes from the table above work out of the box.
+Run [`icon-library`](../commands.md#icon-library-command) to copy the `.ttf` files into `./app/assets/fonts/`. That is the only step. Once the fonts are in place, the icon classes from the table above work.
 
 ```bash
 # All four families
