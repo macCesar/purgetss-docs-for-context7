@@ -68,22 +68,23 @@ What it does:
 
 ## Changelog
 
+### v7.13.1
+
+- Four vulnerable transitive dependencies patched, all of which shipped inside v7.13.0: `postcss`, `nanoid`, `brace-expansion` and `uuid`. Patch bumps within the same major, so `package.json` is untouched and only the lockfile moves. `npm audit` reports zero vulnerabilities afterwards.
+
+### v7.13.0
+
+- **`purgetss brand` now covers every image the Titanium template ships.** A run on a fresh Alloy project used to leave 28 files wearing the grey Alloy logo: the 16 iPhone launch images, the 11 per-qualifier Android splashes, and `appicon.png`. The rule is now explicit: if the template ships the file, `brand` updates it.
+- **The `brand:` config is organized by piece.** Each of the 14 pieces takes the same four keys where they apply (`logo`, `padding`, `background`, `enabled`), and an older block is rewritten to that structure on the next run, carrying over every value you had customized. Unknown keys abort the run instead of being ignored.
+- **Breaking: one name per thing** across config, flags, `--only` and the `purgetss/brand/` files. `--splash` → `--splash-icon`, `--notification` → `--notification-icon`, `--feature-logo` → `--feature-graphic-logo`, `--legacy-splash` removed. No aliases were kept.
+- **New `--only <pieces>` filter** to regenerate one piece or a group, and **`logo-launch.*`** to put your logotype on the iOS launch screen through `LaunchLogo.png`.
+- **New `brand.optimize` / `--optimize`**: quantizes the generated PNGs to a palette. Off by default because it is lossy: 1.6 MB to 476 KB on the reference set, indistinguishable on flat artwork.
+- `shades` and `semantic` no longer strip every comment from `config.cjs`; they rewrite only the `theme:` section.
+
 ### v7.12.1
 
 - `purgetss brand --notes` now targets Titanium's launcher Activity instead of only the app theme. Titanium applies `Theme.Titanium` directly to the generated launcher Activity, so adding splash items only to the `<application>` theme could still leave Android 12+ using the SDK's default background. The notes now print a complete `splashscreen.xml` plus a launcher-only `Theme.SplashScreen` derived from `Theme.Titanium`, with the launch color defined in one place.
-- Font Awesome Free updated to 7.3.1 — 23 new icon classes (`.fa-lotus`, `.fa-codeberg`, `.fa-copilot`, `.fa-substack`, `.fa-tesla`, …), none removed.
+- Font Awesome Free updated to 7.3.1: 23 new icon classes (`.fa-lotus`, `.fa-codeberg`, `.fa-copilot`, `.fa-substack`, `.fa-tesla`, …), none removed.
 - `sharp` updated to 0.35.3 and `glob` to 13.0.6.
 
-### v7.12.0
-
-- **Android launch background snippets in `purgetss brand --notes`.** The notes covered the iOS launch image and the Android launcher icon, but never the color Android draws before Titanium creates the first Window — so a run that set a brand background still flashed the default theme color at launch. `--notes` now prints `android:windowSplashScreenBackground` (Android 12+ system splash) and `android:windowBackground` (native window) to merge into the existing app theme.
-- `--notes` wording no longer names only `tiapp.xml`: the command edits neither `tiapp.xml` nor the Android theme resources, so it now reads "platform launch/theme snippets".
-- `completions-v3.json` reports SDK 13.4.0.GA — metadata label only, the properties map is unchanged.
-
-### v7.11.2
-
-- `images.files` sync silently gave up on any config with comments — including the one `purgetss init` generates — because the scanner tracked quotes but not comments. Only the write-back to `config.cjs` was lost; the SVG pipeline still generated the PNGs.
-- `parseTssMap()` dropped every property following an escaped quote, and classes carrying a nested object (`'.text-xs': { font: { fontSize: 12 } }`) never entered the TSS map at all — so the SVG pipeline resolved dimensions from an incomplete map.
-- Android `theme` values keep their quotes in custom rules: `theme: 'Theme.AppDerived.NoTitleBar'` used to be emitted unquoted, which Alloy cannot compile. Generated `dist/utilities.tss` is byte-identical to the previous release.
-
-→ See the [full changelog](./docs/changelog.md) for older releases (v7.11.1 and earlier).
+→ See the [full changelog](./docs/changelog.md) for older releases (v7.12.0 and earlier).
