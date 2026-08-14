@@ -41,25 +41,28 @@ module.exports = {
     }
   },
   brand: {
-    logos: {},  // empty = auto-discovers from purgetss/brand/
-    padding: {
-      ios: '4%',
-      androidLegacy: '10%',
-      androidAdaptive: '19%'
-    },
-    android: {
-      splash: false,
-      notification: false
-    },
-    ios: {
-      dark: true,
-      tinted: true,
-      darkBackground: null  // null = transparent per Apple HIG
-    },
-    colors: {
-      background: '#FFFFFF'
-    },
-    confirmOverwrites: true  // prompt before overwriting files (set false to skip)
+    background: '#FFFFFF',   // inherited by every piece that doesn't set its own
+    confirmOverwrites: true, // prompt before overwriting files (set false to skip)
+    optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
+
+    // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
+    // these keys are for numbers, colors and activation. Padding is never inherited.
+    icon:             { padding: '4%' },    // DefaultIcon.png + DefaultIcon-ios.png
+    dark:             { background: null }, // DefaultIcon-Dark.png
+    tinted:           {},                   // DefaultIcon-Tinted.png
+    iosSplash:        { padding: '26%' },   // assets/iphone/Default*.png × 16
+    launchLogo:       { padding: '12%' },   // LaunchLogo.png (1024×1024)
+    marketplace:      {},                   // iTunesConnect.png + MarketplaceArtwork.png
+    featureGraphic:   { padding: '12%' },   // MarketplaceArtworkFeature.png (1024×500)
+    adaptive:         { padding: '18%' },   // ic_launcher_{foreground,background,monochrome}.png × 5 + ic_launcher.xml
+    legacyIcon:       { padding: '10%' },   // ic_launcher.png × 5
+    appicon:          {},                   // appicon.png (128×128)
+    androidSplash:    { padding: '26%' },   // assets/android/default.png + images/res-*/default.png × 11
+
+    // Opt-in: inert until you edit the Android theme / FCM meta-data by hand.
+    splashIcon:       { enabled: false },   // drawable-*/splash_icon.png × 5
+    notificationIcon: { enabled: false },   // drawable-*/ic_stat_notify.png × 5
+    ninePatch:        { enabled: false }    // background.9.png (not implemented yet)
   },
   images: {
     quality: 85,             // JPEG/WebP/AVIF quality (0-100)
@@ -81,32 +84,47 @@ The config file has four main sections: `purge`, `brand`, `images`, and `theme`.
 
 `brand:` and `images:` configure the matching commands. Their option lists live in the [`brand` guide](../app-assets/1-app-icons-and-branding.md) and the [`images` guide](../app-assets/2-multi-density-images.md). The rest of this page covers `purge` and `theme`.
 
-For `brand`, the structure is grouped by purpose:
+For `brand`, the structure is one block per piece of artwork, each accepting the same four keys where they apply:
 
-- `logos`: optional path overrides when you do not want to rely on `purgetss/brand/`
-- `padding`: visual sizing for iOS, Android legacy, and Android adaptive icons
-- `android`: Android-only optional outputs such as `splash_icon.png` and notification icons
-- `ios`: optional iOS-only variant toggles and the optional dark background color
-- `colors`: shared color settings such as the adaptive background and iOS flatten color
+- `logo`: path to this piece's artwork, when it lives outside `purgetss/brand/`
+- `padding`: inset per side, as a number or a percentage string like `'19%'`. Never inherited
+- `background`: hex color, or `null` for transparent. Inherited from `brand.background`
+- `enabled`: `false` turns a default piece off, `true` turns an opt-in piece on
 
-For the property-by-property reference, see [App icons and branding](../app-assets/1-app-icons-and-branding.md#brand-config-reference).
+Plus `brand.background`, `brand.confirmOverwrites`, `brand.logo` (the main logo) and `brand.monochromeLogo`.
+
+A `brand:` block written for an older PurgeTSS is rewritten to this structure on the next run, carrying over every value that had been customized. A key that belongs to no structure at all, a typo for instance, aborts the run with the list of valid ones instead. For the property-by-property reference, see [App icons and branding](../app-assets/1-app-icons-and-branding.md#brand-config-reference).
 
 ### Overriding logo paths
 
-By default, PurgeTSS auto-discovers logo files from `purgetss/brand/`. If you want to use custom paths, add them to `brand.logos`:
+By default, PurgeTSS auto-discovers logo files from `purgetss/brand/`: `logo.{svg,png}` for the main artwork and `logo-<piece>.{svg,png}` for a specific piece. If you want to use custom paths, set `logo` on the piece:
 
 `Example: Custom logo paths`
 ```javascript
 module.exports = {
   brand: {
-    logos: {
-      primary: './my-logos/main.svg',         // overrides auto-discovered logo.svg
-      androidLauncher: './my-logos/icon.svg', // overrides auto-discovered logo-icon.svg
-      androidSplash: './my-logos/splash.svg', // overrides auto-discovered logo-splash.svg
-      monochrome: './my-logos/mono.svg',      // overrides auto-discovered logo-mono.svg
-      iosDark: './my-logos/dark.svg',         // overrides auto-discovered logo-dark.svg
-      iosTinted: './my-logos/tinted.svg'      // overrides auto-discovered logo-tinted.svg
-    }
+    background: '#FFFFFF',   // inherited by every piece that doesn't set its own
+    confirmOverwrites: true, // prompt before overwriting files (set false to skip)
+    optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
+
+    // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
+    // these keys are for numbers, colors and activation. Padding is never inherited.
+    icon:             { padding: '4%' },    // DefaultIcon.png + DefaultIcon-ios.png
+    dark:             { background: null }, // DefaultIcon-Dark.png
+    tinted:           {},                   // DefaultIcon-Tinted.png
+    iosSplash:        { padding: '26%' },   // assets/iphone/Default*.png × 16
+    launchLogo:       { padding: '12%' },   // LaunchLogo.png (1024×1024)
+    marketplace:      {},                   // iTunesConnect.png + MarketplaceArtwork.png
+    featureGraphic:   { padding: '12%' },   // MarketplaceArtworkFeature.png (1024×500)
+    adaptive:         { padding: '18%' },   // ic_launcher_{foreground,background,monochrome}.png × 5 + ic_launcher.xml
+    legacyIcon:       { padding: '10%' },   // ic_launcher.png × 5
+    appicon:          {},                   // appicon.png (128×128)
+    androidSplash:    { padding: '26%' },   // assets/android/default.png + images/res-*/default.png × 11
+
+    // Opt-in: inert until you edit the Android theme / FCM meta-data by hand.
+    splashIcon:       { enabled: false },   // drawable-*/splash_icon.png × 5
+    notificationIcon: { enabled: false },   // drawable-*/ic_stat_notify.png × 5
+    ninePatch:        { enabled: false }    // background.9.png (not implemented yet)
   }
 }
 ```

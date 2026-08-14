@@ -12,7 +12,7 @@ This page lists the commands available in PurgeTSS.
 ## Setup commands
 - `init`: Initializes PurgeTSS on an existing Alloy project.
 - `create`: Creates a new Alloy project with PurgeTSS already set up.
-- `brand`: Generates the Titanium branding set from one main logo: launcher icons, adaptive icons, iOS 18+ Dark/Tinted variants, marketplace artwork, and optional Android splash assets. Android-specific logo overrides are available when needed.
+- `brand`: Regenerates every image the Titanium template ships, from one main logo: launcher icons, adaptive icons, iOS 18+ Dark/Tinted variants, marketplace artwork, and the iOS and Android splash sets. Per-piece logo overrides and a `--only` filter are available when needed.
 - `images`: Generates multi-density UI images (Android `res-*` densities, iPhone `@1x`/`@2x`/`@3x` scales) from sources in `./purgetss/images/`. Works on both Alloy and Classic projects.
 
 ## Development commands
@@ -63,26 +63,28 @@ module.exports = {
     }
   },
   brand: {
-    logos: {},  // empty = auto-discovers from purgetss/brand/
-    padding: {
-      ios: '4%',
-      androidLegacy: '10%',
-      androidAdaptive: '19%',
-      featureGraphic: '12%'
-    },
-    android: {
-      splash: false,
-      notification: false
-    },
-    ios: {
-      dark: true,
-      tinted: true,
-      darkBackground: null  // null = transparent per Apple HIG
-    },
-    colors: {
-      background: '#FFFFFF'
-    },
-    confirmOverwrites: true  // prompt before overwriting files (set false to skip)
+    background: '#FFFFFF',   // inherited by every piece that doesn't set its own
+    confirmOverwrites: true, // prompt before overwriting files (set false to skip)
+    optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
+
+    // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
+    // these keys are for numbers, colors and activation. Padding is never inherited.
+    icon:             { padding: '4%' },    // DefaultIcon.png + DefaultIcon-ios.png
+    dark:             { background: null }, // DefaultIcon-Dark.png
+    tinted:           {},                   // DefaultIcon-Tinted.png
+    iosSplash:        { padding: '26%' },   // assets/iphone/Default*.png × 16
+    launchLogo:       { padding: '12%' },   // LaunchLogo.png (1024×1024)
+    marketplace:      {},                   // iTunesConnect.png + MarketplaceArtwork.png
+    featureGraphic:   { padding: '12%' },   // MarketplaceArtworkFeature.png (1024×500)
+    adaptive:         { padding: '18%' },   // ic_launcher_{foreground,background,monochrome}.png × 5 + ic_launcher.xml
+    legacyIcon:       { padding: '10%' },   // ic_launcher.png × 5
+    appicon:          {},                   // appicon.png (128×128)
+    androidSplash:    { padding: '26%' },   // assets/android/default.png + images/res-*/default.png × 11
+
+    // Opt-in: inert until you edit the Android theme / FCM meta-data by hand.
+    splashIcon:       { enabled: false },   // drawable-*/splash_icon.png × 5
+    notificationIcon: { enabled: false },   // drawable-*/ic_stat_notify.png × 5
+    ninePatch:        { enabled: false }    // background.9.png (not implemented yet)
   },
   images: {
     quality: 85,             // JPEG/WebP/AVIF quality (0-100)
@@ -192,7 +194,7 @@ Running `purgetss create "Name of the Project" [--dependencies --vendor=fa,mi,ms
 
 ## `brand` command
 
-Generates the Titanium branding set from a main logo image: launcher icons, adaptive icons, iOS 18+ Dark/Tinted variants, marketplace artwork, and optional notification/splash icons. You can also provide separate Android artwork for the launcher icon and the Android 12+ splash icon. Alloy and Classic projects are detected automatically.
+Regenerates every image the Titanium template ships, from a main logo image: launcher icons, adaptive icons, iOS 18+ Dark/Tinted variants, marketplace artwork, and both splash sets. The rule is *if the template ships the file, `brand` updates it*. Each piece can take its own artwork, and `--only` narrows a run to the pieces you name. Alloy and Classic projects are detected automatically.
 
 > 💡 **TIP**
 >
@@ -205,20 +207,57 @@ Generates the Titanium branding set from a main logo image: launcher icons, adap
 > purgetss brand                                         # uses purgetss/brand/logo.svg + config
 ```
 
+### The pieces
+
+| Piece               | Config key         | Generates                                                                    | On by default               |
+| ------------------- | ------------------ | ---------------------------------------------------------------------------- | --------------------------- |
+| `icon`              | `icon`             | `DefaultIcon.png` + `DefaultIcon-ios.png`                                     | yes                         |
+| `dark`              | `dark`             | `DefaultIcon-Dark.png`                                                        | yes                         |
+| `tinted`            | `tinted`           | `DefaultIcon-Tinted.png`                                                      | yes                         |
+| `ios-splash`        | `iosSplash`        | `assets/iphone/Default*.png` × 16                                             | yes                         |
+| `launch-logo`       | `launchLogo`       | `LaunchLogo.png` (1024×1024)                                                  | when `logo-launch.*` exists |
+| `marketplace`       | `marketplace`      | `iTunesConnect.png` + `MarketplaceArtwork.png`                                | yes                         |
+| `feature-graphic`   | `featureGraphic`   | `MarketplaceArtworkFeature.png` (1024×500)                                    | yes                         |
+| `adaptive`          | `adaptive`         | `ic_launcher_{foreground,background,monochrome}.png` × 5 + `ic_launcher.xml`   | yes                         |
+| `legacy-icon`       | `legacyIcon`       | `ic_launcher.png` × 5                                                         | yes                         |
+| `appicon`           | `appicon`          | `appicon.png` (128×128)                                                       | yes                         |
+| `android-splash`    | `androidSplash`    | `assets/android/default.png` + `images/res-*/default.png` × 11                | yes                         |
+| `splash-icon`       | `splashIcon`       | `drawable-*/splash_icon.png` × 5                                              | `--splash-icon`             |
+| `notification-icon` | `notificationIcon` | `drawable-*/ic_stat_notify.png` × 5                                           | `--notification-icon`       |
+| `nine-patch`        | `ninePatch`        | `background.9.png` (not implemented yet)                                      | `--nine-patch`              |
+
+Groups for `--only`: `ios` (icon, dark, tinted, ios-splash), `store` (marketplace, feature-graphic), `android` (adaptive, legacy-icon, appicon, android-splash).
+
 ### Using custom logo paths
 
-By default, PurgeTSS auto-discovers logos from `purgetss/brand/`. To use custom paths, add them to `brand.logos` in `config.cjs`:
+By default, PurgeTSS auto-discovers logos from `purgetss/brand/`: `logo.{svg,png}` for the main artwork, `logo-<piece>.{svg,png}` for a specific piece. To use custom paths, set `logo` on the piece in `config.cjs`:
 
 `./purgetss/config.cjs`
 ```javascript
 module.exports = {
   brand: {
-    logos: {
-      primary: './my-logos/main.svg',         // overrides auto-discovered logo.svg
-      androidLauncher: './my-logos/icon.svg', // overrides auto-discovered logo-icon.svg
-      iosDark: './my-logos/dark.svg'          // overrides auto-discovered logo-dark.svg
-      // only override what you need
-    }
+    background: '#FFFFFF',   // inherited by every piece that doesn't set its own
+    confirmOverwrites: true, // prompt before overwriting files (set false to skip)
+    optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
+
+    // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
+    // these keys are for numbers, colors and activation. Padding is never inherited.
+    icon:             { padding: '4%' },    // DefaultIcon.png + DefaultIcon-ios.png
+    dark:             { background: null }, // DefaultIcon-Dark.png
+    tinted:           {},                   // DefaultIcon-Tinted.png
+    iosSplash:        { padding: '26%' },   // assets/iphone/Default*.png × 16
+    launchLogo:       { padding: '12%' },   // LaunchLogo.png (1024×1024)
+    marketplace:      {},                   // iTunesConnect.png + MarketplaceArtwork.png
+    featureGraphic:   { padding: '12%' },   // MarketplaceArtworkFeature.png (1024×500)
+    adaptive:         { padding: '18%' },   // ic_launcher_{foreground,background,monochrome}.png × 5 + ic_launcher.xml
+    legacyIcon:       { padding: '10%' },   // ic_launcher.png × 5
+    appicon:          {},                   // appicon.png (128×128)
+    androidSplash:    { padding: '26%' },   // assets/android/default.png + images/res-*/default.png × 11
+
+    // Opt-in: inert until you edit the Android theme / FCM meta-data by hand.
+    splashIcon:       { enabled: false },   // drawable-*/splash_icon.png × 5
+    notificationIcon: { enabled: false },   // drawable-*/ic_stat_notify.png × 5
+    ninePatch:        { enabled: false }    // background.9.png (not implemented yet)
   }
 }
 ```
@@ -232,32 +271,70 @@ Project and output
 - `--output <dir>`: stage into `<dir>` instead of writing in place.
 - `-y, --yes`: skip the overwrite confirmation prompt for this invocation.
 
+Selecting what to generate
+
+- `--only <pieces>`: comma-separated pieces or groups. Generates a named piece even when its opt-in flag is absent; an unknown name aborts before writing anything.
+
 Visual customization
 
-- `--bg-color <hex>`: background color for Android adaptive + iOS/marketplace flatten.
-- `--padding <n>`: shortcut that sets both Android paddings to the same value for one run.
-- `--android-adaptive-padding <n>`: adaptive icon safe-zone % (default `19`).
+- `--bg-color <hex>`: background inherited by every piece that doesn't set its own.
+- `--padding <n>`: shortcut that sets both Android launcher paddings to the same value for one run.
+- `--android-adaptive-padding <n>`: adaptive icon safe-zone % (default `18`).
 - `--android-legacy-padding <n>`: legacy `ic_launcher.png` padding % (default `10`).
-- `--ios-padding <n>`: iOS aesthetic padding % (range `2-8`, default `4`).
+- `--ios-padding <n>`: padding % for the four square iOS/marketplace pieces (range `2-8`, default `4`).
 - `--feature-graphic-padding <n>`: vertical padding % for `MarketplaceArtworkFeature.png` (default `12`, range `0-40`).
+- `--launch-logo-padding <n>`: padding % for `LaunchLogo.png` (default `12`).
+- `--splash-padding <n>`: shortcut that sets both splash paddings to the same value for one run.
+- `--android-splash-padding <n>`: padding % for `default.png` and the 11 `res-*` splashes (default `26`).
+- `--ios-splash-padding <n>`: padding % for the 16 iPhone launch images (default `26`).
+
+Splash padding is a share of the canvas's **shorter** side, so one number keeps the logo at the same visual weight in portrait and in landscape: the `26%` default leaves it at 48% of the shorter side.
 
 Optional asset types
 
-- `--notification`: also emit `ic_stat_notify.png × 5`.
-- `--splash`: also emit `splash_icon.png × 5`.
+- `--notification-icon`: also emit `ic_stat_notify.png × 5`.
+- `--splash-icon`: also emit `splash_icon.png × 5`.
+- `--nine-patch`: declared but not implemented yet; prints a warning and writes nothing.
 
 Logo variants and overrides
 
-- `--icon-logo <path>`: override `purgetss/brand/logo-icon.{svg,png}` for Android launcher icons.
-- `--monochrome-logo <path>`: override `purgetss/brand/logo-mono.{svg,png}`.
-- `--dark-logo <path>`: override `purgetss/brand/logo-dark.{svg,png}`.
-- `--dark-bg-color <hex>`: opaque dark bg for `DefaultIcon-Dark.png` (default: transparent per Apple HIG).
-- `--splash-logo <path>`: override `purgetss/brand/logo-splash.{svg,png}` for Android 12+ splash artwork.
-- `--tinted-logo <path>`: override `purgetss/brand/logo-tinted.{svg,png}`.
-- `--feature-logo <path>`: override `purgetss/brand/logo-feature.{svg,png}` for the Google Play Feature Graphic (1024×500).
+Every piece has a `--<piece>-logo` flag, each overriding the matching `purgetss/brand/logo-<piece>.{svg,png}`:
 
+- `--icon-logo <path>`: `DefaultIcon.png` / `DefaultIcon-ios.png`.
+- `--dark-logo <path>`: iOS 18+ dark variant.
+- `--tinted-logo <path>`: iOS 18+ tinted variant.
+- `--ios-splash-logo <path>`: the 16 iPhone launch images.
+- `--launch-logo <path>`: source for `LaunchLogo.png`; passing it also activates the piece.
+- `--marketplace-logo <path>`: `iTunesConnect.png` / `MarketplaceArtwork.png`.
+- `--feature-graphic-logo <path>`: the Google Play Feature Graphic (1024×500).
+- `--adaptive-logo <path>`: Android adaptive launcher icons.
+- `--legacy-icon-logo <path>`: legacy `ic_launcher.png`.
+- `--appicon-logo <path>`: `appicon.png`.
+- `--android-splash-logo <path>`: Android &lt;12 splash artwork.
+- `--splash-icon-logo <path>`: Android 12+ `splash_icon.png`.
+- `--notification-icon-logo <path>`: `ic_stat_notify.png`.
+
+Two more sources are not pieces:
+
+- `--monochrome-logo <path>`: the silhouette shared by the adaptive monochrome layer and the notification icons (`purgetss/brand/logo-mono.{svg,png}`).
+- the positional `<logo>` argument: the main logo, source for every piece that has no override.
+
+Output size:
+
+- `--optimize`: re-encode every generated PNG with a quantized palette. Lossy, ~71% smaller on a full brand set. Also settable as `brand.optimize` in `config.cjs`.
+- `--no-optimize`: skip that pass even when `brand.optimize` is `true`.
+
+Appearance:
+
+- `--dark-bg-color <hex>`: opaque dark bg for `DefaultIcon-Dark.png` (default: transparent per Apple HIG).
 - `--no-dark`: skip `DefaultIcon-Dark.png`.
 - `--no-tinted`: skip `DefaultIcon-Tinted.png`.
+
+> ⚠️ **CAUTION**
+>
+> Breaking changes in v7.13.0
+> `--splash` → `--splash-icon`, `--notification` → `--notification-icon`, `--splash-logo` → `--splash-icon-logo`, `--feature-logo` → `--feature-graphic-logo`. `--icon-logo` now feeds the `icon` piece; the Android launcher source is `--adaptive-logo`. `--legacy-splash` is gone: the per-qualifier Android splashes are part of `android-splash` and always generated. No flag aliases were kept. The `brand:` config block also changed shape, but that one updates itself. See [Older configs update themselves](./app-assets/1-app-icons-and-branding.md#older-configs-update-themselves).
+
 
 Legacy cleanup
 
@@ -278,23 +355,27 @@ Diagnostics
 ### Examples
 
 ```bash
-> purgetss brand                                         # uses purgetss/brand/logo.svg + config
-> purgetss brand --bg-color "#0B1326"                    # override bg color
-> purgetss brand --icon-logo ./docs/app-icon.svg         # dedicated square Android launcher mark
-> purgetss brand --splash --splash-logo ./docs/splash.svg # custom Android 12+ splash artwork
-> purgetss brand --feature-logo ./docs/feature.svg       # custom Google Play Feature Graphic logo
-> purgetss brand --feature-graphic-padding 8             # tighter Feature Graphic padding (more impact)
-> purgetss brand --notification --splash                 # add notification + splash
-> purgetss brand --no-tinted                             # skip iOS 18+ tinted variant
-> purgetss brand --dry-run                               # preview without writing
-> purgetss brand --cleanup-legacy --dry-run              # preview legacy cleanup
+> purgetss brand                                          # uses purgetss/brand/logo.svg + config
+> purgetss brand --only icon                              # just the DefaultIcon pair
+> purgetss brand --only ios,notification-icon             # a group plus one opt-in piece
+> purgetss brand --bg-color "#0B1326"                     # override bg color
+> purgetss brand --adaptive-logo ./docs/app-icon.svg      # dedicated square Android launcher mark
+> purgetss brand --splash-icon --splash-icon-logo ./docs/splash.svg  # custom Android 12+ splash artwork
+> purgetss brand --launch-logo ./docs/wordmark.svg        # iOS launch screen logotype
+> purgetss brand --feature-graphic-logo ./docs/feature.svg # custom Google Play Feature Graphic logo
+> purgetss brand --feature-graphic-padding 8              # tighter Feature Graphic padding (more impact)
+> purgetss brand --notification-icon --splash-icon        # add notification + splash icons
+> purgetss brand --no-tinted                              # skip iOS 18+ tinted variant
+> purgetss brand --dry-run                                # preview without writing
+> purgetss brand --cleanup-legacy --dry-run               # preview legacy cleanup
 ```
 
-`brand` now writes three Android-facing asset groups with different jobs:
+`brand` writes four Android-facing asset groups with different jobs:
 
 - `ic_launcher*` for the app icon and the default Android 12+ system splash path
-- `splash_icon.png` when you pass `--splash` and want custom Android 12+ splash artwork
-- `default.png` as the older Titanium Android splash fallback
+- `appicon.png` as Titanium's fallback for `tiapp.xml`'s `<icon>` when the manifest declares no `android:icon`
+- `default.png` + `images/res-*/default.png` for the Android &lt;12 splash
+- `splash_icon.png` when you pass `--splash-icon` and want custom Android 12+ splash artwork
 
 The recommended workflow is convention-first:
 
@@ -303,7 +384,7 @@ The recommended workflow is convention-first:
 - use `config.cjs` only when you need a persistent override
 - use CLI flags only for one-off runs
 
-`brand.colors.background` is baked into the generated assets, but PurgeTSS does not automatically edit the iOS LaunchScreen or Android configuration. Run `purgetss brand --notes` to print the iOS snippet plus a complete launcher-only Android theme and Activity override with the current color. The Android snippet points its three launch-related theme attributes to one `splashscreen_background` resource, so the launch color is changed in a single line. See [Matching the launch background](./app-assets/1-app-icons-and-branding.md#matching-the-launch-background) for the full setup and merge rules.
+`brand.background` is baked into the generated assets, but PurgeTSS does not automatically edit the iOS LaunchScreen or Android configuration. Run `purgetss brand --notes` to print the iOS snippet plus a complete launcher-only Android theme and Activity override with the current color. The Android snippet points its three launch-related theme attributes to one `splashscreen_background` resource, so the launch color is changed in a single line. See [Matching the launch background](./app-assets/1-app-icons-and-branding.md#matching-the-launch-background) for the full setup and merge rules.
 
 
 ## `images` command
@@ -345,8 +426,8 @@ Sizing
 Transformations
 
 - `--opacity <n>`: multiply the alpha channel of every generated density by `n/100`. Integer in `[0, 100]`. Useful for placeholder or default ImageView images that render at reduced opacity (loading states, watermarks). Applied so each density inherits the same proportional transparency.
-- `--padding <n>`: shrink the rendered image inside each density canvas by `n%` symmetric borders. Integer in `[0, 40]`. The output canvas size stays the same as without padding — what changes is the rendered logo size inside it (transparent borders fill the rest). Combines with `--opacity` for placeholders that need reduced opacity AND breathing room around an unpadded source logo.
-- `--output <relpath>`: override basename + subfolder relative to the images output root. The full multi-density pattern is preserved — only the basename and subpath change. Constraints: no extension (decided by `--format` or source ext), no absolute paths, no `..` segments, single-file source only.
+- `--padding <n>`: shrink the rendered image inside each density canvas by `n%` symmetric borders. Integer in `[0, 40]`. The output canvas keeps the size it would have without padding; what changes is the rendered logo inside it, with transparent borders filling the rest. Combines with `--opacity` for placeholders that need reduced opacity AND breathing room around an unpadded source logo.
+- `--output <relpath>`: override basename + subfolder relative to the images output root. The full multi-density pattern is preserved. Only the basename and subpath change. Constraints: no extension (decided by `--format` or source ext), no absolute paths, no `..` segments, single-file source only.
 
 Project and output
 
@@ -502,6 +583,14 @@ For the full workflow with examples (Google Fonts, custom icon libraries, `--mod
 ## `shades` command
 
 The `shades` command generates shades and tints for a given color and writes the palette to `config.cjs`.
+
+> ℹ️ **INFO**
+>
+> Your config.cjs keeps its comments
+> `shades` and `semantic` rewrite only the `theme:` section of `config.cjs`; every other byte of the file, comments included, is left exactly as you wrote it. Before v7.13.0 both commands serialized the whole config object and wrote it back, which reformatted the file and dropped every comment in it, `purge:`, `brand:` and `images:` included.
+> 
+> Comments *inside* `theme:` are still replaced, since that is the section being rewritten.
+
 
 ```bash
 > purgetss shades [hexcode] [name]
