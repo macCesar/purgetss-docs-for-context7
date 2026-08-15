@@ -68,6 +68,10 @@ What it does:
 
 ## Changelog
 
+### v7.13.2
+
+- `purgetss brand --help` advertised padding defaults the command does not use: `19` for the adaptive icon and `20` for both splash sets, where the pipeline applies `18`, `26` and `26`. The seven padding descriptions are now interpolated from the piece table instead of being hand-typed in a second place, with a new test that compares the real `--help` output against that table. The values documented on this site were already the correct ones.
+
 ### v7.13.1
 
 - Four vulnerable transitive dependencies patched, all of which shipped inside v7.13.0: `postcss`, `nanoid`, `brace-expansion` and `uuid`. Patch bumps within the same major, so `package.json` is untouched and only the lockfile moves. `npm audit` reports zero vulnerabilities afterwards.
@@ -81,10 +85,4 @@ What it does:
 - **New `brand.optimize` / `--optimize`**: quantizes the generated PNGs to a palette. Off by default because it is lossy: 1.6 MB to 476 KB on the reference set, indistinguishable on flat artwork.
 - `shades` and `semantic` no longer strip every comment from `config.cjs`; they rewrite only the `theme:` section.
 
-### v7.12.1
-
-- `purgetss brand --notes` now targets Titanium's launcher Activity instead of only the app theme. Titanium applies `Theme.Titanium` directly to the generated launcher Activity, so adding splash items only to the `<application>` theme could still leave Android 12+ using the SDK's default background. The notes now print a complete `splashscreen.xml` plus a launcher-only `Theme.SplashScreen` derived from `Theme.Titanium`, with the launch color defined in one place.
-- Font Awesome Free updated to 7.3.1: 23 new icon classes (`.fa-lotus`, `.fa-codeberg`, `.fa-copilot`, `.fa-substack`, `.fa-tesla`, …), none removed.
-- `sharp` updated to 0.35.3 and `glob` to 13.0.6.
-
-→ See the [full changelog](./changelog.md) for older releases (v7.12.0 and earlier).
+→ See the [full changelog](./changelog.md) for older releases (v7.12.1 and earlier).
