@@ -2,6 +2,11 @@
 
 All notable changes to PurgeTSS. For the canonical, full-detail log see [the project CHANGELOG on GitHub](https://github.com/macCesar/purgetss/blob/main/CHANGELOG.md).
 
+## v7.13.2
+
+- **`purgetss brand --help` advertised padding defaults the command does not use.** It printed `default: 19` for `--android-adaptive-padding` and `default: 20` for `--android-splash-padding` and `--ios-splash-padding`, while the pipeline applies `18`, `26` and `26`. The numbers live as data in `src/core/branding/pieces.js`, and `bin/purgetss` carried a second hand-typed copy inside each option description with nothing linking the two. The adaptive string dated to April 2026 and was never revisited when 7.13.0 moved the value; the two splash strings were introduced by 7.13.0 already carrying the wrong figure. All seven padding descriptions are now interpolated from the piece table, so the drift is no longer expressible, and a new unit test parses the real `--help` output and compares every advertised default against the table. The values documented on this site were already the correct ones. See [Padding guidance](./app-assets/1-app-icons-and-branding.md#padding-guidance).
+- The 7.13.0 entry in the project CHANGELOG said the splash paddings default to `20%`, "leaving the logo at 60%". Corrected to `26%` and 48%, matching the code and the rest of that entry.
+
 ## v7.13.1
 
 - Four vulnerable transitive dependencies patched. They shipped inside v7.13.0: `postcss` ≤8.5.22 → 8.5.26 (high: XSS via an unescaped `</style>` in the stringify output, plus three path-traversal advisories around `sourceMappingURL`), `nanoid` 3.3.11 → 3.3.18 (high: non-secure generators can loop indefinitely on a negative size), `brace-expansion` 2.1.0 → 2.1.4 and 5.0.5 → 5.0.9 (high: a large numeric range defeats the documented `max` DoS protection), and `uuid` → 11.1.1 (moderate: missing buffer bounds check in v3/v5/v6 when `buf` is provided). All patch bumps within the same major, so `package.json` is untouched and only the lockfile moves. `npm audit` reports zero vulnerabilities afterwards.
