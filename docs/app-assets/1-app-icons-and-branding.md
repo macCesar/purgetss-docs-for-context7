@@ -3,9 +3,9 @@
 > ℹ️ **INFO**
 >
 > The `brand` command at a glance
-> From one main SVG or PNG logo, `purgetss brand` replaces every image the Titanium template ships: launcher icons, adaptive icons, iOS 18+ Dark/Tinted variants, marketplace artwork, and both the iOS and Android splash sets. Per-piece overrides are there when you need them.
+> From one main SVG or PNG logo, `purgetss brand` generates the complete branding set for the platforms enabled in `tiapp.xml`: launcher icons, adaptive icons, iOS 18+ Dark/Tinted variants, marketplace artwork, and the iOS and Android splash sets. Per-piece overrides are there when you need them.
 > 
-> The rule is simple: **if the template ships the file, `brand` updates it.** You should never have to know which API still reads which file to avoid shipping an app with the grey Alloy logo somewhere in it.
+> The rule is simple: **if an enabled platform can consume the file, `brand` generates or updates it.** You should never have to know whether `ti create` happened to seed that useful file in Alloy or Classic.
 > 
 > Works on Alloy and Classic projects. The layout is detected automatically.
 
@@ -27,9 +27,19 @@ Drop a logo file into `purgetss/brand/`, then run the command.
 
 On the first run, the command:
 
-1. Creates the `brand:` section in `purgetss/config.cjs` with sensible defaults (if missing).
+1. Creates `purgetss/config.cjs` from the canonical template when it does not exist, or adds the `brand:` section when only that block is missing.
 2. Generates every branding file directly into the project (in-place).
 3. Prints a compact summary of what was written.
+
+In a standalone Classic project you may pass the source directly:
+
+```bash
+> purgetss brand sample-icon.png
+```
+
+When no canonical `purgetss/brand/logo.{svg,png}` exists, PurgeTSS moves that positional source to `purgetss/brand/logo.png` (or `.svg`) and reports the new path. It never replaces an existing canonical logo without confirmation.
+
+A normal run reads `<deployment-targets>` from `tiapp.xml` and omits iOS or Android output when that platform is disabled. `--only` is an intentional override, so `--only ios` can prepare iOS assets before enabling the target.
 
 Pass `--dry-run` to preview without writing any files:
 
@@ -97,13 +107,14 @@ Or in `purgetss/config.cjs`, where each piece takes its own `logo`:
 `./purgetss/config.cjs`
 ```javascript
 brand: {
-  background: '#FFFFFF',   // inherited by every piece that doesn't set its own
+  background: '#FFFFFF',   // inherited by pieces that use an opaque background canvas
   confirmOverwrites: true, // prompt before overwriting files (set false to skip)
   optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
 
   // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
   // these keys are for numbers, colors and activation. Padding is never inherited.
-  icon:             { padding: '4%' },    // DefaultIcon.png + DefaultIcon-ios.png
+  // iOS/store icons are full-bleed by default; increase padding only for logo artwork.
+  icon:             { padding: '0%' },    // DefaultIcon.png + DefaultIcon-ios.png
   dark:             { background: null }, // DefaultIcon-Dark.png
   tinted:           {},                   // DefaultIcon-Tinted.png
   iosSplash:        { padding: '26%' },   // assets/iphone/Default*.png × 16
@@ -131,13 +142,14 @@ On the first run, `purgetss brand` adds a `brand:` block to your existing `purge
 `./purgetss/config.cjs`
 ```javascript
 brand: {
-  background: '#FFFFFF',   // inherited by every piece that doesn't set its own
+  background: '#FFFFFF',   // inherited by pieces that use an opaque background canvas
   confirmOverwrites: true, // prompt before overwriting files (set false to skip)
   optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
 
   // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
   // these keys are for numbers, colors and activation. Padding is never inherited.
-  icon:             { padding: '4%' },    // DefaultIcon.png + DefaultIcon-ios.png
+  // iOS/store icons are full-bleed by default; increase padding only for logo artwork.
+  icon:             { padding: '0%' },    // DefaultIcon.png + DefaultIcon-ios.png
   dark:             { background: null }, // DefaultIcon-Dark.png
   tinted:           {},                   // DefaultIcon-Tinted.png
   iosSplash:        { padding: '26%' },   // assets/iphone/Default*.png × 16
@@ -177,7 +189,7 @@ Every piece accepts the same four keys, where they apply:
 
 And these two live at the top level:
 
-- `brand.background` — default `#FFFFFF`. The background every piece inherits unless it declares its own: the Android adaptive background layer, the `DefaultIcon-ios.png` flatten, the splash canvases, and the marketplace flatten when a background is explicitly configured.
+- `brand.background` — default `#FFFFFF`. This is the inherited opaque fallback for icon canvases, splash canvases, adaptive background layers and store artwork. White is only a configurable fallback; neither platform requires PurgeTSS to add a white frame.
 - `brand.confirmOverwrites` — default `true`. Whether `brand` asks before overwriting project files in place.
 - `brand.logo` / `brand.monochromeLogo` — path overrides for the two sources that are not pieces: the main logo, and the monochrome silhouette shared by the adaptive monochrome layer and the notification icons.
 
@@ -185,12 +197,12 @@ And these two live at the top level:
 
 | Piece              | Config key         | Generates                                                                  | Default padding | On by default            |
 | ------------------ | ------------------ | -------------------------------------------------------------------------- | --------------- | ------------------------ |
-| `icon`             | `icon`             | `DefaultIcon.png` + `DefaultIcon-ios.png`                                   | `4%`            | yes                      |
-| `dark`             | `dark`             | `DefaultIcon-Dark.png`                                                      | `4%`            | yes                      |
-| `tinted`           | `tinted`           | `DefaultIcon-Tinted.png`                                                    | `4%`            | yes                      |
+| `icon`             | `icon`             | `DefaultIcon.png` + `DefaultIcon-ios.png`                                   | `0%`            | yes                      |
+| `dark`             | `dark`             | `DefaultIcon-Dark.png`                                                      | `0%`            | yes                      |
+| `tinted`           | `tinted`           | `DefaultIcon-Tinted.png`                                                    | `0%`            | yes                      |
 | `ios-splash`       | `iosSplash`        | `assets/iphone/Default*.png` × 16                                           | `26%`           | yes                      |
 | `launch-logo`      | `launchLogo`       | `LaunchLogo.png` (1024×1024)                                                | `12%`           | when `logo-launch.*` exists |
-| `marketplace`      | `marketplace`      | `iTunesConnect.png` + `MarketplaceArtwork.png`                              | `4%`            | yes                      |
+| `marketplace`      | `marketplace`      | `iTunesConnect.png` + `MarketplaceArtwork.png`                              | `0%`            | yes                      |
 | `feature-graphic`  | `featureGraphic`   | `MarketplaceArtworkFeature.png` (1024×500)                                  | `12%`           | yes                      |
 | `adaptive`         | `adaptive`         | `ic_launcher_{foreground,background,monochrome}.png` × 5 + `ic_launcher.xml` | `18%`           | yes                      |
 | `legacy-icon`      | `legacyIcon`       | `ic_launcher.png` × 5                                                       | `10%`           | yes                      |
@@ -206,7 +218,7 @@ Only three pieces are opt-in, and for one reason: they produce nothing useful un
 
 ### `background` is inherited, `padding` is not
 
-Set `brand.background` once and every piece picks it up. Padding works the other way on purpose: the defaults answer to different constraints. The adaptive `18%` answers to the Android launcher mask, while the iOS `4%` is an aesthetic choice with no mask behind it. A single inherited number would let `8%` quietly break the launcher mask, so padding is set per piece or not at all.
+Set `brand.background` once and every piece that supports a canvas background picks it up. Padding works the other way on purpose: the Android launcher pieces need safe-zone padding, while finished square iOS/store artwork is full-bleed at `0%`. A single inherited number would let an iOS-oriented value quietly break the Android launcher mask, so padding is set per piece or not at all.
 
 ### Older configs update themselves
 
@@ -278,7 +290,7 @@ The output is automatically routed to the right directory for your project layou
 `Alloy layout`
 ```text
 <project>/
-├── DefaultIcon.png                 <- 1024×1024, universal fallback (Android-safe padding)
+├── DefaultIcon.png                 <- 1024×1024, opaque and full-bleed by default
 ├── DefaultIcon-ios.png             <- 1024×1024, iOS flattened on brand.background
 ├── DefaultIcon-Dark.png            <- 1024×1024, iOS 18+ dark (transparent per Apple HIG)
 ├── DefaultIcon-Tinted.png          <- 1024×1024, iOS 18+ tinted (grayscale on black)
@@ -313,7 +325,8 @@ The output is automatically routed to the right directory for your project layou
 │   ├── iphone/Default*.png         <- the launch images the template ships
 │   └── android/
 │       ├── appicon.png             <- 128×128
-│       └── default.png             <- Android <12 splash
+│       ├── default.png             <- Android <12 splash
+│       └── images/res-*/default.png <- the 11 per-qualifier splashes
 └── platform/
     └── android/res/
         ├── mipmap-*/               <- same 5 densities as Alloy
@@ -321,7 +334,7 @@ The output is automatically routed to the right directory for your project layou
         └── mipmap-anydpi-v26/ic_launcher.xml
 ```
 
-A Classic project has no `images/res-*` folders, so the per-qualifier splashes are simply skipped there.
+A fresh Classic project does not include `images/res-*`, but `brand` creates the 11 qualifier folders under `Resources/android/images/`. Titanium consumes those files for the density/orientation-specific Android &lt;12 splash path; they are useful platform inputs, not Alloy-only leftovers.
 
 The Android outputs are related, but they are not interchangeable:
 
@@ -351,13 +364,14 @@ It is off by default because it is lossy. Turn it on per run or for the project:
 `./purgetss/config.cjs`
 ```javascript
 brand: {
-  background: '#FFFFFF',   // inherited by every piece that doesn't set its own
+  background: '#FFFFFF',   // inherited by pieces that use an opaque background canvas
   confirmOverwrites: true, // prompt before overwriting files (set false to skip)
   optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
 
   // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
   // these keys are for numbers, colors and activation. Padding is never inherited.
-  icon:             { padding: '4%' },    // DefaultIcon.png + DefaultIcon-ios.png
+  // iOS/store icons are full-bleed by default; increase padding only for logo artwork.
+  icon:             { padding: '0%' },    // DefaultIcon.png + DefaultIcon-ios.png
   dark:             { background: null }, // DefaultIcon-Dark.png
   tinted:           {},                   // DefaultIcon-Tinted.png
   iosSplash:        { padding: '26%' },   // assets/iphone/Default*.png × 16
@@ -460,13 +474,14 @@ If you want that artwork to differ from the launcher icon, provide `logo-splash-
 `./purgetss/config.cjs`
 ```javascript
 brand: {
-  background: '#FFFFFF',   // inherited by every piece that doesn't set its own
+  background: '#FFFFFF',   // inherited by pieces that use an opaque background canvas
   confirmOverwrites: true, // prompt before overwriting files (set false to skip)
   optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
 
   // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
   // these keys are for numbers, colors and activation. Padding is never inherited.
-  icon:             { padding: '4%' },    // DefaultIcon.png + DefaultIcon-ios.png
+  // iOS/store icons are full-bleed by default; increase padding only for logo artwork.
+  icon:             { padding: '0%' },    // DefaultIcon.png + DefaultIcon-ios.png
   dark:             { background: null }, // DefaultIcon-Dark.png
   tinted:           {},                   // DefaultIcon-Tinted.png
   iosSplash:        { padding: '26%' },   // assets/iphone/Default*.png × 16
@@ -504,7 +519,7 @@ Below Android 12 there is no system splash: the launch screen comes from the ima
 `brand` regenerates the whole set on every run. It is the `android-splash` piece, on by default:
 
 - `app/assets/android/default.png` (`Resources/android/default.png` in Classic)
-- `app/assets/android/images/res-*/default.png` — the 11 per-qualifier images the Alloy template ships
+- `app/assets/android/images/res-*/default.png` (`Resources/android/images/res-*/default.png` in Classic) — the 11 per-qualifier images Titanium consumes
 
 Earlier versions regenerated only the first file and hid the other 11 behind a `--legacy-splash` flag, which is why a freshly branded project could still flash the grey Alloy logo on an older phone. That flag is gone: its output is part of `android-splash` and always generated.
 
@@ -516,7 +531,7 @@ If the launch theme sets `android:windowBackground` to a plain color, which is w
 
 Titanium builds `LaunchLogo.imageset` itself on every iOS build, resizing one source into the five sizes it needs. It looks for `LaunchLogo.png` first and falls back to `DefaultIcon.png`.
 
-So there is nothing for PurgeTSS to generate there, but there is something to choose. With only `DefaultIcon.png` around, the launch screen shows your app icon, safe-zone padding and all. Dropping a `logo-launch.svg` (or `.png`) into `purgetss/brand/` makes `brand` write a `LaunchLogo.png`, and the launch screen shows the full logotype instead:
+So there is nothing else for PurgeTSS to generate there, but there is something to choose. With only `DefaultIcon.png` around, the launch screen shows your app icon with its configured icon inset (`0%` by default). Dropping a `logo-launch.svg` (or `.png`) into `purgetss/brand/` makes `brand` write a `LaunchLogo.png`, and the launch screen shows the full logotype instead:
 
 ```bash
 > cp docs/my-wordmark.svg purgetss/brand/logo-launch.svg
@@ -691,7 +706,7 @@ Padding belongs to the piece, not to the project. Each piece has its own key and
 | ----------------- | -------------------------- | ----------------------------- | ------- |
 | `adaptive`        | `brand.adaptive.padding`   | `--android-adaptive-padding`  | `18%`   |
 | `legacy-icon`     | `brand.legacyIcon.padding` | `--android-legacy-padding`    | `10%`   |
-| `icon`            | `brand.icon.padding`       | `--ios-padding`               | `4%`    |
+| `icon`            | `brand.icon.padding`       | `--ios-padding`               | `0%`    |
 | `feature-graphic` | `brand.featureGraphic.padding` | `--feature-graphic-padding` | `12%` |
 | `launch-logo`     | `brand.launchLogo.padding` | `--launch-logo-padding`       | `12%`   |
 | `android-splash`  | `brand.androidSplash.padding` | `--android-splash-padding` | `26%`   |
@@ -699,7 +714,7 @@ Padding belongs to the piece, not to the project. Each piece has its own key and
 
 `--padding` is a shortcut for the two Android launcher paddings in a single run, and `--splash-padding` for the two splash paddings. `--ios-padding` moves the four square iOS/marketplace pieces together (`icon`, `dark`, `tinted`, `marketplace`); in config each of them has its own key.
 
-There is deliberately **no global padding value that cascades down**. The defaults answer to different constraints: `18%` answers to the Android launcher mask, while `4%` is an aesthetic choice for a canvas with no mask behind it. One inherited number would let a reasonable-looking `8%` silently break the launcher mask. `background`, which has no such trap, is inherited from `brand.background`.
+There is deliberately **no global padding value that cascades down**. The defaults answer to different constraints: `18%` answers to the Android launcher mask, while finished iOS/store icon artwork stays full-bleed at `0%`. One inherited number would let an iOS-oriented value silently break the launcher mask. `background`, which has no such trap, is inherited from `brand.background`.
 
 ### How the source is read, and how sharp the output is
 
@@ -710,12 +725,12 @@ Two things are worth knowing about what happens to your `logo.svg` or `logo.png`
 **The masters are sized to the run.** The source is rasterized once into two intermediate masters, and every piece scales down from them, so their resolution is the ceiling on output sharpness. Rather than a fixed size, `brand` measures the largest number of pixels any selected piece will ask for and builds the masters at exactly that. A default run reports it:
 
 ```text
-  • Masters at 942 px — the largest any selected piece asks for
+  • Masters at 1024 px — the largest any selected piece asks for
 ```
 
-Lower a padding and the figure rises with it (`--splash-padding 4` needs 1413 px), so output never goes soft against a fixed ceiling. Every destination is a reduction, never an upscale.
+Lower a padding and the figure rises with it (`--splash-padding 4` needs 1413 px), so output never goes soft against a fixed ceiling. Every destination is a reduction or the same size, never an upscale.
 
-The one case this cannot fix is a raster source that is simply too small: a 512-px PNG cannot produce a sharp 942-px icon. Prefer SVG, or a PNG of at least 1024×1024.
+The one case this cannot fix is a raster source that is simply too small: a 512-px PNG cannot produce a sharp 1024-px icon. Prefer SVG, or a PNG of at least 1024×1024.
 
 ### Splash padding
 
@@ -746,7 +761,7 @@ Android's adaptive canvas is 108 dp. The mask leaves roughly 72 dp visible, and 
 | `19.44%` | 66.0 dp | exactly on it | inside |
 | `20%`   | 64.8 dp | inside | inside — most conservative |
 
-`18%` sits between the guaranteed circle and the mask edge: a logo that carries its own margin never reaches those corners, which is why it is a safe default in practice. Drop to `20%` if your mark runs edge to edge and you see clipping on a circular launcher.
+`18%` sits between the guaranteed circle and the mask edge: a logo that carries its own margin never reaches those corners, which is why it is a safe default in practice. Raise it to `20%` if your mark runs edge to edge and you see clipping on a circular launcher.
 
 A useful visual check is the "corners" heuristic: imagine a circle inscribed in your 1024×1024 canvas with the given padding. If your logo's outermost corners fit inside that circle, you're safe on circular launchers (Pixel default, Oppo Android 15). If they poke out, they'll be clipped.
 
@@ -817,13 +832,14 @@ Or set it in the config:
 
 ```javascript
 brand: {
-  background: '#FFFFFF',   // inherited by every piece that doesn't set its own
+  background: '#FFFFFF',   // inherited by pieces that use an opaque background canvas
   confirmOverwrites: true, // prompt before overwriting files (set false to skip)
   optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
 
   // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
   // these keys are for numbers, colors and activation. Padding is never inherited.
-  icon:             { padding: '4%' },    // DefaultIcon.png + DefaultIcon-ios.png
+  // iOS/store icons are full-bleed by default; increase padding only for logo artwork.
+  icon:             { padding: '0%' },    // DefaultIcon.png + DefaultIcon-ios.png
   dark:             { background: null }, // DefaultIcon-Dark.png
   tinted:           {},                   // DefaultIcon-Tinted.png
   iosSplash:        { padding: '26%' },   // assets/iphone/Default*.png × 16
@@ -849,6 +865,24 @@ Adaptive padding is probably too generous. Lower it:
 ```bash
 > purgetss brand --android-adaptive-padding 17
 ```
+
+### A white frame appears around a dark icon
+
+PurgeTSS does not require a white frame. Square iOS/store pieces now default to `0%`, so finished edge-to-edge icon artwork stays full-bleed. If an older or customized config still has `brand.icon.padding: '4%'`, change it to `0%` and regenerate.
+
+Android launcher pieces intentionally retain safe-zone padding (`18%` adaptive, `10%` legacy/appicon). If the source PNG is already a finished opaque icon, that inset exposes `brand.background`. Set the inherited background once to a color that matches the artwork's perimeter, or use a transparent logo/mark as the Android source instead of the finished icon canvas:
+
+```javascript
+brand: {
+  background: '#020109',
+  icon: { padding: '0%' },
+  adaptive: { logo: './purgetss/brand/logo-adaptive.png', padding: '18%' },
+  legacyIcon: { padding: '10%' },
+  appicon: { padding: '10%' }
+}
+```
+
+When an opaque edge and a contrasting background would make this frame visible, `brand` prints a warning naming the affected pieces.
 
 ### The monochrome version looks like a white blob
 

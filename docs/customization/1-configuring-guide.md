@@ -41,13 +41,14 @@ module.exports = {
     }
   },
   brand: {
-    background: '#FFFFFF',   // inherited by every piece that doesn't set its own
+    background: '#FFFFFF',   // inherited by pieces that use an opaque background canvas
     confirmOverwrites: true, // prompt before overwriting files (set false to skip)
     optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
 
     // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
     // these keys are for numbers, colors and activation. Padding is never inherited.
-    icon:             { padding: '4%' },    // DefaultIcon.png + DefaultIcon-ios.png
+    // iOS/store icons are full-bleed by default; increase padding only for logo artwork.
+    icon:             { padding: '0%' },    // DefaultIcon.png + DefaultIcon-ios.png
     dark:             { background: null }, // DefaultIcon-Dark.png
     tinted:           {},                   // DefaultIcon-Tinted.png
     iosSplash:        { padding: '26%' },   // assets/iphone/Default*.png × 16
@@ -103,13 +104,14 @@ By default, PurgeTSS auto-discovers logo files from `purgetss/brand/`: `logo.{sv
 ```javascript
 module.exports = {
   brand: {
-    background: '#FFFFFF',   // inherited by every piece that doesn't set its own
+    background: '#FFFFFF',   // inherited by pieces that use an opaque background canvas
     confirmOverwrites: true, // prompt before overwriting files (set false to skip)
     optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
 
     // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
     // these keys are for numbers, colors and activation. Padding is never inherited.
-    icon:             { padding: '4%' },    // DefaultIcon.png + DefaultIcon-ios.png
+    // iOS/store icons are full-bleed by default; increase padding only for logo artwork.
+    icon:             { padding: '0%' },    // DefaultIcon.png + DefaultIcon-ios.png
     dark:             { background: null }, // DefaultIcon-Dark.png
     tinted:           {},                   // DefaultIcon-Tinted.png
     iosSplash:        { padding: '26%' },   // assets/iphone/Default*.png × 16

@@ -63,13 +63,14 @@ module.exports = {
     }
   },
   brand: {
-    background: '#FFFFFF',   // inherited by every piece that doesn't set its own
+    background: '#FFFFFF',   // inherited by pieces that use an opaque background canvas
     confirmOverwrites: true, // prompt before overwriting files (set false to skip)
     optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
 
     // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
     // these keys are for numbers, colors and activation. Padding is never inherited.
-    icon:             { padding: '4%' },    // DefaultIcon.png + DefaultIcon-ios.png
+    // iOS/store icons are full-bleed by default; increase padding only for logo artwork.
+    icon:             { padding: '0%' },    // DefaultIcon.png + DefaultIcon-ios.png
     dark:             { background: null }, // DefaultIcon-Dark.png
     tinted:           {},                   // DefaultIcon-Tinted.png
     iosSplash:        { padding: '26%' },   // assets/iphone/Default*.png × 16
@@ -194,7 +195,7 @@ Running `purgetss create "Name of the Project" [--dependencies --vendor=fa,mi,ms
 
 ## `brand` command
 
-Regenerates every image the Titanium template ships, from a main logo image: launcher icons, adaptive icons, iOS 18+ Dark/Tinted variants, marketplace artwork, and both splash sets. The rule is *if the template ships the file, `brand` updates it*. Each piece can take its own artwork, and `--only` narrows a run to the pieces you name. Alloy and Classic projects are detected automatically.
+Regenerates the complete branding set for the platforms enabled in `tiapp.xml`: launcher icons, adaptive icons, iOS 18+ Dark/Tinted variants, marketplace artwork, and both splash sets. Alloy and Classic layouts are detected automatically. A normal run follows `<deployment-targets>`; an explicit `--only` is an override that can prepare a disabled platform ahead of time.
 
 > 💡 **TIP**
 >
@@ -205,6 +206,7 @@ Regenerates every image the Titanium template ships, from a main logo image: lau
 
 ```bash
 > purgetss brand                                         # uses purgetss/brand/logo.svg + config
+> purgetss brand sample-icon.png                         # adopts it as purgetss/brand/logo.png when missing
 ```
 
 ### The pieces
@@ -236,13 +238,14 @@ By default, PurgeTSS auto-discovers logos from `purgetss/brand/`: `logo.{svg,png
 ```javascript
 module.exports = {
   brand: {
-    background: '#FFFFFF',   // inherited by every piece that doesn't set its own
+    background: '#FFFFFF',   // inherited by pieces that use an opaque background canvas
     confirmOverwrites: true, // prompt before overwriting files (set false to skip)
     optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
 
     // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
     // these keys are for numbers, colors and activation. Padding is never inherited.
-    icon:             { padding: '4%' },    // DefaultIcon.png + DefaultIcon-ios.png
+    // iOS/store icons are full-bleed by default; increase padding only for logo artwork.
+    icon:             { padding: '0%' },    // DefaultIcon.png + DefaultIcon-ios.png
     dark:             { background: null }, // DefaultIcon-Dark.png
     tinted:           {},                   // DefaultIcon-Tinted.png
     iosSplash:        { padding: '26%' },   // assets/iphone/Default*.png × 16
@@ -277,11 +280,11 @@ Selecting what to generate
 
 Visual customization
 
-- `--bg-color <hex>`: background inherited by every piece that doesn't set its own.
+- `--bg-color <hex>`: opaque fallback inherited by every piece that doesn't set its own. White is configurable, not required by either platform.
 - `--padding <n>`: shortcut that sets both Android launcher paddings to the same value for one run.
 - `--android-adaptive-padding <n>`: adaptive icon safe-zone % (default `18`).
 - `--android-legacy-padding <n>`: legacy `ic_launcher.png` padding % (default `10`).
-- `--ios-padding <n>`: padding % for the four square iOS/marketplace pieces (range `2-8`, default `4`).
+- `--ios-padding <n>`: inset % for the four square iOS/store pieces (default `0`, full-bleed). Raise it when the source is a logo that needs breathing room.
 - `--feature-graphic-padding <n>`: vertical padding % for `MarketplaceArtworkFeature.png` (default `12`, range `0-40`).
 - `--launch-logo-padding <n>`: padding % for `LaunchLogo.png` (default `12`).
 - `--splash-padding <n>`: shortcut that sets both splash paddings to the same value for one run.
