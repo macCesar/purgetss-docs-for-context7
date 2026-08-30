@@ -2,6 +2,12 @@
 
 All notable changes to PurgeTSS. For the canonical, full-detail log see [the project CHANGELOG on GitHub](https://github.com/macCesar/purgetss/blob/main/CHANGELOG.md).
 
+## v7.15.0
+
+- **Standalone resource commands now work cleanly in Classic Titanium projects.** `images`, `semantic`, `shades`, `color-module`, `module`, `icon-library`, and `build-fonts` detect Alloy or Classic and write to the appropriate native location. Classic never receives `app/`, `app/alloy.jmk`, TSS, or a PurgeTSS compilation dependency.
+- **`images` follows `tiapp.xml` deployment targets by default.** Android-only projects get Android density files; iOS-only projects get iPhone scales. `--android` and `--ios` remain intentional overrides, and an external source does not create an empty `purgetss/` folder.
+- **Official icon modules now include font-family aliases.** Use `fontAwesome.icons.home` with `fontAwesome.solid`; the other bundled modules expose their installed variants through `families` and concise aliases. Existing icon APIs remain unchanged.
+
 ## v7.14.0
 
 - **Square iOS/store artwork is now full-bleed by default.** `icon`, `dark`, `tinted` and `marketplace` use `0%` instead of the former `4%` inset. `--ios-padding` still moves the family together when the source is a logo that needs breathing room.
