@@ -2,6 +2,14 @@
 
 All notable changes to PurgeTSS. For the canonical, full-detail log see [the project CHANGELOG on GitHub](https://github.com/macCesar/purgetss/blob/main/CHANGELOG.md).
 
+## v7.14.0
+
+- **Square iOS/store artwork is now full-bleed by default.** `icon`, `dark`, `tinted` and `marketplace` use `0%` instead of the former `4%` inset. `--ios-padding` still moves the family together when the source is a logo that needs breathing room.
+- **`DefaultIcon.png` and `DefaultIcon-ios.png` now both obey `brand.icon.padding`.** The root fallback had incorrectly inherited Android adaptive padding, creating a much larger border than configured. Both outputs are opaque and use the same inset.
+- **Standalone Classic projects get a complete first-run setup.** If `purgetss/config.cjs` is missing, `brand` creates the canonical config. A positional source such as `sample-icon.png` is adopted as `purgetss/brand/logo.png` when no canonical logo exists, and the move is reported.
+- **Generation follows `tiapp.xml` deployment targets in Alloy and Classic.** Normal runs omit disabled platforms; explicit `--only` remains an override. Classic Android retains the 11 `Resources/android/images/res-*` splash variants Titanium consumes even though `ti create` does not seed those folders.
+- **Visible icon frames are diagnosed before they surprise you.** Opaque edge-to-edge artwork combined with padding and a contrasting inherited background produces a warning naming the affected pieces. White remains a configurable fallback, not a platform requirement.
+
 ## v7.13.2
 
 - **`purgetss brand --help` advertised padding defaults the command does not use.** It printed `default: 19` for `--android-adaptive-padding` and `default: 20` for `--android-splash-padding` and `--ios-splash-padding`, while the pipeline applies `18`, `26` and `26`. The numbers live as data in `src/core/branding/pieces.js`, and `bin/purgetss` carried a second hand-typed copy inside each option description with nothing linking the two. The adaptive string dated to April 2026 and was never revisited when 7.13.0 moved the value; the two splash strings were introduced by 7.13.0 already carrying the wrong figure. All seven padding descriptions are now interpolated from the piece table, so the drift is no longer expressible, and a new unit test parses the real `--help` output and compares every advertised default against the table. The values documented on this site were already the correct ones. See [Padding guidance](./app-assets/1-app-icons-and-branding.md#padding-guidance).
