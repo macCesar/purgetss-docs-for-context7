@@ -68,6 +68,14 @@ What it does:
 
 ## Changelog
 
+### v7.14.0
+
+- **Square iOS/store artwork is now full-bleed by default.** `icon`, `dark`, `tinted` and `marketplace` use `0%` instead of the former `4%` inset. `--ios-padding` still moves the family together when the source is a logo that needs breathing room.
+- **`DefaultIcon.png` and `DefaultIcon-ios.png` now both obey `brand.icon.padding`.** The root fallback had incorrectly inherited Android adaptive padding, creating a much larger border than configured. Both outputs are opaque and use the same inset.
+- **Standalone Classic projects get a complete first-run setup.** If `purgetss/config.cjs` is missing, `brand` creates the canonical config. A positional source such as `sample-icon.png` is adopted as `purgetss/brand/logo.png` when no canonical logo exists, and the move is reported.
+- **Generation follows `tiapp.xml` deployment targets in Alloy and Classic.** Normal runs omit disabled platforms; explicit `--only` remains an override. Classic Android retains the 11 `Resources/android/images/res-*` splash variants Titanium consumes even though `ti create` does not seed those folders.
+- **Visible icon frames are diagnosed before they surprise you.** Opaque edge-to-edge artwork combined with padding and a contrasting inherited background produces a warning naming the affected pieces. White remains a configurable fallback, not a platform requirement.
+
 ### v7.13.2
 
 - `purgetss brand --help` advertised padding defaults the command does not use: `19` for the adaptive icon and `20` for both splash sets, where the pipeline applies `18`, `26` and `26`. The seven padding descriptions are now interpolated from the piece table instead of being hand-typed in a second place, with a new test that compares the real `--help` output against that table. The values documented on this site were already the correct ones.
@@ -76,13 +84,4 @@ What it does:
 
 - Four vulnerable transitive dependencies patched, all of which shipped inside v7.13.0: `postcss`, `nanoid`, `brace-expansion` and `uuid`. Patch bumps within the same major, so `package.json` is untouched and only the lockfile moves. `npm audit` reports zero vulnerabilities afterwards.
 
-### v7.13.0
-
-- **`purgetss brand` now covers every image the Titanium template ships.** A run on a fresh Alloy project used to leave 28 files wearing the grey Alloy logo: the 16 iPhone launch images, the 11 per-qualifier Android splashes, and `appicon.png`. The rule is now explicit: if the template ships the file, `brand` updates it.
-- **The `brand:` config is organized by piece.** Each of the 14 pieces takes the same four keys where they apply (`logo`, `padding`, `background`, `enabled`), and an older block is rewritten to that structure on the next run, carrying over every value you had customized. Unknown keys abort the run instead of being ignored.
-- **Breaking: one name per thing** across config, flags, `--only` and the `purgetss/brand/` files. `--splash` → `--splash-icon`, `--notification` → `--notification-icon`, `--feature-logo` → `--feature-graphic-logo`, `--legacy-splash` removed. No aliases were kept.
-- **New `--only <pieces>` filter** to regenerate one piece or a group, and **`logo-launch.*`** to put your logotype on the iOS launch screen through `LaunchLogo.png`.
-- **New `brand.optimize` / `--optimize`**: quantizes the generated PNGs to a palette. Off by default because it is lossy: 1.6 MB to 476 KB on the reference set, indistinguishable on flat artwork.
-- `shades` and `semantic` no longer strip every comment from `config.cjs`; they rewrite only the `theme:` section.
-
-→ See the [full changelog](./docs/changelog.md) for older releases (v7.12.1 and earlier).
+→ See the [full changelog](./docs/changelog.md) for older releases (v7.13.0 and earlier).
