@@ -1,6 +1,6 @@
 # Icon font libraries
 
-PurgeTSS ships with four official icon font families, each preconfigured with the TSS classes and `fontFamily` mappings you need to drop icons into Buttons, Labels, and TextFields.
+PurgeTSS ships with four official icon font families. Alloy projects can use their preconfigured TSS classes; Classic projects can install the same font files and use their `fontFamily` and Unicode values directly, without adopting the PurgeTSS styling workflow.
 
 > ℹ️ **INFO**
 >
@@ -47,7 +47,12 @@ The complete class definitions live in the PurgeTSS `dist/` folder:
 
 ## Installing the icon fonts
 
-Run [`icon-library`](../commands.md#icon-library-command) to copy the `.ttf` files into `./app/assets/fonts/`. That is the only step. Once the fonts are in place, the icon classes from the table above work.
+Run [`icon-library`](../commands.md#icon-library-command) to copy the `.ttf` files into the native font folder for the detected layout:
+
+- Alloy: `app/assets/fonts/`
+- Classic: `Resources/fonts/`
+
+In Alloy, the icon classes from the table above work once the fonts are installed. In Classic, use `fontFamily` directly and either a raw Unicode value or the optional CommonJS module.
 
 ```bash
 # All four families
@@ -59,18 +64,20 @@ $ purgetss il -v=fa,mi,ms,f7
 
 > ℹ️ **INFO**
 >
-> You do not need the `.tss` files in `./purgetss/styles/`
+> Alloy class workflow
 > PurgeTSS already knows every official icon class and resolves them at compile time from its own bundled `dist/` files. You do not need `fontawesome.tss`, `materialsymbols.tss`, `materialicons.tss`, or `framework7icons.tss` inside `./purgetss/styles/` for `class="fas fa-home"` (or any other icon class) to work in your XML and controllers. Install the `.ttf` files with `icon-library` and the classes are ready.
 > 
 > The resolved classes are written to the generated `app/styles/app.tss`, not to `purgetss/styles/utilities.tss`. If you go looking for a class like `.ms-home`, check `app.tss`.
+> 
+> Classic projects do not run this class-resolution step. The command installs only the native font resources and any requested JavaScript module.
 
 
 ### Optional flags
 
 Two optional flags adjust what `icon-library` copies into your project:
 
-- `-s, --styles`: copies the official `.tss` source files into `./purgetss/styles/` for reference only. Useful if you want to grep the full class list, see how a class is defined, or override a specific class in your own project.
-- `-m, --module`: copies the matching CommonJS module into `./app/lib/`, which exposes each icon's Unicode string to JavaScript. Handy when you set `label.text` from a controller and prefer a friendly name like `icons.fa.home` over a raw `\uf015`.
+- `-s, --styles`: Alloy only. Copies the official `.tss` source files into `./purgetss/styles/` for reference. In Classic it is skipped and no TSS file is created.
+- `-m, --module`: copies the matching CommonJS module into `./app/lib/` on Alloy or `./Resources/lib/` on Classic. It exposes each icon's Unicode string to JavaScript.
 
 ```bash
 # Add either flag when you want them
@@ -79,7 +86,37 @@ $ purgetss il -m
 $ purgetss il -m -s
 ```
 
-## Using icons in XML
+### Using an installed icon in Classic
+
+The CommonJS module lets a Classic app avoid hard-coded Unicode strings:
+
+`Resources/app.js`
+```javascript
+const fontAwesome = require('fontawesome')
+
+const home = Ti.UI.createLabel({
+  text: fontAwesome.icons.home,
+  font: {
+    fontFamily: fontAwesome.solid,
+    fontSize: 24
+  }
+})
+```
+
+Each module exposes `families` plus direct aliases for its variants. `families` is the stable, consistent form; the direct aliases keep the common cases concise.
+
+| Module | Aliases |
+|---|---|
+| `fontawesome` | `solid`, `regular`, `brands` |
+| `materialicons` | `regular`, `outlined`, `round`, `sharp`, `twoTone` |
+| `materialsymbols` | `outlined`, `rounded`, `sharp` |
+| `framework7icons` | `fontFamily` |
+
+Every module also provides `families.default`. For example, `fontAwesome.families.solid` is the same value as `fontAwesome.solid`.
+
+The module filename follows the selected library (`fontawesome`, `materialicons`, `materialsymbols`, or `framework7icons`).
+
+## Using icons in Alloy XML
 
 The variant class sets the `fontFamily`. The icon class sets the glyph (`text` / `title`). Apply both together:
 

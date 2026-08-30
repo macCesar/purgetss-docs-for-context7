@@ -8,7 +8,7 @@
 > - Android: `res-mdpi`, `res-hdpi`, `res-xhdpi`, `res-xxhdpi`, `res-xxxhdpi` (5 densities)
 > - iPhone: `@1x`, `@2x`, `@3x` (3 scales via filename suffix)
 > 
-> Works on Alloy and Classic projects. The layout is auto-detected.
+> Works on Alloy and Classic projects. The layout and enabled platforms in `tiapp.xml` are detected automatically.
 
 
 This page covers the `purgetss/images/` folder, the 4× master convention, single-file regeneration, and where the command fits in a normal build.
@@ -55,9 +55,20 @@ app/assets/
         └── primary@3x.svg
 ```
 
+Classic uses the same density layout under `Resources/`:
+
+```text
+Resources/
+├── android/images/res-{mdpi,hdpi,xhdpi,xxhdpi,xxxhdpi}/
+└── iphone/images/
+    ├── my-hero-illustration.png
+    ├── my-hero-illustration@2x.png
+    └── my-hero-illustration@3x.png
+```
+
 ## The `purgetss/images/` convention
 
-`init` creates `purgetss/images/` alongside `fonts/` and `brand/`, so the folder is already there before you drop in any source images.
+Alloy `init` creates `purgetss/images/` alongside `fonts/` and `brand/`. In a standalone Classic project, running `purgetss images` without a positional source creates the convention folder so you can add files. Passing an existing external file or directory does not create an empty `purgetss/` folder.
 
 `./purgetss/images/`
 ```text
@@ -73,7 +84,7 @@ purgetss/images/
 
 Supported input formats: `.svg`, `.png`, `.jpg`, `.jpeg`, `.webp`, `.gif`.
 
-Subdirectories are preserved in the output. A file at `purgetss/images/buttons/primary.png` ends up at `app/assets/android/images/res-*/buttons/primary.png` and `app/assets/iphone/images/buttons/primary.png`. Use whatever folder layout makes sense for your project.
+Subdirectories are preserved in the output. A file at `purgetss/images/buttons/primary.png` ends up under `app/assets/` in Alloy or `Resources/` in Classic. Use whatever folder layout makes sense for your project.
 
 > 💡 **TIP**
 >
@@ -182,7 +193,7 @@ The upper bound exists because `--width 8192` already produces an `xxxhdpi` outp
 
 ## The `images:` config section
 
-On the first run, `purgetss images` adds an `images:` block to your existing `purgetss/config.cjs` between `brand:` and `theme:`:
+When the convention-based command runs and an existing `purgetss/config.cjs` lacks the section, `purgetss images` adds an `images:` block between `brand:` and `theme:`:
 
 `./purgetss/config.cjs`
 ```javascript
@@ -295,7 +306,7 @@ When the source is outside `purgetss/images/`, the source file's directory becom
 
 ## Platform filter
 
-By default, every run generates both Android densities and iPhone scales. Scope to one platform for targeted runs:
+By default, the command reads `<deployment-targets>` from `tiapp.xml`: a project that enables only Android does not receive iPhone files, and an iOS-only project does not receive Android files. Pass a platform flag to override that project default explicitly:
 
 ```bash
 > purgetss images --android                # Android only (skip iPhone)
@@ -307,7 +318,7 @@ This is useful when:
 - You are iterating on an iOS-only screen and do not need to regenerate Android assets every time.
 - You want to tune JPEG quality differently for the two platforms by running the command twice with different flags.
 
-The two flags are mutually exclusive. Pass neither to get both.
+The two flags are mutually exclusive. Pass neither to follow `tiapp.xml`.
 
 ## Format conversion
 
@@ -472,7 +483,7 @@ Titanium auto-picks the correct density at runtime based on the device.
 
 ## Full pipeline alongside `build`
 
-A normal app workflow looks like this:
+An Alloy workflow looks like this:
 
 ```bash
 # 1. Edit your source images in Affinity/Figma, drop into purgetss/images/
@@ -488,9 +499,11 @@ A normal app workflow looks like this:
 
 If you only changed CSS classes, you do not need to re-run `purgetss images`.
 
+Classic does not run the PurgeTSS build step. Generate the images, then compile the app normally with `ti build`; the files under `Resources/` are ordinary Titanium resources.
+
 ## Cleaning up
 
-`purgetss images` never deletes files. It only creates them. If you remove an image from `purgetss/images/`, the generated copies in `app/assets/android/images/res-*/` and `app/assets/iphone/images/` stay in place. Remove them manually or with git when you clean up.
+`purgetss images` never deletes files. It only creates them. If you remove an image from `purgetss/images/`, the generated copies under `app/assets/` (Alloy) or `Resources/` (Classic) stay in place. Remove them manually or with git when you clean up.
 
 ## Troubleshooting
 
@@ -511,7 +524,7 @@ JPEG doesn't support alpha channels. If your source is PNG with transparency and
 
 Two common causes:
 
-1. There is no `.png` next to the `.svg`. Titanium falls back from `.svg` references to `.png` siblings. If `purgetss images` (or the post-purge SVG pipeline) hasn't generated them yet, the fallback can't fire. Run `purgetss images` (or `purgetss` for the automatic pipeline) and verify the `.png` exists under `app/assets/iphone/images/` and `app/assets/android/images/res-*/`.
+1. There is no `.png` next to the `.svg`. Titanium falls back from `.svg` references to `.png` siblings. If `purgetss images` (or the Alloy post-purge SVG pipeline) hasn't generated them yet, the fallback can't fire. Run `purgetss images` and verify the `.png` exists under `app/assets/` (Alloy) or `Resources/` (Classic).
 2. Both `.png` and `.webp` (or another non-png) sit next to each other for the same basename. That breaks the fallback entirely, and Titanium shows nothing. Delete the non-`.png` siblings, or use the post-purge SVG pipeline / pin the SVG in `images.files` to force-PNG behavior.
 
 ### My subdirectories aren't preserved in the output

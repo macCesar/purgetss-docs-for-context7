@@ -63,9 +63,9 @@ To include transparency, use the 8-digit hex format (`#RRGGBBAA`):
 }
 ```
 
-## Registering in config.cjs
+## Registering utility classes in config.cjs (Alloy)
 
-Map the semantic color names to PurgeTSS class names in `config.cjs`:
+This section applies to Alloy projects that use the PurgeTSS utility-class workflow. Map the semantic color names to PurgeTSS class names in `config.cjs`:
 
 `purgetss/config.cjs`
 ```js
@@ -89,6 +89,8 @@ module.exports = {
 ```
 
 This generates classes such as `bg-surface`, `bg-surface-high`, `text-on-surface`, `text-accent`, and `bg-border`.
+
+Classic projects do not need `config.cjs`. Use the semantic name directly in Titanium properties, for example `backgroundColor: 'surfaceColor'` or `color: 'textColor'`.
 
 ### Nesting rules
 
@@ -336,7 +338,7 @@ Writing 11 palette entries by hand is tedious. So is creating each purpose-based
 
 #### Palette mode: generated tonal scale
 
-One base hex creates 11 entries with mirror inversion and the matching `config.cjs` mapping.
+One base hex creates 11 entries with mirror inversion. Alloy also receives the matching `config.cjs` mapping; Classic receives only the native `Resources/semantic.colors.json` file.
 
 ```bash
 > purgetss semantic '#15803d' amazon
@@ -349,7 +351,7 @@ One base hex creates 11 entries with mirror inversion and the matching `config.c
 > 
 > 1. Generates the 11-step tonal palette from the input hex (same algorithm as `shades`).
 > 2. Writes `semantic.colors.json` at the project's canonical location (`app/assets/` on Alloy, `Resources/` on Classic) with mirror-by-index values: `50` ↔ `950`, `100` ↔ `900`, and `500` as the identical anchor.
-> 3. Updates `purgetss/config.cjs` to map the family to those semantic keys, for example `{ 50: 'amazon50', 100: 'amazon100' }`.
+> 3. On Alloy, updates `purgetss/config.cjs` to map the family to those semantic keys, for example `{ 50: 'amazon50', 100: 'amazon100' }`. Classic skips this step.
 > 4. Removes prior keys for the same family before writing, so re-runs replace instead of duplicating.
 > 
 > Classes like `bg-amazon-50`, `text-amazon-950`, `border-amazon-500` flip tonal contrast automatically when the appearance changes.
@@ -383,7 +385,7 @@ Use single mode for colors like `surfaceColor`, `textColor`, `borderColor`, and 
 
 The name is preserved verbatim as the JSON key, including camelCase. When `--dark` is omitted, it defaults to the light hex. That is useful for overlays or glass surfaces where alpha is the only variation.
 
-Single mode writes both files: the JSON entry and an auto-generated class mapping in `config.cjs`. The class name is derived from the semantic key by stripping the conventional `Color` suffix and kebab-casing the rest:
+On Alloy, single mode writes the JSON entry and an auto-generated class mapping in `config.cjs`. The class name is derived from the semantic key by stripping the conventional `Color` suffix and kebab-casing the rest:
 
 `./purgetss/config.cjs (auto-generated)`
 ```js
@@ -403,6 +405,8 @@ theme: {
 ```
 
 After the batch above you can use `bg-surface`, `bg-surface-high`, `text-text`, `bg-accent`, `bg-overlay`, etc. immediately.
+
+On Classic, single mode writes only `Resources/semantic.colors.json`; it does not create `purgetss/config.cjs`, TSS, `app/`, or an Alloy hook. Use the generated names directly in Titanium properties.
 
 If your design system uses different class names, such as `on-surface` instead of `text`, or the nested `surface: { DEFAULT, high }` form from earlier in this page, edit `config.cjs` after running the commands. Adjusting one generated mapping is faster than typing the whole structure from scratch.
 

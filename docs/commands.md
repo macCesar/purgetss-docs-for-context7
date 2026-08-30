@@ -9,24 +9,43 @@
 
 This page lists the commands available in PurgeTSS.
 
+## Alloy and Classic compatibility
+
+The PurgeTSS utility-class lifecycle remains Alloy-only. Classic apps can use the independent asset and CommonJS commands without installing an `alloy.jmk` hook or adding PurgeTSS to their compilation flow.
+
+| Command | Alloy | Classic | Classic behavior |
+| --- | :---: | :---: | --- |
+| `brand` | ✅ | ✅ | Generates only platforms enabled in `tiapp.xml`; `--only` explicitly overrides that filter. |
+| `images` | ✅ | ✅ | Writes to `Resources/{android,iphone}/images/` and follows `tiapp.xml` unless `--android` or `--ios` is passed. |
+| `semantic` | ✅ | ✅ | Writes only `Resources/semantic.colors.json`; no `purgetss/`, utility mapping, or TSS is created. |
+| `shades` | ✅ | ✅ | Console modes work anywhere. Saving creates or updates `purgetss/config.cjs`. |
+| `color-module` | ✅ | ✅ | Writes to `app/lib/` or `Resources/lib/`. |
+| `module` | ✅ | ✅ | Writes to the matching project `lib` folder. |
+| `icon-library` | ✅ | ✅ | Uses `Resources/fonts/` and optionally `Resources/lib/`; `--styles` is skipped in Classic. |
+| `build-fonts` | ✅ | ✅ | Uses `Resources/fonts/` and optionally `Resources/lib/`; no TSS is generated. |
+| Root `purgetss`, `--all`, `init`, `create`, `install-dependencies`, `build`, `watch` | ✅ | — | These commands own the Alloy/PurgeTSS utility-class lifecycle. |
+| `update`, `sudo-update` | ✅ | ✅ | Global CLI maintenance; no project layout is required. |
+
+The files generated under `Resources/` are ordinary Titanium resources. A Classic app does not need PurgeTSS installed to compile or run with them.
+
 ## Setup commands
 - `init`: Initializes PurgeTSS on an existing Alloy project.
 - `create`: Creates a new Alloy project with PurgeTSS already set up.
 - `brand`: Regenerates every image the Titanium template ships, from one main logo: launcher icons, adaptive icons, iOS 18+ Dark/Tinted variants, marketplace artwork, and the iOS and Android splash sets. Per-piece logo overrides and a `--only` filter are available when needed.
-- `images`: Generates multi-density UI images (Android `res-*` densities, iPhone `@1x`/`@2x`/`@3x` scales) from sources in `./purgetss/images/`. Works on both Alloy and Classic projects.
+- `images`: Generates multi-density UI images (Android `res-*` densities, iPhone `@1x`/`@2x`/`@3x` scales). Works on Alloy and Classic and follows `tiapp.xml` deployment targets.
 
 ## Development commands
 - `build`: Generates `utilities.tss` from `config.cjs`.
 - `watch`: Runs `purgetss` automatically on each project compile (defaults to `--on`).
 
 ## Asset commands
-- `icon-library`: Copies the official icon fonts into `./app/assets/fonts`.
-- `build-fonts`: Generates `./purgetss/styles/fonts.tss` with class definitions and `fontFamily` selectors for custom fonts.
+- `icon-library`: Copies official icon fonts to `app/assets/fonts/` (Alloy) or `Resources/fonts/` (Classic).
+- `build-fonts`: Installs custom fonts in Alloy or Classic; TSS class definitions are generated only for Alloy.
 
 ## Utility commands
 - `shades`: Generates shades and tints for a color and writes the palette to `config.cjs`.
-- `semantic`: Generates Titanium semantic colors (Light/Dark mode) into `app/assets/semantic.colors.json`. It supports tonal palettes (one base hex -> 11 shades with mirror inversion) and single purpose-based colors (explicit light + dark + optional alpha).
-- `color-module`: Creates `./app/lib/purgetss.colors.js` with the colors defined in `config.cjs`.
+- `semantic`: Generates Titanium semantic colors into `app/assets/semantic.colors.json` (Alloy) or `Resources/semantic.colors.json` (Classic).
+- `color-module`: Creates `purgetss.colors.js` in the project-specific `lib` folder with the colors defined in `config.cjs`.
 - `module`: Installs `purgetss.ui.js` in the `lib` folder.
 
 ## Maintenance commands
@@ -394,6 +413,13 @@ The recommended workflow is convention-first:
 
 Generates multi-density variants of your UI images from one high-resolution source per image. That includes buttons, illustrations, logos, and screen graphics. Alloy and Classic projects are detected automatically.
 
+Without a platform flag, `images` reads `<deployment-targets>` from `tiapp.xml` and skips disabled platforms. Passing `--android` or `--ios` is an explicit override. Output paths are:
+
+- Alloy: `app/assets/{android,iphone}/images/`
+- Classic: `Resources/{android,iphone}/images/`
+
+Running `images` with no positional source uses the `purgetss/images/` convention and creates that folder when missing. Passing an existing external file or directory is self-contained: the command does not create an empty `purgetss/images/` or a config file merely to process it.
+
 > 💡 **TIP**
 >
 > Full guide
@@ -414,8 +440,8 @@ Source selection
 
 Platform filter
 
-- `--android`: only Android density variants. Mutually exclusive with `--ios`.
-- `--ios`: only iPhone scale variants. Mutually exclusive with `--android`.
+- `--android`: explicitly generate only Android density variants, even when Android is disabled in `tiapp.xml`. Mutually exclusive with `--ios`.
+- `--ios`: explicitly generate only iPhone scale variants, even when iOS is disabled in `tiapp.xml`. Mutually exclusive with `--android`.
 
 Output format
 
@@ -468,6 +494,8 @@ Diagnostics
 
 This command installs dev dependencies and configuration files in an existing PurgeTSS project. It also sets up Visual Studio Code (VSCode) support.
 
+This is an Alloy-only command because Tailwind IntelliSense, the Alloy ESLint plugin, and the generated editor configuration support the PurgeTSS utility-class workflow. It is intentionally not installed into Classic projects.
+
 ```bash
 > purgetss install-dependencies
 
@@ -485,7 +513,10 @@ This command installs dev dependencies and configuration files in an existing Pu
 
 ## `icon-library` command
 
-The `icon-library` command copies the free font files for Font Awesome, Material Icons, Material Symbols, and Framework7 Icons into `./app/assets/fonts`.
+The `icon-library` command copies the free font files for Font Awesome, Material Icons, Material Symbols, and Framework7 Icons into the native font folder for the detected project:
+
+- Alloy: `app/assets/fonts/`
+- Classic: `Resources/fonts/`
 
 ```bash
 > purgetss icon-library [--vendor=fa,mi,ms,f7] [--module] [--styles]
@@ -497,11 +528,11 @@ The `icon-library` command copies the free font files for Font Awesome, Material
 ### Options and flags
 
 - `-v, --vendor [fa,mi,ms,f7]`: copy specific font vendors.
-- `-m, --module`: copy the corresponding CommonJS module into `./app/lib/`.
-- `-s, --styles`: copy the corresponding `tss` files into `./purgetss/styles/` for review.
+- `-m, --module`: copy the corresponding CommonJS module into `app/lib/` (Alloy) or `Resources/lib/` (Classic).
+- `-s, --styles`: copy the corresponding TSS files into `./purgetss/styles/` for review. This option is Alloy-only and is skipped in Classic without creating TSS files.
 
-`./app/assets/fonts/`
-```bash
+`app/assets/fonts/ or Resources/fonts/`
+```text
 FontAwesome7Brands-Regular.ttf
 FontAwesome7Free-Regular.ttf
 FontAwesome7Free-Solid.ttf
@@ -516,9 +547,9 @@ MaterialSymbolsRounded-Regular.ttf
 MaterialSymbolsSharp-Regular.ttf
 ```
 
-After copying the fonts, you can use them in Buttons and Labels. For Font Awesome, set the font family to `fa` (Solid icons) and use a class like `fa-home`.
+In Alloy, the bundled PurgeTSS classes can use the fonts immediately. In Classic, the same files are available as normal Titanium custom fonts: set `font.fontFamily` and use the Unicode value directly or install the CommonJS lookup module with `--module`.
 
-You do not need to copy any `.tss` file for this to work: PurgeTSS resolves the official icon classes at compile time and writes them to the generated `app/styles/app.tss` (not `purgetss/styles/utilities.tss`). See [Icon font libraries](./customization/8-icon-fonts-libraries.md) for the full reference.
+Alloy users do not need to copy any `.tss` file: PurgeTSS resolves the official icon classes at compile time and writes them to generated `app/styles/app.tss`. Classic does not use those classes; use the font family plus a Unicode value or the optional CommonJS module. See [Icon font libraries](./customization/8-icon-fonts-libraries.md) for the full reference.
 
 ### Available font classes
 
@@ -546,7 +577,7 @@ Available names and aliases:
 
 ### CommonJS module
 
-Use `--module` to copy the corresponding CommonJS module into `./app/lib/`.
+Use `--module` to copy the corresponding CommonJS module into `app/lib/` (Alloy) or `Resources/lib/` (Classic).
 
 ```bash
 > purgetss icon-library --module [--vendor="fontawesome, materialicons, materialsymbols, framework7"]
@@ -555,7 +586,16 @@ Use `--module` to copy the corresponding CommonJS module into `./app/lib/`.
 > purgetss il -m [-v=fa,mi,ms,f7]
 ```
 
-Each library includes a CommonJS module that exposes Unicode strings for the icon fonts.
+Each library includes a CommonJS module that exposes Unicode strings and the matching Titanium font-family aliases. For example, a Classic app can use `fontAwesome.icons.home` with `fontAwesome.solid` instead of repeating `FontAwesome7Free-Solid`.
+
+All modules expose `families.default`. Variant aliases are:
+
+| Module | Aliases |
+|---|---|
+| `fontawesome` | `solid`, `regular`, `brands` |
+| `materialicons` | `regular`, `outlined`, `round`, `sharp`, `twoTone` |
+| `materialsymbols` | `outlined`, `rounded`, `sharp` |
+| `framework7icons` | `fontFamily` |
 
 All prefixes are stripped from their class names and camel-cased. For example:
 
@@ -566,7 +606,10 @@ All prefixes are stripped from their class names and camel-cased. For example:
 
 ## `build-fonts` command
 
-The `build-fonts` command generates `./purgetss/styles/fonts.tss` from font files placed in `./purgetss/fonts/`. Use it for brand typography, custom icon fonts, or any community icon library not bundled with PurgeTSS.
+The `build-fonts` command reads font files placed in `./purgetss/fonts/`. Use it for brand typography, custom icon fonts, or any community icon library not bundled with PurgeTSS.
+
+- Alloy: copies fonts to `app/assets/fonts/` and generates `purgetss/styles/fonts.tss` plus the class definitions file.
+- Classic: copies fonts to `Resources/fonts/` and does not generate TSS or definitions. The `purgetss/fonts/` folder is only a development-time source; the app does not depend on PurgeTSS at runtime.
 
 ```bash
 > purgetss build-fonts [--module] [--font-class-from-filename]
@@ -577,7 +620,7 @@ The `build-fonts` command generates `./purgetss/styles/fonts.tss` from font file
 
 ### Options and flags
 
-- `-m, --module`: generate a CommonJS module in `./app/lib/purgetss.fonts.js`.
+- `-m, --module`: generate `purgetss.fonts.js` in `app/lib/` (Alloy) or `Resources/lib/` (Classic).
 - `-f, --font-class-from-filename`: use the font's filename as the font class name and icon prefix instead of the font family name (replaces the old `-p` flag).
 
 For the full workflow with examples (Google Fonts, custom icon libraries, `--module` output, filename-based prefixes), see [Custom fonts](./customization/7-custom-fonts.md).
@@ -586,6 +629,8 @@ For the full workflow with examples (Google Fonts, custom icon libraries, `--mod
 ## `shades` command
 
 The `shades` command generates shades and tints for a given color and writes the palette to `config.cjs`.
+
+Saving works in Alloy and Classic. In Classic, `config.cjs` is a development-time color source for commands such as `color-module`; it does not install the PurgeTSS build lifecycle. The output-only flags (`--log`, `--json`, and `--tailwind`) work outside a project and write nothing.
 
 > ℹ️ **INFO**
 >
@@ -620,7 +665,7 @@ The `shades` command generates shades and tints for a given color and writes the
 > 💡 **TIP**
 >
 > Need Titanium semantic colors (Light/Dark mode)?
-> Use the dedicated [`semantic` command](#semantic-command). It writes to `app/assets/semantic.colors.json` and generates either an 11-step tonal palette with mirror inversion or a single purpose-based color with explicit per-mode hex and optional alpha.
+> Use the dedicated [`semantic` command](#semantic-command). It writes to `app/assets/semantic.colors.json` in Alloy or `Resources/semantic.colors.json` in Classic and generates either an 11-step tonal palette with mirror inversion or a single purpose-based color with explicit per-mode hex and optional alpha.
 
 
 > ℹ️ **INFO**
@@ -784,7 +829,10 @@ To print a Titanium `config.json`-compatible structure to the console, use `--js
 
 ## `semantic` command
 
-The `semantic` command generates [Titanium semantic colors](./best-practices/2-semantic-colors.md) into `app/assets/semantic.colors.json`, with Light/Dark mode support built in. Use `--single` to switch modes.
+The `semantic` command generates [Titanium semantic colors](./best-practices/2-semantic-colors.md), with Light/Dark mode support built in. Use `--single` to switch modes.
+
+- Alloy: writes `app/assets/semantic.colors.json` and updates the PurgeTSS utility mapping in `purgetss/config.cjs`.
+- Classic: writes only `Resources/semantic.colors.json`. It does not create `purgetss/`, `config.cjs`, utility mappings, or TSS files.
 
 ```bash
 > purgetss semantic [hexcode] [name]
@@ -792,7 +840,7 @@ The `semantic` command generates [Titanium semantic colors](./best-practices/2-s
 
 ### Palette mode (no `--single`)
 
-One base hex becomes an 11-shade tonal palette with mirror-by-index Light/Dark inversion anchored at shade `500`. The command writes both files in one step: the JSON gets 11 entries, and `config.cjs` gets the family mapped to those semantic keys.
+One base hex becomes an 11-shade tonal palette with mirror-by-index Light/Dark inversion anchored at shade `500`. Alloy writes the JSON entries and the matching `config.cjs` mapping. Classic writes only the native JSON entries.
 
 ```bash
 > purgetss semantic '#15803d' amazon
@@ -826,11 +874,11 @@ theme: {
 }
 ```
 
-Classes like `bg-amazon-50`, `text-amazon-500`, `border-amazon-950` flip tonal contrast automatically with the system appearance.
+In Alloy, classes like `bg-amazon-50`, `text-amazon-500`, and `border-amazon-950` flip tonal contrast automatically with the system appearance. Classic code references the semantic keys directly, for example `backgroundColor: 'amazon50'`.
 
 ### Single mode (`--single`)
 
-This mode uses explicit per-mode hex values for purpose-based semantic colors such as `surfaceColor`, `textColor`, `borderColor`, or `overlayColor`. It writes the JSON entry and maps it to a class in `config.cjs` by stripping the conventional `Color` suffix.
+This mode uses explicit per-mode hex values for purpose-based semantic colors such as `surfaceColor`, `textColor`, `borderColor`, or `overlayColor`. Alloy also maps the key to a class in `config.cjs` by stripping the conventional `Color` suffix. Classic writes the native JSON entry only.
 
 ```bash
 > purgetss semantic --single '#F9FAFB' surfaceColor       --dark '#0f172a'
@@ -840,7 +888,7 @@ This mode uses explicit per-mode hex values for purpose-based semantic colors su
 > purgetss semantic --single '#000000' overlayColor       --alpha 50
 ```
 
-The name is preserved verbatim as the JSON key, including camelCase. When `--dark` is omitted, it defaults to the light hex. That is useful for overlays or glass surfaces where alpha is the only variation. Each command logs the mapping it wrote:
+The name is preserved verbatim as the JSON key, including camelCase. When `--dark` is omitted, it defaults to the light hex. That is useful for overlays or glass surfaces where alpha is the only variation. An Alloy run logs the mapping it wrote:
 
 ```text
 ::PurgeTSS:: "surfaceColor" saved to app/assets/semantic.colors.json and mapped to class surface in config.cjs.
@@ -877,7 +925,7 @@ theme: {
 }
 ```
 
-You can use the classes immediately: `bg-surface`, `bg-surface-high`, `text-text`, `bg-accent`, `bg-overlay`.
+Alloy can use the generated classes immediately: `bg-surface`, `bg-surface-high`, `text-text`, `bg-accent`, `bg-overlay`. Classic uses `surfaceColor`, `surfaceHighColor`, `textColor`, `accentColor`, and `overlayColor` directly in Titanium color properties.
 
 #### Customizing the class name
 
@@ -925,14 +973,16 @@ Re-running on the same family replaces it. Before writing, PurgeTSS strips every
 - `-a, --alpha <0-100>`: With `--single`, wraps both modes in `{ color, alpha }` per the Titanium spec. Range `0.0–100.0`, integer or float.
 - `-n, --name <name>`: Specify the name (alternative to the positional argument).
 - `-r, --random`: In palette mode, use a random base color.
-- `-o, --override`: Place the mapping in `theme.colors` instead of `theme.extend.colors`.
-- `-q, --quotes`: Keep double quotes in `config.cjs`.
+- `-o, --override`: Place the Alloy mapping in `theme.colors` instead of `theme.extend.colors`. Ignored in Classic because no mapping is written.
+- `-q, --quotes`: Keep double quotes in the Alloy `config.cjs`. Ignored in Classic.
 - `-l, --log`: Preview the JSON without writing any files.
 
 
 ## `color-module` command
 
 This command creates `purgetss.colors.js` in the `lib` folder with all colors defined in `config.cjs`.
+
+The destination is `app/lib/purgetss.colors.js` in Alloy or `Resources/lib/purgetss.colors.js` in Classic. A missing `purgetss/config.cjs` is created because that file is the command's color source; no Alloy hook or TSS is installed in Classic.
 
 ```bash
 > purgetss color-module
@@ -1044,6 +1094,8 @@ To deactivate it, use `--off`.
 
 The `module` command installs `purgetss.ui.js` in the `lib` folder.
 
+The destination is selected automatically: `app/lib/purgetss.ui.js` in Alloy or `Resources/lib/purgetss.ui.js` in Classic. The generated CommonJS file is self-contained; a Classic app does not need PurgeTSS during compilation or at runtime.
+
 ```bash
 > purgetss module
 
@@ -1053,7 +1105,7 @@ The `module` command installs `purgetss.ui.js` in the `lib` folder.
 
 The PurgeTSS module includes:
 
-- Animation methods for playing or applying basic animations and transformations to Alloy objects.
+- Animation methods for playing or applying basic animations and transformations to Titanium views.
 
 > 💡 **TIP**
 >

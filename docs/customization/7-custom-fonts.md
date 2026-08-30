@@ -1,6 +1,14 @@
 # Custom fonts
 
-Use the `purgetss/fonts/` folder and the `build-fonts` command to register any font in your Titanium app: brand typefaces, custom icon fonts, or community icon libraries that PurgeTSS no longer bundles.
+Use the `purgetss/fonts/` folder and the `build-fonts` command to register any font in your Titanium app: brand typefaces, custom icon fonts, or community icon libraries that PurgeTSS no longer bundles. The command detects Alloy and Classic projects automatically.
+
+| Output | Alloy | Classic |
+|---|---|---|
+| Font files | `app/assets/fonts/` | `Resources/fonts/` |
+| Generated TSS classes | `purgetss/styles/fonts.tss` | Not generated |
+| `--module` output | `app/lib/purgetss.fonts.js` | `Resources/lib/purgetss.fonts.js` |
+
+Classic projects receive only native Titanium resources and, when requested, a CommonJS module. They do not receive TSS files, `app/`, or an Alloy build hook.
 
 ## The `fonts` folder
 
@@ -47,15 +55,17 @@ $ purgetss build-fonts [-m] [-f]
 $ purgetss bf [-m] [-f]
 ```
 
-What it does:
+In an Alloy project it:
 
 1. Creates `./purgetss/styles/fonts.tss` with one `fontFamily` class per file.
 2. Copies the font files into `./app/assets/fonts/`, renamed to their PostScript names so they work on both iOS and Android.
 
+In a Classic project it copies the renamed files into `./Resources/fonts/`. It deliberately skips `fonts.tss` and utility-class definitions because those belong to the Alloy/PurgeTSS styling workflow.
+
 > ℹ️ **INFO**
 >
 > How this differs from the official icon fonts
-> Unlike the [official icon fonts](./8-icon-fonts-libraries.md), which PurgeTSS resolves automatically from its own bundled files and need no `.tss` in your project, custom fonts **do** generate `./purgetss/styles/fonts.tss`. That file is then folded into the generated `app/styles/app.tss` when you run `purgetss` (or compile your app). That is where the final classes used by Alloy live.
+> In Alloy, unlike the [official icon fonts](./8-icon-fonts-libraries.md), custom fonts generate `./purgetss/styles/fonts.tss`. That file is folded into the generated `app/styles/app.tss` when you run `purgetss` (or compile your app). Classic projects skip this step and use the font's PostScript name directly through Titanium's `fontFamily` property.
 
 
 After running `purgetss build-fonts` with the Bevan and Dancing Script example above:
@@ -74,7 +84,17 @@ After running `purgetss build-fonts` with the Bevan and Dancing Script example a
 '.dancingscript-semibold': { font: { fontFamily: 'DancingScript-SemiBold' } }
 ```
 
-You can now use these classes on any Titanium component with a `font` property: Labels, Buttons, TextFields, TextAreas, ListItems, TableViewRows, and ActivityIndicators.
+In Alloy, you can now use these classes on any Titanium component with a `font` property: Labels, Buttons, TextFields, TextAreas, ListItems, TableViewRows, and ActivityIndicators.
+
+In Classic, use the same PostScript name directly:
+
+`Resources/app.js`
+```javascript
+const label = Ti.UI.createLabel({
+  text: 'Custom font',
+  font: { fontFamily: 'DancingScript-Regular', fontSize: 24 }
+})
+```
 
 ### Renaming the class
 
@@ -161,7 +181,7 @@ After `purgetss build-fonts`, the generated `fonts.tss` includes the family clas
 
 Two optional flags adjust what `build-fonts` generates:
 
-- `-m, --module`: generates a CommonJS module in `./app/lib/purgetss.fonts.js` that exposes each icon's Unicode string to JavaScript. Handy when you set `label.text` from a controller.
+- `-m, --module`: generates a CommonJS module in `./app/lib/purgetss.fonts.js` on Alloy or `./Resources/lib/purgetss.fonts.js` on Classic. It exposes each icon's Unicode string to JavaScript.
 - `-f, --font-class-from-filename`: uses the font's filename as the font class name and icon prefix instead of the font family name. Useful when you want shorter prefixes. Replaces the old `-p` flag.
 
 ### Using `--module`
@@ -175,7 +195,7 @@ $ purgetss bf -m
 
 To avoid prefix conflicts between libraries, each icon keeps its prefix as a nested object:
 
-`./app/lib/purgetss.fonts.js`
+`app/lib/purgetss.fonts.js (Alloy) or Resources/lib/purgetss.fonts.js (Classic)`
 ```javascript
 const icons = {
   // map-icons/map-icons.css
@@ -245,7 +265,7 @@ purgetss
 /* ... */
 ```
 
-`./app/lib/purgetss.fonts.js`
+`app/lib/purgetss.fonts.js (Alloy) or Resources/lib/purgetss.fonts.js (Classic)`
 ```javascript
 const icons = {
   // map-icons/mp.css
@@ -284,4 +304,4 @@ exports.families = families;
 
 ## Custom proprietary icon fonts
 
-If your design system ships its own icon font, treat it like any other icon library: drop the `.ttf` + `.css` pair into `./purgetss/fonts/<name>/` and run `build-fonts`. The classes are then available in your TSS.
+If your design system ships its own icon font, treat it like any other icon library: drop the `.ttf` + `.css` pair into `./purgetss/fonts/<name>/` and run `build-fonts`. Alloy receives TSS classes. Classic can use the generated CommonJS module (`--module`) together with the exported font family, without adopting PurgeTSS utility classes.

@@ -13,6 +13,14 @@ Install PurgeTSS globally on your machine with [NPM](https://www.npmjs.com/).
 > PurgeTSS requires Node 20.0.0 or higher.
 
 
+> ℹ️ **INFO**
+>
+> Alloy workflow and Classic standalone commands
+> The full PurgeTSS utility-class workflow on this page is Alloy-only: it creates `app.tss`, installs `app/alloy.jmk`, and processes Alloy XML/TSS sources.
+> 
+> Classic projects can still use autonomous resource commands such as `brand`, `images`, `semantic`, `shades`, `color-module`, `module`, `icon-library`, and `build-fonts`. They write to native `Resources/` paths and do not add the Alloy hook or make the app depend on PurgeTSS at build time. See the [command compatibility matrix](./commands.md#alloy-and-classic-compatibility).
+
+
 ## Run PurgeTSS the first time
 
 > ℹ️ **INFO**
