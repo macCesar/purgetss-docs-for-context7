@@ -24,8 +24,8 @@ What it does:
 - 23,300+ utility classes for colors, spacing, typography, layout, and more.
 - Parses XML files and writes an `app.tss` with only the classes you use.
 - Customizable through `config.cjs`, with arbitrary values for one-off sizes and colors.
-- Icon fonts for Buttons and Labels: Font Awesome, Material Icons, Material Symbols, and Framework7-Icons.
-- `build-fonts` command generates `fonts.tss` with class definitions and `fontFamily` selectors for any font you drop in.
+- Icon fonts for Buttons and Labels: Font Awesome, Material Icons, Material Symbols, and Framework7-Icons in Alloy and Classic projects.
+- `build-fonts` installs custom fonts in Alloy or Classic; TSS class definitions are generated only for Alloy.
 - `shades` command generates color palettes from a hex value.
 - Animation module with 2D transforms, draggable views with collision detection, sequential animations, and position utilities.
 - Grid system for aligning and distributing elements in rows and columns.
@@ -67,6 +67,12 @@ What it does:
 ---
 
 ## Changelog
+
+### v7.15.0
+
+- **Standalone resource commands now work cleanly in Classic Titanium projects.** `images`, `semantic`, `shades`, `color-module`, `module`, `icon-library`, and `build-fonts` detect Alloy or Classic and write to native `Resources/` paths where appropriate. Classic does not receive the PurgeTSS utility-class lifecycle.
+- **Official icon modules expose font-family aliases.** For example, use `fontAwesome.icons.home` with `fontAwesome.solid`; `families` exposes the complete stable mapping for every bundled library.
+- **`images` follows `tiapp.xml` deployment targets by default.** Explicit `--android` and `--ios` flags remain available when you need an override.
 
 ### v7.14.0
 
