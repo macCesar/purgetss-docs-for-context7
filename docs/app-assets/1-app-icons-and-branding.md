@@ -107,12 +107,14 @@ Or in `purgetss/config.cjs`, where each piece takes its own `logo`:
 `./purgetss/config.cjs`
 ```javascript
 brand: {
-  background: '#FFFFFF',   // inherited by pieces that use an opaque background canvas
-  confirmOverwrites: true, // prompt before overwriting files (set false to skip)
-  optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
+  background: '#FFFFFF',      // inherited by pieces that use an opaque background canvas
+  splashCornerRadius: '0%',   // rounded artwork on legacy iOS/Android splash screens (0-50)
+  confirmOverwrites: true,    // prompt before overwriting files (set false to skip)
+  optimize: false,            // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
 
   // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
   // these keys are for numbers, colors and activation. Padding is never inherited.
+  // Only iosSplash/androidSplash accept cornerRadius; it overrides splashCornerRadius.
   // iOS/store icons are full-bleed by default; increase padding only for logo artwork.
   icon:             { padding: '0%' },    // DefaultIcon.png + DefaultIcon-ios.png
   dark:             { background: null }, // DefaultIcon-Dark.png
@@ -123,7 +125,7 @@ brand: {
   featureGraphic:   { padding: '12%' },   // MarketplaceArtworkFeature.png (1024×500)
   adaptive:         { padding: '18%' },   // ic_launcher_{foreground,background,monochrome}.png × 5 + ic_launcher.xml
   legacyIcon:       { padding: '10%' },   // ic_launcher.png × 5
-  appicon:          {},                   // appicon.png (128×128)
+  appicon:          { padding: '10%' },   // appicon.png (128×128)
   androidSplash:    { padding: '26%' },   // assets/android/default.png + images/res-*/default.png × 11
 
   // Opt-in: inert until you edit the Android theme / FCM meta-data by hand.
@@ -142,12 +144,14 @@ On the first run, `purgetss brand` adds a `brand:` block to your existing `purge
 `./purgetss/config.cjs`
 ```javascript
 brand: {
-  background: '#FFFFFF',   // inherited by pieces that use an opaque background canvas
-  confirmOverwrites: true, // prompt before overwriting files (set false to skip)
-  optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
+  background: '#FFFFFF',      // inherited by pieces that use an opaque background canvas
+  splashCornerRadius: '0%',   // rounded artwork on legacy iOS/Android splash screens (0-50)
+  confirmOverwrites: true,    // prompt before overwriting files (set false to skip)
+  optimize: false,            // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
 
   // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
   // these keys are for numbers, colors and activation. Padding is never inherited.
+  // Only iosSplash/androidSplash accept cornerRadius; it overrides splashCornerRadius.
   // iOS/store icons are full-bleed by default; increase padding only for logo artwork.
   icon:             { padding: '0%' },    // DefaultIcon.png + DefaultIcon-ios.png
   dark:             { background: null }, // DefaultIcon-Dark.png
@@ -158,7 +162,7 @@ brand: {
   featureGraphic:   { padding: '12%' },   // MarketplaceArtworkFeature.png (1024×500)
   adaptive:         { padding: '18%' },   // ic_launcher_{foreground,background,monochrome}.png × 5 + ic_launcher.xml
   legacyIcon:       { padding: '10%' },   // ic_launcher.png × 5
-  appicon:          {},                   // appicon.png (128×128)
+  appicon:          { padding: '10%' },   // appicon.png (128×128)
   androidSplash:    { padding: '26%' },   // assets/android/default.png + images/res-*/default.png × 11
 
   // Opt-in: inert until you edit the Android theme / FCM meta-data by hand.
@@ -176,21 +180,26 @@ Change only what you want to keep as a project default. CLI flags still win for 
 - **Config decides numbers, colors and activation**, none of which can be expressed with a filename.
 - `logo:` inside a piece is there for artwork that lives outside `purgetss/brand/`.
 
+Use CLI flags for temporary choices: artwork sources, visual geometry (padding and splash corner radius), the shared background, one-run selection or activation, and optimization. Keep persistent preferences in `config.cjs`, including `confirmOverwrites`, permanent `enabled` values, and exceptional backgrounds for individual pieces.
+
 ## Brand config reference
 
-Every piece accepts the same four keys, where they apply:
+Every piece accepts the same five keys, where they apply:
 
 | Key          | What it does                                                                     |
 | ------------ | -------------------------------------------------------------------------------- |
 | `logo`       | Path to this piece's artwork, when it lives outside `purgetss/brand/`.            |
 | `padding`    | Inset per side, as a number or a percentage string like `'19%'`. Never inherited. |
+| `cornerRadius` | Rounded artwork corners, only for `iosSplash` and `androidSplash`; range `0–50`. |
 | `background` | Hex color, or `null` for transparent. Inherited from `brand.background`.          |
 | `enabled`    | `false` turns a default piece off; `true` turns an opt-in piece on.               |
 
-And these two live at the top level:
+And these live at the top level:
 
 - `brand.background` — default `#FFFFFF`. This is the inherited opaque fallback for icon canvases, splash canvases, adaptive background layers and store artwork. White is only a configurable fallback; neither platform requires PurgeTSS to add a white frame.
+- `brand.splashCornerRadius` — default `'0%'`. Shared corner radius for the artwork placed inside legacy iOS and Android splash canvases. It never changes the square master icon.
 - `brand.confirmOverwrites` — default `true`. Whether `brand` asks before overwriting project files in place.
+- `brand.optimize` — default `false`. Whether generated PNGs are quantized after rendering.
 - `brand.logo` / `brand.monochromeLogo` — path overrides for the two sources that are not pieces: the main logo, and the monochrome silhouette shared by the adaptive monochrome layer and the notification icons.
 
 ### The pieces
@@ -364,12 +373,14 @@ It is off by default because it is lossy. Turn it on per run or for the project:
 `./purgetss/config.cjs`
 ```javascript
 brand: {
-  background: '#FFFFFF',   // inherited by pieces that use an opaque background canvas
-  confirmOverwrites: true, // prompt before overwriting files (set false to skip)
-  optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
+  background: '#FFFFFF',      // inherited by pieces that use an opaque background canvas
+  splashCornerRadius: '0%',   // rounded artwork on legacy iOS/Android splash screens (0-50)
+  confirmOverwrites: true,    // prompt before overwriting files (set false to skip)
+  optimize: false,            // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
 
   // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
   // these keys are for numbers, colors and activation. Padding is never inherited.
+  // Only iosSplash/androidSplash accept cornerRadius; it overrides splashCornerRadius.
   // iOS/store icons are full-bleed by default; increase padding only for logo artwork.
   icon:             { padding: '0%' },    // DefaultIcon.png + DefaultIcon-ios.png
   dark:             { background: null }, // DefaultIcon-Dark.png
@@ -380,7 +391,7 @@ brand: {
   featureGraphic:   { padding: '12%' },   // MarketplaceArtworkFeature.png (1024×500)
   adaptive:         { padding: '18%' },   // ic_launcher_{foreground,background,monochrome}.png × 5 + ic_launcher.xml
   legacyIcon:       { padding: '10%' },   // ic_launcher.png × 5
-  appicon:          {},                   // appicon.png (128×128)
+  appicon:          { padding: '10%' },   // appicon.png (128×128)
   androidSplash:    { padding: '26%' },   // assets/android/default.png + images/res-*/default.png × 11
 
   // Opt-in: inert until you edit the Android theme / FCM meta-data by hand.
@@ -474,12 +485,14 @@ If you want that artwork to differ from the launcher icon, provide `logo-splash-
 `./purgetss/config.cjs`
 ```javascript
 brand: {
-  background: '#FFFFFF',   // inherited by pieces that use an opaque background canvas
-  confirmOverwrites: true, // prompt before overwriting files (set false to skip)
-  optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
+  background: '#FFFFFF',      // inherited by pieces that use an opaque background canvas
+  splashCornerRadius: '0%',   // rounded artwork on legacy iOS/Android splash screens (0-50)
+  confirmOverwrites: true,    // prompt before overwriting files (set false to skip)
+  optimize: false,            // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
 
   // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
   // these keys are for numbers, colors and activation. Padding is never inherited.
+  // Only iosSplash/androidSplash accept cornerRadius; it overrides splashCornerRadius.
   // iOS/store icons are full-bleed by default; increase padding only for logo artwork.
   icon:             { padding: '0%' },    // DefaultIcon.png + DefaultIcon-ios.png
   dark:             { background: null }, // DefaultIcon-Dark.png
@@ -490,7 +503,7 @@ brand: {
   featureGraphic:   { padding: '12%' },   // MarketplaceArtworkFeature.png (1024×500)
   adaptive:         { padding: '18%' },   // ic_launcher_{foreground,background,monochrome}.png × 5 + ic_launcher.xml
   legacyIcon:       { padding: '10%' },   // ic_launcher.png × 5
-  appicon:          {},                   // appicon.png (128×128)
+  appicon:          { padding: '10%' },   // appicon.png (128×128)
   androidSplash:    { padding: '26%' },   // assets/android/default.png + images/res-*/default.png × 11
 
   // Opt-in: inert until you edit the Android theme / FCM meta-data by hand.
@@ -706,6 +719,7 @@ Padding belongs to the piece, not to the project. Each piece has its own key and
 | ----------------- | -------------------------- | ----------------------------- | ------- |
 | `adaptive`        | `brand.adaptive.padding`   | `--android-adaptive-padding`  | `18%`   |
 | `legacy-icon`     | `brand.legacyIcon.padding` | `--android-legacy-padding`    | `10%`   |
+| `appicon`         | `brand.appicon.padding`    | `--appicon-padding`           | `10%`   |
 | `icon`            | `brand.icon.padding`       | `--ios-padding`               | `0%`    |
 | `feature-graphic` | `brand.featureGraphic.padding` | `--feature-graphic-padding` | `12%` |
 | `launch-logo`     | `brand.launchLogo.padding` | `--launch-logo-padding`       | `12%`   |
@@ -748,6 +762,39 @@ Measuring against the shorter side is what lets a single number work across canv
 The `26%` default is calibrated against the Titanium template itself: the Alloy logo in the stock `default.png` measures 665×488 px on a 1440×2560 canvas, so `26%` lands within 4% of the size Titanium ships.
 
 Before v7.13.0 none of this was configurable: `default.png` used a hardcoded box of 72% × 26% of its own canvas, and the `res-*` set a separate hardcoded 60%. Two rules for the same piece, neither adjustable.
+
+### Rounded splash artwork
+
+The master logo stays square so iOS and Android can apply their own launcher-icon masks. Rounding is applied only after the splash artwork has been resized, immediately before it is composited onto the splash background.
+
+`./purgetss/config.cjs`
+```javascript
+brand: {
+  splashCornerRadius: '22%',
+  iosSplash: {
+    padding: '26%',
+    // cornerRadius: '18%'
+  },
+  androidSplash: {
+    padding: '26%',
+    // cornerRadius: '26%'
+  }
+}
+```
+
+Values accept integers or percentage strings from `0` through `50`. The percentage is measured against the shorter side of the already-resized artwork: `0%` is a no-op, `50%` produces a circle for square art or a capsule for a wordmark. Existing configs without the property therefore keep their previous square output exactly.
+
+Precedence is specific platform flag, shared flag, piece config, global config, then `0%`:
+
+```text
+--ios-splash-corner-radius / --android-splash-corner-radius
+→ --splash-corner-radius
+→ brand.iosSplash.cornerRadius / brand.androidSplash.cornerRadius
+→ brand.splashCornerRadius
+→ 0%
+```
+
+The mask covers the 16 iPhone `Default*.png` files, Android `default.png`, and its 11 `images/res-*/default.png` variants. It does not touch `DefaultIcon*`, marketplace artwork, `LaunchLogo.png`, adaptive or legacy launcher icons, Android 12+ `splash_icon.png`, or notification icons. Putting `cornerRadius` in any other piece is an error.
 
 ### Adaptive icon padding
 
@@ -832,12 +879,14 @@ Or set it in the config:
 
 ```javascript
 brand: {
-  background: '#FFFFFF',   // inherited by pieces that use an opaque background canvas
-  confirmOverwrites: true, // prompt before overwriting files (set false to skip)
-  optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
+  background: '#FFFFFF',      // inherited by pieces that use an opaque background canvas
+  splashCornerRadius: '0%',   // rounded artwork on legacy iOS/Android splash screens (0-50)
+  confirmOverwrites: true,    // prompt before overwriting files (set false to skip)
+  optimize: false,            // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
 
   // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
   // these keys are for numbers, colors and activation. Padding is never inherited.
+  // Only iosSplash/androidSplash accept cornerRadius; it overrides splashCornerRadius.
   // iOS/store icons are full-bleed by default; increase padding only for logo artwork.
   icon:             { padding: '0%' },    // DefaultIcon.png + DefaultIcon-ios.png
   dark:             { background: null }, // DefaultIcon-Dark.png
@@ -848,7 +897,7 @@ brand: {
   featureGraphic:   { padding: '12%' },   // MarketplaceArtworkFeature.png (1024×500)
   adaptive:         { padding: '18%' },   // ic_launcher_{foreground,background,monochrome}.png × 5 + ic_launcher.xml
   legacyIcon:       { padding: '10%' },   // ic_launcher.png × 5
-  appicon:          {},                   // appicon.png (128×128)
+  appicon:          { padding: '10%' },   // appicon.png (128×128)
   androidSplash:    { padding: '26%' },   // assets/android/default.png + images/res-*/default.png × 11
 
   // Opt-in: inert until you edit the Android theme / FCM meta-data by hand.

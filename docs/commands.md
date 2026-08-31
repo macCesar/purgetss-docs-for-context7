@@ -82,12 +82,14 @@ module.exports = {
     }
   },
   brand: {
-    background: '#FFFFFF',   // inherited by pieces that use an opaque background canvas
-    confirmOverwrites: true, // prompt before overwriting files (set false to skip)
-    optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
+    background: '#FFFFFF',      // inherited by pieces that use an opaque background canvas
+    splashCornerRadius: '0%',   // rounded artwork on legacy iOS/Android splash screens (0-50)
+    confirmOverwrites: true,    // prompt before overwriting files (set false to skip)
+    optimize: false,            // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
 
     // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
     // these keys are for numbers, colors and activation. Padding is never inherited.
+    // Only iosSplash/androidSplash accept cornerRadius; it overrides splashCornerRadius.
     // iOS/store icons are full-bleed by default; increase padding only for logo artwork.
     icon:             { padding: '0%' },    // DefaultIcon.png + DefaultIcon-ios.png
     dark:             { background: null }, // DefaultIcon-Dark.png
@@ -98,7 +100,7 @@ module.exports = {
     featureGraphic:   { padding: '12%' },   // MarketplaceArtworkFeature.png (1024×500)
     adaptive:         { padding: '18%' },   // ic_launcher_{foreground,background,monochrome}.png × 5 + ic_launcher.xml
     legacyIcon:       { padding: '10%' },   // ic_launcher.png × 5
-    appicon:          {},                   // appicon.png (128×128)
+    appicon:          { padding: '10%' },   // appicon.png (128×128)
     androidSplash:    { padding: '26%' },   // assets/android/default.png + images/res-*/default.png × 11
 
     // Opt-in: inert until you edit the Android theme / FCM meta-data by hand.
@@ -257,12 +259,14 @@ By default, PurgeTSS auto-discovers logos from `purgetss/brand/`: `logo.{svg,png
 ```javascript
 module.exports = {
   brand: {
-    background: '#FFFFFF',   // inherited by pieces that use an opaque background canvas
-    confirmOverwrites: true, // prompt before overwriting files (set false to skip)
-    optimize: false,         // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
+    background: '#FFFFFF',      // inherited by pieces that use an opaque background canvas
+    splashCornerRadius: '0%',   // rounded artwork on legacy iOS/Android splash screens (0-50)
+    confirmOverwrites: true,    // prompt before overwriting files (set false to skip)
+    optimize: false,            // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
 
     // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
     // these keys are for numbers, colors and activation. Padding is never inherited.
+    // Only iosSplash/androidSplash accept cornerRadius; it overrides splashCornerRadius.
     // iOS/store icons are full-bleed by default; increase padding only for logo artwork.
     icon:             { padding: '0%' },    // DefaultIcon.png + DefaultIcon-ios.png
     dark:             { background: null }, // DefaultIcon-Dark.png
@@ -273,7 +277,7 @@ module.exports = {
     featureGraphic:   { padding: '12%' },   // MarketplaceArtworkFeature.png (1024×500)
     adaptive:         { padding: '18%' },   // ic_launcher_{foreground,background,monochrome}.png × 5 + ic_launcher.xml
     legacyIcon:       { padding: '10%' },   // ic_launcher.png × 5
-    appicon:          {},                   // appicon.png (128×128)
+    appicon:          { padding: '10%' },   // appicon.png (128×128)
     androidSplash:    { padding: '26%' },   // assets/android/default.png + images/res-*/default.png × 11
 
     // Opt-in: inert until you edit the Android theme / FCM meta-data by hand.
@@ -303,14 +307,20 @@ Visual customization
 - `--padding <n>`: shortcut that sets both Android launcher paddings to the same value for one run.
 - `--android-adaptive-padding <n>`: adaptive icon safe-zone % (default `18`).
 - `--android-legacy-padding <n>`: legacy `ic_launcher.png` padding % (default `10`).
+- `--appicon-padding <n>`: `appicon.png` padding % (default `10`).
 - `--ios-padding <n>`: inset % for the four square iOS/store pieces (default `0`, full-bleed). Raise it when the source is a logo that needs breathing room.
 - `--feature-graphic-padding <n>`: vertical padding % for `MarketplaceArtworkFeature.png` (default `12`, range `0-40`).
 - `--launch-logo-padding <n>`: padding % for `LaunchLogo.png` (default `12`).
 - `--splash-padding <n>`: shortcut that sets both splash paddings to the same value for one run.
 - `--android-splash-padding <n>`: padding % for `default.png` and the 11 `res-*` splashes (default `26`).
 - `--ios-splash-padding <n>`: padding % for the 16 iPhone launch images (default `26`).
+- `--splash-corner-radius <n>`: shortcut that sets both legacy splash artwork corner radii (default `0`, range `0-50`).
+- `--ios-splash-corner-radius <n>`: corner radius % for artwork in the 16 iPhone launch images.
+- `--android-splash-corner-radius <n>`: corner radius % for artwork in Android `default.png` and its 11 qualifier variants.
 
 Splash padding is a share of the canvas's **shorter** side, so one number keeps the logo at the same visual weight in portrait and in landscape: the `26%` default leaves it at 48% of the shorter side.
+
+Corner radius is measured against the shorter side of the already-resized artwork. It rounds only the artwork placed on legacy splash canvases, not the main icon, `LaunchLogo.png`, marketplace art, adaptive icons, or Android 12+ `splash_icon.png`. The specific platform flag wins over the shared flag, then piece config, `brand.splashCornerRadius`, and finally `0%`.
 
 Optional asset types
 
@@ -386,6 +396,8 @@ Diagnostics
 > purgetss brand --launch-logo ./docs/wordmark.svg        # iOS launch screen logotype
 > purgetss brand --feature-graphic-logo ./docs/feature.svg # custom Google Play Feature Graphic logo
 > purgetss brand --feature-graphic-padding 8              # tighter Feature Graphic padding (more impact)
+> purgetss brand --splash-corner-radius 22                # round legacy splash artwork on both platforms
+> purgetss brand --appicon-padding 14                     # temporary appicon.png inset
 > purgetss brand --notification-icon --splash-icon        # add notification + splash icons
 > purgetss brand --no-tinted                              # skip iOS 18+ tinted variant
 > purgetss brand --dry-run                                # preview without writing
@@ -405,6 +417,8 @@ The recommended workflow is convention-first:
 - let auto-discovery pick them up
 - use `config.cjs` only when you need a persistent override
 - use CLI flags only for one-off runs
+
+Flags cover artwork sources, visual geometry, the shared background, temporary selection or activation, and optimization. Configuration also owns preferences that should persist without a flag: `confirmOverwrites`, permanent `enabled` values, and exceptional backgrounds for individual pieces.
 
 `brand.background` is baked into the generated assets, but PurgeTSS does not automatically edit the iOS LaunchScreen or Android configuration. Run `purgetss brand --notes` to print the iOS snippet plus a complete launcher-only Android theme and Activity override with the current color. The Android snippet points its three launch-related theme attributes to one `splashscreen_background` resource, so the launch color is changed in a single line. See [Matching the launch background](./app-assets/1-app-icons-and-branding.md#matching-the-launch-background) for the full setup and merge rules.
 
