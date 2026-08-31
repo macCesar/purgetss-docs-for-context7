@@ -68,6 +68,11 @@ What it does:
 
 ## Changelog
 
+### Unreleased
+
+- **Round splash artwork without rounding the app icon.** A shared `brand.splashCornerRadius` setting, per-platform config overrides, and three one-run flags apply only to the 28 legacy iOS/Android splash PNGs. Existing projects stay square at the `0%` default.
+- **`appicon.padding` now has a matching CLI flag.** The canonical config exposes its `10%` default and `--appicon-padding` handles temporary changes.
+
 ### v7.15.0
 
 - **Standalone resource commands now work cleanly in Classic Titanium projects.** `images`, `semantic`, `shades`, `color-module`, `module`, `icon-library`, and `build-fonts` detect Alloy or Classic and write to native `Resources/` paths where appropriate. Classic does not receive the PurgeTSS utility-class lifecycle.
