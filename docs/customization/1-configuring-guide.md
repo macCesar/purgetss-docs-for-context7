@@ -42,13 +42,14 @@ module.exports = {
   },
   brand: {
     background: '#FFFFFF',      // inherited by pieces that use an opaque background canvas
-    splashCornerRadius: '0%',   // rounded artwork on legacy iOS/Android splash screens (0-50)
+    artworkCornerRadius: '0%',  // rounded non-icon artwork: splashes, Feature Graphic and LaunchLogo (0-50)
     confirmOverwrites: true,    // prompt before overwriting files (set false to skip)
     optimize: false,            // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
 
     // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
     // these keys are for numbers, colors and activation. Padding is never inherited.
-    // Only iosSplash/androidSplash accept cornerRadius; it overrides splashCornerRadius.
+    // iosSplash, androidSplash, featureGraphic and launchLogo accept cornerRadius.
+    // Store and launcher icons stay square for platform masking.
     // iOS/store icons are full-bleed by default; increase padding only for logo artwork.
     icon:             { padding: '0%' },    // DefaultIcon.png + DefaultIcon-ios.png
     dark:             { background: null }, // DefaultIcon-Dark.png
@@ -91,13 +92,13 @@ For `brand`, the structure is one block per piece of artwork, each accepting the
 
 - `logo`: path to this piece's artwork, when it lives outside `purgetss/brand/`
 - `padding`: inset per side, as a number or a percentage string like `'19%'`. Never inherited
-- `cornerRadius`: integer or percentage string from `0` through `50`, valid only in `iosSplash` and `androidSplash`
+- `cornerRadius`: integer or percentage string from `0` through `50`, valid only in `iosSplash`, `androidSplash`, `featureGraphic`, and `launchLogo`
 - `background`: hex color, or `null` for transparent. Inherited from `brand.background`
 - `enabled`: `false` turns a default piece off, `true` turns an opt-in piece on
 
-Plus `brand.background`, `brand.splashCornerRadius` (shared legacy splash artwork radius, default `'0%'`), `brand.confirmOverwrites`, `brand.optimize`, `brand.logo` (the main logo) and `brand.monochromeLogo`.
+Plus `brand.background`, `brand.artworkCornerRadius` (shared non-icon artwork radius, default `'0%'`), optional `brand.splashCornerRadius` (splash-only override), `brand.confirmOverwrites`, `brand.optimize`, `brand.logo` (the main logo) and `brand.monochromeLogo`.
 
-Use flags for temporary artwork sources, visual geometry, the shared background, one-run selection or activation, and optimization. Keep persistent preferences in config: `confirmOverwrites`, permanent `enabled` values, and exceptional backgrounds for individual pieces. For corner radius, a specific platform flag wins over the shared flag, then piece config, `brand.splashCornerRadius`, and the `0%` default.
+Use flags for temporary artwork sources, visual geometry, the shared background, one-run selection or activation, and optimization. Keep persistent preferences in config: `confirmOverwrites`, permanent `enabled` values, and exceptional backgrounds for individual pieces. For corner radius, a piece-specific flag wins over the splash shortcut when applicable, then the shared artwork flag, piece config, splash-only config when applicable, `brand.artworkCornerRadius`, and the `0%` default.
 
 A `brand:` block written for an older PurgeTSS is rewritten to this structure on the next run, carrying over every value that had been customized. A key that belongs to no structure at all, a typo for instance, aborts the run with the list of valid ones instead. For the property-by-property reference, see [App icons and branding](../app-assets/1-app-icons-and-branding.md#brand-config-reference).
 
@@ -110,13 +111,14 @@ By default, PurgeTSS auto-discovers logo files from `purgetss/brand/`: `logo.{sv
 module.exports = {
   brand: {
     background: '#FFFFFF',      // inherited by pieces that use an opaque background canvas
-    splashCornerRadius: '0%',   // rounded artwork on legacy iOS/Android splash screens (0-50)
+    artworkCornerRadius: '0%',  // rounded non-icon artwork: splashes, Feature Graphic and LaunchLogo (0-50)
     confirmOverwrites: true,    // prompt before overwriting files (set false to skip)
     optimize: false,            // true = quantize the generated PNGs to a palette (lossy, ~71% smaller)
 
     // One block per piece. Artwork comes from purgetss/brand/logo-<piece>.{svg,png};
     // these keys are for numbers, colors and activation. Padding is never inherited.
-    // Only iosSplash/androidSplash accept cornerRadius; it overrides splashCornerRadius.
+    // iosSplash, androidSplash, featureGraphic and launchLogo accept cornerRadius.
+    // Store and launcher icons stay square for platform masking.
     // iOS/store icons are full-bleed by default; increase padding only for logo artwork.
     icon:             { padding: '0%' },    // DefaultIcon.png + DefaultIcon-ios.png
     dark:             { background: null }, // DefaultIcon-Dark.png
