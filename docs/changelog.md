@@ -4,7 +4,7 @@ All notable changes to PurgeTSS. For the canonical, full-detail log see [the pro
 
 ## Unreleased
 
-- **Legacy splash artwork now has a configurable corner radius.** `brand.splashCornerRadius` defaults to `0%` for pixel-compatible square output. Platform overrides live at `brand.iosSplash.cornerRadius` and `brand.androidSplash.cornerRadius`; the matching shared and platform-specific flags support temporary values from 0 through 50. The mask covers the 16 iPhone launch images and 12 Android pre-12 splash files without changing launcher icons, store artwork, `LaunchLogo.png`, adaptive icons, or Android 12+ splash assets.
+- **Non-icon artwork now has a configurable corner radius.** `brand.artworkCornerRadius` defaults to `0%` for byte-compatible output and covers the 16 iPhone launch images, 12 Android pre-12 splashes, Feature Graphic, and LaunchLogo. Piece overrides and six matching flags support temporary values from 0 through 50. Store and launcher icon files remain square for Apple/Google masking; `brand.splashCornerRadius` remains available as a splash-only shared override.
 - **`appicon.padding` is complete and visible.** New configs show its existing `10%` default, and `--appicon-padding` overrides it for one run.
 
 ## v7.15.0
