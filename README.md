@@ -70,7 +70,7 @@ What it does:
 
 ### Unreleased
 
-- **Round splash artwork without rounding the app icon.** A shared `brand.splashCornerRadius` setting, per-platform config overrides, and three one-run flags apply only to the 28 legacy iOS/Android splash PNGs. Existing projects stay square at the `0%` default.
+- **Round non-icon artwork without pre-masking app icons.** `brand.artworkCornerRadius`, piece overrides, and six one-run flags cover the 28 legacy splash PNGs, Feature Graphic, and LaunchLogo. Store/launcher icons stay square for platform masking, and existing projects retain byte-compatible output at the `0%` default.
 - **`appicon.padding` now has a matching CLI flag.** The canonical config exposes its `10%` default and `--appicon-padding` handles temporary changes.
 
 ### v7.15.0
