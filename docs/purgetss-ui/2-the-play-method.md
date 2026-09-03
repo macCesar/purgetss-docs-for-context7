@@ -2,6 +2,8 @@
 
 The `play` method runs the animation for a single view or an array of views. You can also chain multiple Animation objects with callbacks to build sequences.
 
+`toggle` points to the same function as `play`. Both change the animation object's internal open/closed state. Passing an array starts the views in parallel and adds the configured `delay` cumulatively for each view.
+
 ```javascript
 $.myAnimation.play($.myView)
 ```
@@ -247,3 +249,40 @@ $.myAnimation.play([$.card1, $.card2, $.card3], (e) => {
   view.borderColor = 'green'
 })
 ```
+
+## Titanium Classic
+
+Create the animation and views in JavaScript. State objects replace Alloy's `open:` and `close:` classes:
+
+`Resources/app.js`
+```js
+const { createAnimation } = require('lib/purgetss.ui')
+
+const card = Ti.UI.createView({
+  width: 180,
+  height: 96,
+  opacity: 0
+})
+const motion = createAnimation({
+  id: 'cardMotion',
+  duration: 240,
+  delay: 40,
+  curve: Ti.UI.ANIMATION_CURVE_EASE_OUT,
+  animationProperties: {
+    open: { opacity: 1, scale: 1 },
+    close: { opacity: 0, scale: 0.92 },
+    complete: { borderColor: '#22c55e' }
+  }
+})
+
+motion.play(card, (event) => {
+  Ti.API.info(`Card state: ${event.state}`)
+})
+
+// `toggle` calls the same function as `play`.
+motion.toggle(card)
+```
+
+Callbacks receive `type`, `bubbles`, `cancelBubble`, `action`, `state`, `id`, `targetId`, `index`, `total`, and `getTarget()`. For an array, the callback runs once per view. Use [`sequence`](./6-additional-methods.md#the-sequence-method) when each view must finish before the next begins.
+
+See [Using `purgetss.ui` in Titanium Classic](./2-titanium-classic.md#states-and-child-animations) for child animation objects and lifecycle guidance.

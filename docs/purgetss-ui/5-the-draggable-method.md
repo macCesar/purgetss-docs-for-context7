@@ -53,11 +53,9 @@ $.draggableAnimation.draggable([$.red, $.green, $.blue])
 - You can set global modifiers in the Animation object or set modifiers per view.
 - Local modifiers override global modifiers.
 
-> ℹ️ **INFO**
+> ⚠️ **CAUTION**
 >
-> To keep behavior predictable while dragging, we restrict the types of animations you can apply.
-> 
-> In particular, we do not apply `size`, `scale`, or `anchorPoint` transformations.
+> The runtime forwards every property supplied under `drag` and `drop`; it does not filter size, scale, or anchor-point values. Transformed dragging follows separate iOS and Android code paths, so verify complex combinations on both platforms.
 
 
 ### Drag and drop example
@@ -284,7 +282,7 @@ $.draggableAnimation.draggable($.card)
 
 ## The `undraggable` method
 
-Use `undraggable` to remove drag behavior and clean up all event listeners from one or more views.
+Use `undraggable` to remove drag behavior and the module-owned listeners from one or more views.
 
 ```javascript
 $.draggableAnimation.undraggable($.card)
@@ -297,7 +295,13 @@ This method:
 - Removes `touchstart`, `touchend`, and `touchmove` listeners from each view
 - Removes the `orientationchange` listener from `Ti.Gesture`
 - Removes the views from the collision detection registry
-- Cleans up internal tracking properties (`_originTop`, `_originLeft`, `_visualTop`, `_visualLeft`, `_collisionEnabled`, `_dragListeners`)
+- Cleans up internal tracking properties (`_originTop`, `_originLeft`, `_visualTop`, `_visualLeft`, `_collisionEnabled`, `_bouncingBack`, `_dragListeners`)
+
+> ⚠️ **CAUTION**
+>
+> Current cleanup limitation
+> The current runtime does not delete the private `_wasDragged` property. Do not use that internal flag as application state. Also avoid calling `draggable()` more than once for the same view because registrations are not deduplicated.
+
 
 ### Real-world use cases
 
@@ -498,3 +502,56 @@ function onClose() {
 ```
 
 The flow uses three calls: `draggable`, `detectCollisions`, and `swap` inside the drop callback. `lastTarget` tracks the current hover target, and the `if (target)` guard prevents errors when dropping outside any card.
+
+## Titanium Classic
+
+In Classic, store drag configuration on the animation object and per-view overrides directly on the Titanium views. A view's bounds override the corresponding global bounds, while axis constraints are read only from `view.constraint`.
+
+`Resources/app.js`
+```js
+const { createAnimation } = require('lib/purgetss.ui')
+
+const dragMotion = createAnimation({
+  duration: 160,
+  bounds: { top: 12, right: 12, bottom: 12, left: 12 },
+  draggable: {
+    drag: { opacity: 0.65, scale: 1.04 },
+    drop: { opacity: 1, scale: 1 }
+  },
+  animationProperties: {
+    keepZIndex: true,
+    snap: { back: true, center: true }
+  }
+})
+
+piece.bounds = { bottom: 32 }
+piece.constraint = 'horizontal'
+piece.draggingType = 'apply'
+
+function onHover(source, target) {
+  dropZone.borderColor = target === dropZone ? '#22c55e' : '#64748b'
+}
+
+function onDrop(source, target) {
+  Ti.API.info(`${source.id} -> ${target.id}`)
+}
+
+function enablePlayground() {
+  dragMotion.draggable(piece)
+  dragMotion.detectCollisions([piece, dropZone], onHover, onDrop)
+}
+
+function disposePlayground() {
+  // This also removes the drop zone from the collision registry.
+  dragMotion.undraggable([piece, dropZone])
+  window.removeEventListener('open', enablePlayground)
+  window.removeEventListener('close', disposePlayground)
+}
+
+window.addEventListener('open', enablePlayground)
+window.addEventListener('close', disposePlayground)
+```
+
+Collision detection checks whether the dragged view's center is inside a registered target. Initialize it after the views are attached and laid out because the runtime reads `rect` and calls `convertPointToView()`. During a drag, the hover callback receives `(source, targetOrNull)`; the drop callback only runs when a target is found.
+
+On Android, touch end consolidates `translation`, `rotate`, `scale`, and the equivalent matrix before snap or drop handling. See [Classic drag configuration and lifecycle](./2-titanium-classic.md#drag-and-drop-objects) for the complete object shape.

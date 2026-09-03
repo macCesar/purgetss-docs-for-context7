@@ -1,6 +1,6 @@
-# Available utilities
+# Alloy animation utilities
 
-Besides regular utilities like colors, widths, and heights, the Animation module has these animation-specific utilities.
+This page lists PurgeTSS classes available to Alloy's `<Animation>` component. These classes are generated into TSS and are not available in Titanium Classic. Classic uses the native JavaScript equivalents in the table at the end of this page.
 
 ## anchorPoint
 The point on the View around which animations pivot.
@@ -8,6 +8,8 @@ The point on the View around which animations pivot.
 A dictionary with `x` and `y` properties, where `{x: 0.5, y: 0.5}` is the center of the View.
 
 Default: `(0.5, 0.5)`
+
+Titanium exposes this property on different proxy types by platform: `Ti.UI.Animation.anchorPoint` is Android-only, while `Ti.UI.View.anchorPoint` is iOS-only. Test pivot-dependent motion on both targets.
 
 ```css
 /* Property(ies): anchorPoint */
@@ -201,13 +203,12 @@ Default: `1`
 '.scale-150': { scale: 1.5 }
 ```
 
-## snap-back, snap-center, snap-magnet
+## snap-back and snap-center
 
 Control how draggable views behave when dropped. All are off by default; opt in with classes on the `<Animation>` object.
 
 - `snap-back`: view returns to its origin when dropped outside a collision target
 - `snap-center`: view auto-centers on the target when dropped on it (uses `snapTo` internally)
-- `snap-magnet`: (planned) magnetic attraction while dragging near a target
 
 ```css
 /* Property(ies): snap - For the Animation module */
@@ -216,9 +217,9 @@ Control how draggable views behave when dropped. All are off by default; opt in 
 '.snap-back-false': { animationProperties: { snap: { back: false } } }
 '.snap-center': { animationProperties: { snap: { center: true } } }
 '.snap-center-false': { animationProperties: { snap: { center: false } } }
-'.snap-magnet': { animationProperties: { snap: { magnet: true } } }
-'.snap-magnet-false': { animationProperties: { snap: { magnet: false } } }
 ```
+
+`snap.magnet` is not read by the current runtime and is therefore not a supported behavior.
 
 ## keep-z-index
 
@@ -289,3 +290,43 @@ Sets the View's scale to the specified value, then animates it back to 1.
 '.zoom-out-125': { animationProperties: { close: { scale: 1.25 }, complete: { scale: 1 } } }
 '.zoom-out-150': { animationProperties: { close: { scale: 1.5 }, complete: { scale: 1 } } }
 ```
+
+## Titanium Classic equivalents
+
+Classic projects do not load these classes. Pass the equivalent native values to `createAnimation()`:
+
+| Alloy utility | Classic property |
+|---|---|
+| `duration-*`, `delay-*` | `duration`, `delay` in milliseconds |
+| `ease-in`, `ease-out`, `ease-in-out`, `ease-linear` | `curve: Ti.UI.ANIMATION_CURVE_*` |
+| `repeat-*`, `autoreverse` | `repeat`, `autoreverse` |
+| `rotate-*`, `scale-*`, origin classes | `rotate`, `scale`, `anchorPoint` |
+| Position, size, opacity, and color classes | Native `top`, `left`, `width`, `height`, `opacity`, and color properties |
+| `open:*`, `close:*`, `complete:*` | `animationProperties.open`, `.close`, `.complete` |
+| `children:*`, `child:*` | Global `children` and per-view `animationProperties.child` objects |
+| `bounds:*` | Constructor `bounds` plus optional `view.bounds` overrides |
+| `vertical-constraint`, `horizontal-constraint` | `view.constraint = 'vertical'` or `'horizontal'` |
+| `drag:*`, `drop:*` | Constructor or per-view `draggable.drag/drop` objects |
+| `drag-apply`, `drag-animate` | `draggingType: 'apply'` or `'animate'` |
+| `snap-back`, `snap-center` | `animationProperties.snap.back/center` |
+| `keep-z-index` | `animationProperties.keepZIndex` |
+
+`Resources/app.js`
+```js
+const { createAnimation } = require('lib/purgetss.ui')
+
+const motion = createAnimation({
+  duration: 200,
+  delay: 50,
+  curve: Ti.UI.ANIMATION_CURVE_EASE_IN_OUT,
+  scale: 1.1,
+  animationProperties: {
+    open: { opacity: 1 },
+    close: { opacity: 0 },
+    snap: { back: true, center: true },
+    keepZIndex: true
+  }
+})
+```
+
+The runtime has no universal 200 ms animation default. The value above is explicit. See the [Classic object reference](./2-titanium-classic.md#native-animation-objects).

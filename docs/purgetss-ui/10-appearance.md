@@ -1,97 +1,42 @@
 # Appearance management
 
-The `Appearance` export handles light, dark, and system mode switching. It also persists the user's choice across app restarts.
+`Appearance` is a singleton that applies and persists a user interface style. It supports `system`, `light`, and `dark`.
 
-## Setup
+Call `Appearance.init()` before opening the first window. It reads the saved `userInterfaceStyle` value from `Ti.App.Properties` and assigns it to `Ti.UI.overrideUserInterfaceStyle`.
 
-Call `Appearance.init()` once at app startup, before opening the first window:
+## Methods
+
+| Method | Behavior | Return value |
+|---|---|---|
+| `init()` | Restores and applies the saved style; defaults to `system` | `undefined` |
+| `set(mode)` | Applies and stores `system`, `light`, or `dark` | `undefined` |
+| `get()` | Reads the mode held by the singleton | Mode string |
+| `toggle()` | Changes `dark` to `light`; any other current mode changes to `dark` | `undefined` |
+
+`set()` silently ignores an unsupported value. `Appearance` does not emit a change event, so update labels, icons, or other non-color state in the same handler that calls `set()` or `toggle()`.
+
+## Alloy
+
+Initialize the singleton from the first controller:
 
 `app/controllers/index.js`
 ```js
 const { Appearance } = require('purgetss.ui')
+
 Appearance.init()
-
-$.navWin.open()
+$.index.open()
 ```
 
-This reads the saved preference from `Ti.App.Properties` and applies it through `Ti.UI.overrideUserInterfaceStyle`.
-
-## Methods
-
-| Method      | Description                                                          |
-| ----------- | -------------------------------------------------------------------- |
-| `init()`    | Restore the saved mode from `Ti.App.Properties` and apply it         |
-| `set(mode)` | Apply and persist a mode: `'system'`, `'light'`, or `'dark'`         |
-| `get()`     | Returns the current mode string (`'system'`, `'light'`, or `'dark'`) |
-| `toggle()`  | Switch between `'light'` and `'dark'` (skips `'system'`)             |
-
-## Usage example
-
-Build your own UI (buttons, switches, segmented controls) and call `Appearance.set()` from event handlers:
-
-`app/views/settings.xml`
-```xml
-<View onClick="selectSystem">
-  <Label text="System" />
-  <Label id="systemCheck" class="fa-solid fa-circle-check hidden" />
-</View>
-
-<View onClick="selectLight">
-  <Label text="Light" />
-  <Label id="lightCheck" class="fa-solid fa-circle-check hidden" />
-</View>
-
-<View onClick="selectDark">
-  <Label text="Dark" />
-  <Label id="darkCheck" class="fa-solid fa-circle-check hidden" />
-</View>
-```
-
-`app/controllers/settings.js`
-```js
-const { Appearance } = require('purgetss.ui')
-
-updateUI(Appearance.get())
-
-function selectDark() { selectMode('dark') }
-function selectLight() { selectMode('light') }
-function selectSystem() { selectMode('system') }
-
-function selectMode(value) {
-  Appearance.set(value)
-  updateUI(value)
-}
-
-function updateUI(value) {
-  $.darkCheck.visible = (value === 'dark')
-  $.lightCheck.visible = (value === 'light')
-  $.systemCheck.visible = (value === 'system')
-}
-```
-
-## Semantic colors
-
-To make views respond to mode changes, add a `semantic.colors.json` file in `app/assets/`:
+Place semantic colors in `app/assets/semantic.colors.json` and map them to PurgeTSS classes in `purgetss/config.cjs`:
 
 `app/assets/semantic.colors.json`
 ```json
 {
-  "surfaceColor": {
-    "light": "#FFFFFF",
-    "dark": "#0f172a"
-  },
-  "textColor": {
-    "light": "#111827",
-    "dark": "#f1f5f9"
-  },
-  "borderColor": {
-    "light": "#E5E7EB",
-    "dark": "#334155"
-  }
+  "surfaceColor": { "light": "#F8FAFC", "dark": "#0F172A" },
+  "textColor": { "light": "#0F172A", "dark": "#F8FAFC" },
+  "accentColor": { "light": "#2563EB", "dark": "#60A5FA" }
 }
 ```
-
-Then register them in `config.cjs`:
 
 `purgetss/config.cjs`
 ```js
@@ -99,28 +44,105 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        surface: { DEFAULT: 'surfaceColor' },
-        'on-surface': 'textColor',
-        border: 'borderColor'
+        surface: 'surfaceColor',
+        text: 'textColor',
+        accent: 'accentColor'
       }
     }
   }
 }
 ```
 
-Use the semantic classes in your views:
-
+`app/views/index.xml`
 ```xml
-<Window class="bg-surface" title="Settings">
-  <Label class="text-on-surface" text="Hello" />
-  <View class="bg-border h-px w-screen" />
-</Window>
+<Alloy>
+  <Window class="bg-surface">
+    <Label class="text-text" text="Appearance" />
+    <Button class="bg-accent text-white" title="Toggle" onClick="toggleAppearance" />
+  </Window>
+</Alloy>
 ```
 
-When `Appearance.set('dark')` is called, Titanium resolves the semantic color names to their dark variants automatically.
+`app/controllers/index.js`
+```js
+const { Appearance } = require('purgetss.ui')
+
+function toggleAppearance() {
+  Appearance.toggle()
+  Ti.API.info(`Mode: ${Appearance.get()}`)
+}
+```
+
+## Titanium Classic
+
+Classic stores the native file at `Resources/semantic.colors.json`:
+
+`Resources/semantic.colors.json`
+```json
+{
+  "surfaceColor": { "light": "#F8FAFC", "dark": "#0F172A" },
+  "textColor": { "light": "#0F172A", "dark": "#F8FAFC" },
+  "accentColor": { "light": "#2563EB", "dark": "#60A5FA" }
+}
+```
+
+Use the semantic names directly in Titanium color properties. Classic does not need PurgeTSS utility classes, TSS, `config.cjs`, or any Alloy runtime file.
+
+`Resources/app.js`
+```js
+const { Appearance } = require('lib/purgetss.ui')
+
+Appearance.init()
+
+const window = Ti.UI.createWindow({
+  backgroundColor: 'surfaceColor'
+})
+const title = Ti.UI.createLabel({
+  top: 80,
+  text: `Mode: ${Appearance.get()}`,
+  color: 'textColor'
+})
+const toggleButton = Ti.UI.createButton({
+  width: 180,
+  height: 48,
+  title: 'Toggle appearance',
+  color: 'surfaceColor',
+  backgroundColor: 'accentColor'
+})
+
+function updateModeLabel() {
+  title.text = `Mode: ${Appearance.get()}`
+}
+
+function toggleAppearance() {
+  Appearance.toggle()
+  updateModeLabel()
+}
+
+function useSystemAppearance() {
+  Appearance.set('system')
+  updateModeLabel()
+}
+
+function disposeWindow() {
+  toggleButton.removeEventListener('click', toggleAppearance)
+  window.removeEventListener('close', disposeWindow)
+}
+
+toggleButton.addEventListener('click', toggleAppearance)
+window.add(title)
+window.add(toggleButton)
+window.addEventListener('close', disposeWindow)
+window.open()
+
+// Call useSystemAppearance() from your own System mode control.
+```
+
+The JSON is consumed by Titanium's native build. Run a full build after adding or changing semantic keys; a LiveView reload alone does not refresh the native color catalog.
 
 > 💡 **TIP**
 >
-> Setup guide
-> For a step-by-step guide covering Window defaults, semantic colors, and Appearance together, see [Appearance setup](../best-practices/1-appearance-setup.md).
+> The `purgetss semantic` command can write this file for both project types. In Classic it writes only `Resources/semantic.colors.json`; it does not create `config.cjs`, TSS, or utility mappings.
 
+
+See [Using `purgetss.ui` in Titanium Classic](./2-titanium-classic.md#quick-start) for an animation and Appearance example in the same application.

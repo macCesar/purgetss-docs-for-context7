@@ -48,12 +48,13 @@ What it does:
   - [Icon Fonts Libraries](./customization/8-icon-fonts-libraries.md)
 - The UI Module
   - [Introduction](./purgetss-ui/1-introduction.md)
+  - [Using `purgetss.ui` in Titanium Classic](./purgetss-ui/2-titanium-classic.md)
   - [The `play` Method](./purgetss-ui/2-the-play-method.md)
   - [The `apply` Method](./purgetss-ui/3-the-apply-method.md)
   - [The `open` and `close` Methods](./purgetss-ui/4-the-open-close-methods.md)
   - [The `draggable` Method](./purgetss-ui/5-the-draggable-method.md)
-  - [Complex UI Elements](./purgetss-ui/7-complex-ui-elements.md)
   - [Additional Methods](./purgetss-ui/6-additional-methods.md)
+  - [Complex UI Elements](./purgetss-ui/7-complex-ui-elements.md)
   - [Available Utilities](./purgetss-ui/8-available-utilities.md)
   - [Implementation Rules](./purgetss-ui/9-implementation-rules.md)
   - [Appearance](./purgetss-ui/10-appearance.md)
@@ -84,20 +85,4 @@ What it does:
 - **Round non-icon artwork without pre-masking app icons.** `brand.artworkCornerRadius`, piece overrides, and six one-run flags cover the 28 legacy splash PNGs, Feature Graphic, and LaunchLogo. Store/launcher icons stay square for platform masking, and existing projects retain byte-compatible output at the `0%` default.
 - **`appicon.padding` now has a matching CLI flag.** The canonical config exposes its `10%` default and `--appicon-padding` handles temporary changes.
 
-### v7.14.0
-
-- **Square iOS/store artwork is now full-bleed by default.** `icon`, `dark`, `tinted` and `marketplace` use `0%` instead of the former `4%` inset. `--ios-padding` still moves the family together when the source is a logo that needs breathing room.
-- **`DefaultIcon.png` and `DefaultIcon-ios.png` now both obey `brand.icon.padding`.** The root fallback had incorrectly inherited Android adaptive padding, creating a much larger border than configured. Both outputs are opaque and use the same inset.
-- **Standalone Classic projects get a complete first-run setup.** If `purgetss/config.cjs` is missing, `brand` creates the canonical config. A positional source such as `sample-icon.png` is adopted as `purgetss/brand/logo.png` when no canonical logo exists, and the move is reported.
-- **Generation follows `tiapp.xml` deployment targets in Alloy and Classic.** Normal runs omit disabled platforms; explicit `--only` remains an override. Classic Android retains the 11 `Resources/android/images/res-*` splash variants Titanium consumes even though `ti create` does not seed those folders.
-- **Visible icon frames are diagnosed before they surprise you.** Opaque edge-to-edge artwork combined with padding and a contrasting inherited background produces a warning naming the affected pieces. White remains a configurable fallback, not a platform requirement.
-
-### v7.13.2
-
-- `purgetss brand --help` advertised padding defaults the command does not use: `19` for the adaptive icon and `20` for both splash sets, where the pipeline applies `18`, `26` and `26`. The seven padding descriptions are now interpolated from the piece table instead of being hand-typed in a second place, with a new test that compares the real `--help` output against that table. The values documented on this site were already the correct ones.
-
-### v7.13.1
-
-- Four vulnerable transitive dependencies patched, all of which shipped inside v7.13.0: `postcss`, `nanoid`, `brace-expansion` and `uuid`. Patch bumps within the same major, so `package.json` is untouched and only the lockfile moves. `npm audit` reports zero vulnerabilities afterwards.
-
-→ See the [full changelog](./changelog.md) for older releases (v7.13.0 and earlier).
+→ See the [full changelog](./changelog.md) for older releases (v7.15.0 and earlier).

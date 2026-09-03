@@ -132,4 +132,29 @@ The main classes:
 - `close:duration-0 open:duration-100`: opens at 100ms and closes instantly.
 - `duration-75`: keeps the overlay fade quick.
 
+## Titanium Classic
+
+Put the state-specific native properties under `animationProperties`. Unlike `play()`, these methods do not toggle according to the previous state: `open()` always chooses `open` and `close()` always chooses `close`.
+
+`Resources/app.js`
+```js
+const { createAnimation } = require('lib/purgetss.ui')
+
+const panel = Ti.UI.createView({ opacity: 0 })
+const panelMotion = createAnimation({
+  id: 'panelMotion',
+  duration: 180,
+  curve: Ti.UI.ANIMATION_CURVE_EASE_IN_OUT,
+  animationProperties: {
+    open: { opacity: 1, scale: 1 },
+    close: { opacity: 0, scale: 0.9 }
+  }
+})
+
+openButton.addEventListener('click', () => panelMotion.open(panel))
+closeButton.addEventListener('click', () => panelMotion.close(panel))
+```
+
+Both methods accept a view or array of views and an optional callback. See [Classic states and children](./2-titanium-classic.md#states-and-child-animations).
+
 Show and hide are two lines each. The animation behavior lives in the XML.

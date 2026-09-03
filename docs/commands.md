@@ -1166,18 +1166,28 @@ Load it in Classic with the path relative to `Resources/`:
 
 `Resources/app.js`
 ```javascript
-const { Appearance, deviceInfo } = require('lib/purgetss.ui')
+const {
+  createAnimation,
+  Appearance,
+  deviceInfo,
+  saveComponent
+} = require('lib/purgetss.ui')
 ```
 
-The PurgeTSS module includes:
+The generated module exports:
 
-- Animation methods for playing or applying basic animations and transformations to Titanium views.
+- `AnimationProperties`, the direct animation constructor export.
+- `createAnimation(args)`, the behavior-equivalent factory recommended for Classic.
+- `deviceInfo()` and `saveComponent()` runtime utilities.
+- The `Appearance` singleton.
+
+Its animation object exposes `play`, `toggle`, `apply`, `open`, `close`, `draggable`, `undraggable`, `detectCollisions`, `sequence`, `swap`, `pulse`, `shake`, `snapTo`, `reorder`, and `transition`.
 
 > 💡 **TIP**
 >
 > To learn more
 > 
-> See the [The UI Module](./purgetss-ui/1-introduction.md) documentation for details.
+> See [The UI Module](./purgetss-ui/1-introduction.md) for the full API or [Using `purgetss.ui` in Titanium Classic](./purgetss-ui/2-titanium-classic.md) for native JavaScript examples.
 
 
 
