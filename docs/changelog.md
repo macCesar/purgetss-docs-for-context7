@@ -4,6 +4,18 @@ All notable changes to PurgeTSS. For the canonical, full-detail log see [the pro
 
 ## Unreleased
 
+## v7.16.2
+
+- **Custom-font modules now include every processed font family.** `build-fonts --module` exports each TTF/OTF PostScript name through `families`, including projects that contain ordinary text fonts without an icon CSS map.
+- **Classic color commands no longer create unrelated empty source folders.** Saving a palette with `shades` creates or updates only `purgetss/config.cjs`; `color-module` adds only `Resources/lib/purgetss.colors.js`. The empty `purgetss/brand/`, `purgetss/fonts/`, and `purgetss/images/` conventions remain part of Alloy initialization.
+
+## v7.16.1
+
+- **Titanium Classic video voice samples.** Added the reference script and Zoe Premium recordings used by the demo production kit.
+- **Alloy build failures now preserve PurgeTSS diagnostics.** The synchronous hook exposes the CLI output before Alloy's generic failure message and suggests running `purgetss` directly when more context is needed.
+
+## v7.16.0
+
 - **Non-icon artwork now has a configurable corner radius.** `brand.artworkCornerRadius` defaults to `0%` for byte-compatible output and covers the 16 iPhone launch images, 12 Android pre-12 splashes, Feature Graphic, and LaunchLogo. Piece overrides and six matching flags support temporary values from 0 through 50. Store and launcher icon files remain square for Apple/Google masking; `brand.splashCornerRadius` remains available as a splash-only shared override.
 - **`appicon.padding` is complete and visible.** New configs show its existing `10%` default, and `--appicon-padding` overrides it for one run.
 

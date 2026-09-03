@@ -70,14 +70,19 @@ What it does:
 
 ### Unreleased
 
+### v7.16.2
+
+- **Custom-font modules expose every processed family.** `build-fonts --module` maps each TTF/OTF to the exact PostScript name Titanium expects, even when the project contains no icon CSS.
+- **Classic color commands avoid unrelated empty source folders.** `shades` updates only `purgetss/config.cjs`, while `color-module` writes the CommonJS file under `Resources/lib/` without initializing brand, font, image, or Alloy scaffolding.
+
+### v7.16.1
+
+- **Titanium Classic video production assets were added**, together with clearer PurgeTSS diagnostics when an automatic Alloy purge fails.
+
+### v7.16.0
+
 - **Round non-icon artwork without pre-masking app icons.** `brand.artworkCornerRadius`, piece overrides, and six one-run flags cover the 28 legacy splash PNGs, Feature Graphic, and LaunchLogo. Store/launcher icons stay square for platform masking, and existing projects retain byte-compatible output at the `0%` default.
 - **`appicon.padding` now has a matching CLI flag.** The canonical config exposes its `10%` default and `--appicon-padding` handles temporary changes.
-
-### v7.15.0
-
-- **Standalone resource commands now work cleanly in Classic Titanium projects.** `images`, `semantic`, `shades`, `color-module`, `module`, `icon-library`, and `build-fonts` detect Alloy or Classic and write to native `Resources/` paths where appropriate. Classic does not receive the PurgeTSS utility-class lifecycle.
-- **Official icon modules expose font-family aliases.** For example, use `fontAwesome.icons.home` with `fontAwesome.solid`; `families` exposes the complete stable mapping for every bundled library.
-- **`images` follows `tiapp.xml` deployment targets by default.** Explicit `--android` and `--ios` flags remain available when you need an override.
 
 ### v7.14.0
 
