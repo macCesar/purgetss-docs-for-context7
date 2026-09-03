@@ -19,14 +19,28 @@ The PurgeTSS utility-class lifecycle remains Alloy-only. Classic apps can use th
 | `images` | ✅ | ✅ | Writes to `Resources/{android,iphone}/images/` and follows `tiapp.xml` unless `--android` or `--ios` is passed. |
 | `semantic` | ✅ | ✅ | Writes only `Resources/semantic.colors.json`; no `purgetss/`, utility mapping, or TSS is created. |
 | `shades` | ✅ | ✅ | Console modes work anywhere. Saving creates or updates `purgetss/config.cjs`. |
-| `color-module` | ✅ | ✅ | Writes to `app/lib/` or `Resources/lib/`. |
-| `module` | ✅ | ✅ | Writes to the matching project `lib` folder. |
+| `color-module` | ✅ | ✅ | Writes `Resources/lib/purgetss.colors.js`; load it with `require('lib/purgetss.colors')`. |
+| `module` | ✅ | ✅ | Writes `Resources/lib/purgetss.ui.js`; load it with `require('lib/purgetss.ui')`. |
 | `icon-library` | ✅ | ✅ | Uses `Resources/fonts/` and optionally `Resources/lib/`; `--styles` is skipped in Classic. |
 | `build-fonts` | ✅ | ✅ | Uses `Resources/fonts/` and optionally `Resources/lib/`; no TSS is generated. |
 | Root `purgetss`, `--all`, `init`, `create`, `install-dependencies`, `build`, `watch` | ✅ | — | These commands own the Alloy/PurgeTSS utility-class lifecycle. |
 | `update`, `sudo-update` | ✅ | ✅ | Global CLI maintenance; no project layout is required. |
 
 The files generated under `Resources/` are ordinary Titanium resources. A Classic app does not need PurgeTSS installed to compile or run with them.
+
+### Loading generated modules in Classic
+
+Titanium resolves a local CommonJS module path from the app's `Resources/` directory. Omit both the `Resources/` prefix and the `.js` extension from `require()`. For example, `Resources/lib/purgetss.colors.js` is loaded with `require('lib/purgetss.colors')`, not `require('purgetss.colors')`. See Titanium's official [CommonJS module path resolution](https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_Guide/Best_Practices_and_Recommendations/CommonJS_Modules_in_Titanium.html#javascript-module-path-resolution).
+
+| Generated Classic file | Use from Classic JavaScript |
+|---|---|
+| `Resources/lib/purgetss.colors.js` | `require('lib/purgetss.colors')` |
+| `Resources/lib/purgetss.ui.js` | `require('lib/purgetss.ui')` |
+| `Resources/lib/purgetss.fonts.js` | `require('lib/purgetss.fonts')` |
+| `Resources/lib/fontawesome.js` | `require('lib/fontawesome')` |
+| `Resources/lib/materialicons.js` | `require('lib/materialicons')` |
+| `Resources/lib/materialsymbols.js` | `require('lib/materialsymbols')` |
+| `Resources/lib/framework7icons.js` | `require('lib/framework7icons')` |
 
 ## Setup commands
 - `init`: Initializes PurgeTSS on an existing Alloy project.
@@ -45,8 +59,8 @@ The files generated under `Resources/` are ordinary Titanium resources. A Classi
 ## Utility commands
 - `shades`: Generates shades and tints for a color and writes the palette to `config.cjs`.
 - `semantic`: Generates Titanium semantic colors into `app/assets/semantic.colors.json` (Alloy) or `Resources/semantic.colors.json` (Classic).
-- `color-module`: Creates `purgetss.colors.js` in the project-specific `lib` folder with the colors defined in `config.cjs`.
-- `module`: Installs `purgetss.ui.js` in the `lib` folder.
+- `color-module`: Creates `app/lib/purgetss.colors.js` in Alloy or `Resources/lib/purgetss.colors.js` in Classic with the colors defined in `config.cjs`.
+- `module`: Installs `app/lib/purgetss.ui.js` in Alloy or `Resources/lib/purgetss.ui.js` in Classic.
 
 ## Maintenance commands
 - `update`: Updates PurgeTSS to the latest version.
@@ -606,7 +620,9 @@ Use `--module` to copy the corresponding CommonJS module into `app/lib/` (Alloy)
 > purgetss il -m [-v=fa,mi,ms,f7]
 ```
 
-Each library includes a CommonJS module that exposes Unicode strings and the matching Titanium font-family aliases. For example, a Classic app can use `fontAwesome.icons.home` with `fontAwesome.solid` instead of repeating `FontAwesome7Free-Solid`.
+Each library includes a CommonJS module that exposes Unicode strings and the matching Titanium font-family aliases. For example, a Classic app can load `Resources/lib/fontawesome.js` with `require('lib/fontawesome')`, then use `fontAwesome.icons.home` with `fontAwesome.solid` instead of repeating `FontAwesome7Free-Solid`.
+
+The other Classic module paths follow the same rule: `require('lib/materialicons')`, `require('lib/materialsymbols')`, and `require('lib/framework7icons')`.
 
 All modules expose `families.default`. Variant aliases are:
 
@@ -640,8 +656,20 @@ The `build-fonts` command reads font files placed in `./purgetss/fonts/`. Use it
 
 ### Options and flags
 
-- `-m, --module`: generate `purgetss.fonts.js` in `app/lib/` (Alloy) or `Resources/lib/` (Classic).
+- `-m, --module`: generate `purgetss.fonts.js` in `app/lib/` (Alloy) or `Resources/lib/` (Classic). Its `families` object maps every processed TTF/OTF to the exact PostScript name Titanium expects; icon CSS additionally populates `icons`.
 - `-f, --font-class-from-filename`: use the font's filename as the font class name and icon prefix instead of the font family name (replaces the old `-p` flag).
+
+In Classic, load the generated module from `Resources/app.js` or another JavaScript file with:
+
+`Resources/app.js`
+```javascript
+const customFonts = require('lib/purgetss.fonts')
+
+const title = Ti.UI.createLabel({
+  text: 'Custom typography',
+  font: { fontFamily: customFonts.families.poppinsSemiBold }
+})
+```
 
 For the full workflow with examples (Google Fonts, custom icon libraries, `--module` output, filename-based prefixes), see [Custom fonts](./customization/7-custom-fonts.md).
 
@@ -650,7 +678,7 @@ For the full workflow with examples (Google Fonts, custom icon libraries, `--mod
 
 The `shades` command generates shades and tints for a given color and writes the palette to `config.cjs`.
 
-Saving works in Alloy and Classic. In Classic, `config.cjs` is a development-time color source for commands such as `color-module`; it does not install the PurgeTSS build lifecycle. The output-only flags (`--log`, `--json`, and `--tailwind`) work outside a project and write nothing.
+Saving works in Alloy and Classic. In Classic, `config.cjs` is a development-time color source for commands such as `color-module`; it does not install the PurgeTSS build lifecycle or create empty `purgetss/brand/`, `purgetss/fonts/`, or `purgetss/images/` folders. The output-only flags (`--log`, `--json`, and `--tailwind`) work outside a project and write nothing.
 
 > ℹ️ **INFO**
 >
@@ -1002,7 +1030,7 @@ Re-running on the same family replaces it. Before writing, PurgeTSS strips every
 
 This command creates `purgetss.colors.js` in the `lib` folder with all colors defined in `config.cjs`.
 
-The destination is `app/lib/purgetss.colors.js` in Alloy or `Resources/lib/purgetss.colors.js` in Classic. A missing `purgetss/config.cjs` is created because that file is the command's color source; no Alloy hook or TSS is installed in Classic.
+The destination is `app/lib/purgetss.colors.js` in Alloy or `Resources/lib/purgetss.colors.js` in Classic. A missing `purgetss/config.cjs` is created because that file is the command's color source. In Classic, the command creates no empty brand, font, image, Alloy, hook, or TSS scaffolding.
 
 ```bash
 > purgetss color-module
@@ -1011,7 +1039,7 @@ The destination is `app/lib/purgetss.colors.js` in Alloy or `Resources/lib/purge
 > purgetss cm
 ```
 
-`./lib/purgetss.colors.js`
+`app/lib/purgetss.colors.js (Alloy) or Resources/lib/purgetss.colors.js (Classic)`
 ```js
 module.exports = {
   harlequin: {
@@ -1057,6 +1085,17 @@ module.exports = {
 ```
 
 Use this when you want to reference configured colors from code instead of hardcoding values in multiple places.
+
+In a Classic app, load that generated file with its path relative to `Resources/`:
+
+`Resources/app.js`
+```javascript
+const colors = require('lib/purgetss.colors')
+
+const label = Ti.UI.createLabel({
+  color: colors.primary['200']
+})
+```
 
 
 ## `build` command
@@ -1121,6 +1160,13 @@ The destination is selected automatically: `app/lib/purgetss.ui.js` in Alloy or 
 
 # alias:
 > purgetss m
+```
+
+Load it in Classic with the path relative to `Resources/`:
+
+`Resources/app.js`
+```javascript
+const { Appearance, deviceInfo } = require('lib/purgetss.ui')
 ```
 
 The PurgeTSS module includes:

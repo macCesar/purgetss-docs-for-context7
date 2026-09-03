@@ -4,8 +4,17 @@
 
 > ℹ️ **INFO**
 >
-> `purgetss.ui` is the runtime module included with PurgeTSS. It provides animation, appearance management, and utility functions from a single `require('purgetss.ui')`.
+> `purgetss.ui` is the runtime module included with PurgeTSS. It provides animation, appearance management, and utility functions from one CommonJS file.
 
+
+The command installs that file according to the project layout:
+
+| Project | Generated file | Load it with |
+|---|---|---|
+| Alloy | `app/lib/purgetss.ui.js` | `require('purgetss.ui')` |
+| Classic | `Resources/lib/purgetss.ui.js` | `require('lib/purgetss.ui')` |
+
+Classic paths are relative to `Resources/`, as specified by Titanium's official [CommonJS module path resolution](https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_Guide/Best_Practices_and_Recommendations/CommonJS_Modules_in_Titanium.html#javascript-module-path-resolution).
 
 The module exports three areas of functionality:
 

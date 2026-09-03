@@ -92,7 +92,7 @@ The CommonJS module lets a Classic app avoid hard-coded Unicode strings:
 
 `Resources/app.js`
 ```javascript
-const fontAwesome = require('fontawesome')
+const fontAwesome = require('lib/fontawesome')
 
 const home = Ti.UI.createLabel({
   text: fontAwesome.icons.home,
@@ -115,6 +115,18 @@ Each module exposes `families` plus direct aliases for its variants. `families` 
 Every module also provides `families.default`. For example, `fontAwesome.families.solid` is the same value as `fontAwesome.solid`.
 
 The module filename follows the selected library (`fontawesome`, `materialicons`, `materialsymbols`, or `framework7icons`).
+
+In Classic, every generated module is inside `Resources/lib/`, so include `lib/` in its `require()` path:
+
+`Resources/app.js`
+```javascript
+const fontAwesome = require('lib/fontawesome')
+const materialIcons = require('lib/materialicons')
+const materialSymbols = require('lib/materialsymbols')
+const framework7Icons = require('lib/framework7icons')
+```
+
+The path is relative to `Resources/`; do not include `Resources/` or the `.js` extension. This is the resolution rule documented in Titanium's official [CommonJS Modules guide](https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_Guide/Best_Practices_and_Recommendations/CommonJS_Modules_in_Titanium.html#javascript-module-path-resolution).
 
 ## Using icons in Alloy XML
 
