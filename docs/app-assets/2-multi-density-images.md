@@ -197,16 +197,42 @@ When the convention-based command runs and an existing `purgetss/config.cjs` lac
 
 `./purgetss/config.cjs`
 ```javascript
+// Sources in purgetss/images/ are 4x masters: a 1024px file yields
+// 256 (mdpi/@1x), 384 (hdpi), 512 (xhdpi/@2x), 768 (xxhdpi/@3x), 1024 (xxxhdpi).
+// There is no width to configure here — the source's own pixels decide.
+// SVGs have no natural pixels; pin theirs in files: [] below.
 images: {
-  autoSync: true,          // false = SVG pipeline computes dims but doesn't write to images.files
-  quality: 85,             // JPEG/WebP/AVIF quality (0-100)
+  quality: 85,             // webp/jpeg/avif/tiff quality (0-100); PNG and GIF ignore it
   format: null,            // null = keep original; 'webp' | 'jpeg' | 'png' to convert every image
+  autoSync: true,          // false = SVG pipeline computes dims but doesn't write to images.files
   confirmOverwrites: true, // prompt before overwriting files (set false to skip)
   files: []                // per-file overrides: [{ filename: 'images/<sub>/<name>.<ext>', width, height? }]
 }
 ```
 
 Change only what should become a project default. CLI flags still win for one-off runs. `autoSync` and `files` are covered in the [Per-file overrides](#per-file-overrides-with-imagesfiles) and [SVG-aware compile-time pipeline](./3-svg-pipeline.md) sections.
+
+The section is short on purpose. Most of what the command needs is already in the source file: its pixels decide the width, its subfolder decides where the output lands, its extension decides the format. `images:` holds the rest.
+
+### Unknown keys are an error
+
+Those five keys are the whole section. Anything else stops the run before anything is written:
+
+```text
+> purgetss images
+Error running images: Unknown key(s) in the images: section of purgetss/config.cjs:
+  • images.qualty
+  • images.files[0].widht
+
+  Top-level keys: quality, format, autoSync, confirmOverwrites, files
+  Inside files[]: filename, width, height
+
+  Check the spelling. No images were generated.
+```
+
+A `qualty: 95` that gets ignored looks exactly like the default, so the typo used to produce the wrong output and say nothing about it. The same check runs inside `files`, where an entry with no `filename` matches no file and was skipped the same way. `brand:` has validated its own keys since 7.13.0.
+
+`width`, `opacity`, `padding` and `output` are CLI flags, not config keys, so the validator names them instead of ignoring them. Width belongs in `files` when a particular file needs one pinned. The other three describe a single run, or are already part of the file you exported.
 
 ## Per-file overrides with `images.files`
 
