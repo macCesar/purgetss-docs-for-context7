@@ -129,9 +129,10 @@ brand: {
   appicon:          { padding: '10%' },   // appicon.png (128×128)
   androidSplash:    { padding: '26%' },   // assets/android/default.png + images/res-*/default.png × 11
 
-  // Opt-in: inert until you edit the Android theme / FCM meta-data by hand.
+  // Opt-in: splash_icon stays inert until the Android theme points at it.
+  // notificationicon is read by firebase.cloudmessaging, by that exact name.
   splashIcon:       { enabled: false },   // drawable-*/splash_icon.png × 5
-  notificationIcon: { enabled: false },   // drawable-*/ic_stat_notify.png × 5
+  notificationIcon: { enabled: false },   // drawable-*/notificationicon.png × 5
   ninePatch:        { enabled: false }    // background.9.png (not implemented yet)
 }
 ```
@@ -167,9 +168,10 @@ brand: {
   appicon:          { padding: '10%' },   // appicon.png (128×128)
   androidSplash:    { padding: '26%' },   // assets/android/default.png + images/res-*/default.png × 11
 
-  // Opt-in: inert until you edit the Android theme / FCM meta-data by hand.
+  // Opt-in: splash_icon stays inert until the Android theme points at it.
+  // notificationicon is read by firebase.cloudmessaging, by that exact name.
   splashIcon:       { enabled: false },   // drawable-*/splash_icon.png × 5
-  notificationIcon: { enabled: false },   // drawable-*/ic_stat_notify.png × 5
+  notificationIcon: { enabled: false },   // drawable-*/notificationicon.png × 5
   ninePatch:        { enabled: false }    // background.9.png (not implemented yet)
 }
 ```
@@ -221,12 +223,12 @@ And these live at the top level:
 | `appicon`          | `appicon`          | `appicon.png` (128×128)                                                     | `10%`           | yes                      |
 | `android-splash`   | `androidSplash`    | `assets/android/default.png` + `images/res-*/default.png` × 11              | `26%`           | yes                      |
 | `splash-icon`      | `splashIcon`       | `drawable-*/splash_icon.png` × 5                                            | —               | `--splash-icon`          |
-| `notification-icon`| `notificationIcon` | `drawable-*/ic_stat_notify.png` × 5                                         | —               | `--notification-icon`    |
+| `notification-icon`| `notificationIcon` | `drawable-*/notificationicon.png` × 5                                       | —               | `--notification-icon`    |
 | `nine-patch`       | `ninePatch`        | `background.9.png`                                                          | —               | `--nine-patch` (not implemented yet) |
 
 `ic_launcher.xml` always travels inside `adaptive`; it is never generated on its own.
 
-Only three pieces are opt-in, and for one reason: they produce nothing useful until you edit XML by hand. `splash_icon.png` is inert without `windowSplashScreenAnimatedIcon` in the theme, and `ic_stat_notify.png` is inert without the FCM `meta-data` entry.
+Three pieces are opt-in, because none of them does anything on its own. `splash_icon.png` is inert until the theme points `windowSplashScreenAnimatedIcon` at it. `notificationicon.png` needs `firebase.cloudmessaging` in the project, plus a `meta-data` entry for the notification messages that do not reach it by name — see [FCM notification icon](#fcm-notification-icon). `background.9.png` is not implemented yet.
 
 ### `background` is inherited, `padding` is not
 
@@ -398,9 +400,10 @@ brand: {
   appicon:          { padding: '10%' },   // appicon.png (128×128)
   androidSplash:    { padding: '26%' },   // assets/android/default.png + images/res-*/default.png × 11
 
-  // Opt-in: inert until you edit the Android theme / FCM meta-data by hand.
+  // Opt-in: splash_icon stays inert until the Android theme points at it.
+  // notificationicon is read by firebase.cloudmessaging, by that exact name.
   splashIcon:       { enabled: false },   // drawable-*/splash_icon.png × 5
-  notificationIcon: { enabled: false },   // drawable-*/ic_stat_notify.png × 5
+  notificationIcon: { enabled: false },   // drawable-*/notificationicon.png × 5
   ninePatch:        { enabled: false }    // background.9.png (not implemented yet)
 }
 ```
@@ -511,9 +514,10 @@ brand: {
   appicon:          { padding: '10%' },   // appicon.png (128×128)
   androidSplash:    { padding: '26%' },   // assets/android/default.png + images/res-*/default.png × 11
 
-  // Opt-in: inert until you edit the Android theme / FCM meta-data by hand.
+  // Opt-in: splash_icon stays inert until the Android theme points at it.
+  // notificationicon is read by firebase.cloudmessaging, by that exact name.
   splashIcon:       { enabled: false },   // drawable-*/splash_icon.png × 5
-  notificationIcon: { enabled: false },   // drawable-*/ic_stat_notify.png × 5
+  notificationIcon: { enabled: false },   // drawable-*/notificationicon.png × 5
   ninePatch:        { enabled: false }    // background.9.png (not implemented yet)
 }
 ```
@@ -543,6 +547,38 @@ Earlier versions regenerated only the first file and hid the other 11 behind a `
 
 :::note A solid windowBackground wins
 If the launch theme sets `android:windowBackground` to a plain color, which is what [Matching the launch background](#matching-the-launch-background) recommends, that color takes precedence over this artwork on Android &lt;12. Drop the `windowBackground` item if you want the image to show instead.
+:::
+
+## FCM notification icon
+
+`notification-icon` is off by default. Turn it on with `brand.notificationIcon.enabled`, or generate it for a single run with `--notification-icon`. It writes white-on-transparent icons at five densities to `app/platform/android/res/drawable-*/notificationicon.png` (`platform/android/res/drawable-*/notificationicon.png` in Classic). Android tints status-bar icons at runtime, so every non-transparent pixel comes out white and the color in your artwork is discarded.
+
+The filename is fixed, the way `appicon.png` and `DefaultIcon.png` are fixed: the consumer dictates it. `firebase.cloudmessaging` resolves the drawable by name inside `TiFirebaseMessagingService.showNotification()`, through `getResource("notificationicon")`. That lookup is the only path a data message has. When the drawable is missing the module falls back to `appicon` — the opaque launcher icon, which the status bar renders as a white blob, since only the alpha channel survives the tint.
+
+Notification messages take the configurable path. Add the `meta-data` entry under `<application>` in `tiapp.xml`:
+
+`./tiapp.xml`
+```xml
+<meta-data android:name="com.google.firebase.messaging.default_notification_icon"
+           android:resource="@drawable/notificationicon"/>
+<meta-data android:name="com.google.firebase.messaging.default_notification_color"
+           android:resource="@color/notification_tint"/>
+```
+
+The second entry colors the notification's accent, not the icon. Create or merge the color resource:
+
+`app/platform/android/res/values/colors.xml`
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="notification_tint">#0B1326</color>
+</resources>
+```
+
+Classic projects use `platform/android/res/values/colors.xml`.
+
+:::note Renamed in PurgeTSS 7.17.1
+The piece used to write `ic_stat_notify.png`, which follows the Android convention for status-bar drawables but not the name `firebase.cloudmessaging` looks up. Under the old name a data message never found the icon, whatever the `meta-data` said. If you wired `@drawable/ic_stat_notify` by hand, change that one line and delete the five stale files.
 :::
 
 ## The iOS launch screen and LaunchLogo.png
@@ -926,9 +962,10 @@ brand: {
   appicon:          { padding: '10%' },   // appicon.png (128×128)
   androidSplash:    { padding: '26%' },   // assets/android/default.png + images/res-*/default.png × 11
 
-  // Opt-in: inert until you edit the Android theme / FCM meta-data by hand.
+  // Opt-in: splash_icon stays inert until the Android theme points at it.
+  // notificationicon is read by firebase.cloudmessaging, by that exact name.
   splashIcon:       { enabled: false },   // drawable-*/splash_icon.png × 5
-  notificationIcon: { enabled: false },   // drawable-*/ic_stat_notify.png × 5
+  notificationIcon: { enabled: false },   // drawable-*/notificationicon.png × 5
   ninePatch:        { enabled: false }    // background.9.png (not implemented yet)
 }
 ```

@@ -118,9 +118,10 @@ module.exports = {
     appicon:          { padding: '10%' },   // appicon.png (128×128)
     androidSplash:    { padding: '26%' },   // assets/android/default.png + images/res-*/default.png × 11
 
-    // Opt-in: inert until you edit the Android theme / FCM meta-data by hand.
+    // Opt-in: splash_icon stays inert until the Android theme points at it.
+    // notificationicon is read by firebase.cloudmessaging, by that exact name.
     splashIcon:       { enabled: false },   // drawable-*/splash_icon.png × 5
-    notificationIcon: { enabled: false },   // drawable-*/ic_stat_notify.png × 5
+    notificationIcon: { enabled: false },   // drawable-*/notificationicon.png × 5
     ninePatch:        { enabled: false }    // background.9.png (not implemented yet)
   },
   images: {
@@ -261,7 +262,7 @@ Regenerates the complete branding set for the platforms enabled in `tiapp.xml`: 
 | `appicon`           | `appicon`          | `appicon.png` (128×128)                                                       | yes                         |
 | `android-splash`    | `androidSplash`    | `assets/android/default.png` + `images/res-*/default.png` × 11                | yes                         |
 | `splash-icon`       | `splashIcon`       | `drawable-*/splash_icon.png` × 5                                              | `--splash-icon`             |
-| `notification-icon` | `notificationIcon` | `drawable-*/ic_stat_notify.png` × 5                                           | `--notification-icon`       |
+| `notification-icon` | `notificationIcon` | `drawable-*/notificationicon.png` × 5                                         | `--notification-icon`       |
 | `nine-patch`        | `ninePatch`        | `background.9.png` (not implemented yet)                                      | `--nine-patch`              |
 
 Groups for `--only`: `ios` (icon, dark, tinted, ios-splash), `store` (marketplace, feature-graphic), `android` (adaptive, legacy-icon, appicon, android-splash).
@@ -296,9 +297,10 @@ module.exports = {
     appicon:          { padding: '10%' },   // appicon.png (128×128)
     androidSplash:    { padding: '26%' },   // assets/android/default.png + images/res-*/default.png × 11
 
-    // Opt-in: inert until you edit the Android theme / FCM meta-data by hand.
+    // Opt-in: splash_icon stays inert until the Android theme points at it.
+    // notificationicon is read by firebase.cloudmessaging, by that exact name.
     splashIcon:       { enabled: false },   // drawable-*/splash_icon.png × 5
-    notificationIcon: { enabled: false },   // drawable-*/ic_stat_notify.png × 5
+    notificationIcon: { enabled: false },   // drawable-*/notificationicon.png × 5
     ninePatch:        { enabled: false }    // background.9.png (not implemented yet)
   }
 }
@@ -343,7 +345,7 @@ Corner radius is measured against the shorter side of the already-resized artwor
 
 Optional asset types
 
-- `--notification-icon`: also emit `ic_stat_notify.png × 5`.
+- `--notification-icon`: also emit `notificationicon.png × 5`.
 - `--splash-icon`: also emit `splash_icon.png × 5`.
 - `--nine-patch`: declared but not implemented yet; prints a warning and writes nothing.
 
@@ -363,7 +365,7 @@ Every piece has a `--<piece>-logo` flag, each overriding the matching `purgetss/
 - `--appicon-logo <path>`: `appicon.png`.
 - `--android-splash-logo <path>`: Android &lt;12 splash artwork.
 - `--splash-icon-logo <path>`: Android 12+ `splash_icon.png`.
-- `--notification-icon-logo <path>`: `ic_stat_notify.png`.
+- `--notification-icon-logo <path>`: `notificationicon.png`.
 
 Two more sources are not pieces:
 
