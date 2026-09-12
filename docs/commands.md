@@ -204,6 +204,8 @@ Adds linting and editor support to an existing project.
 
 This option installs ESLint, Tailwind CSS, and setup files for Visual Studio Code (VSCode).
 
+The ESLint template is `eslint.config.mjs`, a flat config for ESLint 9. It declares the globals Alloy and the Titanium runtime inject — `Ti`, `Titanium`, `Alloy`, `Backbone`, `$`, `$model`, `_`, `L`, `Widget`, the `OS_*`, `ENV_*` and `DIST_*` compile-time constants, and `task` for `alloy.jmk` hooks — and lints `app/**/*.js` only. Generated code is ignored: `Resources/`, `build/`, `purgetss/`, and the six libraries PurgeTSS copies into `app/lib/`, listed by name so your own libraries in that folder keep being linted. `no-unused-vars` is a warning rather than an error, because Alloy wires event handlers from the XML view and a controller function with no caller in the JS may still be in use.
+
 Recommended VSCode extensions:
 
 - [XML Tools](https://marketplace.visualstudio.com/items?itemName=DotJoshJohnson.xml): XML formatting.
@@ -224,9 +226,9 @@ Running `purgetss create "Name of the Project" [--dependencies --vendor=fa,mi,ms
 - `purgetss b` - builds `./purgetss/styles/utilities.tss`.
 - `[--vendor=fa,mi,ms,f7]` - copies the selected fonts and the CommonJS module into `./app/lib/`.
 - `[--dependencies]` - installs:
-  - `npm i -D tailwindcss && npx tailwindcss init` - Tailwind CSS.
-  - `npm i -D eslint eslint-config-axway eslint-plugin-alloy` - ESLint and Titanium plugins.
-  - `.editorconfig`, `eslint.config.js`, `tailwind.config.js`, `.vscode/extensions.json`, `.vscode/settings.json` - config files.
+  - `npm i -D tailwindcss@3 && npx tailwindcss init` - Tailwind CSS.
+  - `npm i -D eslint @eslint/js` - ESLint 9.
+  - `.editorconfig`, `eslint.config.mjs`, `tailwind.config.js`, `.vscode/extensions.json`, `.vscode/settings.json` - config files.
 - `code .`, `subl .`, or `open .` - opens the project in VS Code, Sublime Text, or Finder.
 
 
