@@ -4,6 +4,17 @@ All notable changes to PurgeTSS. For the canonical, full-detail log see [the pro
 
 ## Unreleased
 
+## v7.17.1
+
+- **The `notification-icon` piece now writes `notificationicon.png` instead of `ic_stat_notify.png`.** `ic_stat_notify` follows the Android convention for status-bar drawables, but in Titanium this piece feeds `firebase.cloudmessaging`, and that module hardcodes the name: `TiFirebaseMessagingService.showNotification()` calls `getResource("notificationicon")` and falls back to the opaque `appicon` when the drawable is missing, which the status bar renders as a white blob. That lookup is the only path a data message has — the `default_notification_icon` meta-data is the configurable one and covers notification messages alone. The snippet printed after a run now points at `@drawable/notificationicon`. Projects that wired `@drawable/ic_stat_notify` by hand need to update that one line and delete the five stale files. See [FCM notification icon](./app-assets/1-app-icons-and-branding.md#fcm-notification-icon).
+
+## v7.17.0
+
+- **`install-dependencies` and `create --dependencies` now scaffold a working ESLint setup.** The old template was an `.eslintrc.js` extending `eslint-config-axway/env-alloy`, and three upstream changes broke it at once: ESLint 9 stopped reading `.eslintrc.*`, `eslint-config-axway@10.0.0` removed the `env-alloy` and `env-titanium` environments, and `eslint-plugin-alloy` has been unmaintained since 2022 and throws under ESLint 9. Any project scaffolded since December 2025 got a lint that could not run at all.
+- **The shipped template is now `eslint.config.mjs`, a flat config for ESLint 9.** It declares the Titanium and Alloy globals itself, lints `app/**/*.js`, ignores generated code — `Resources/`, `build/`, `purgetss/`, and the six libraries PurgeTSS copies into `app/lib/` — and reports `no-unused-vars` as a warning, since Alloy wires event handlers from the XML view. The installers pull only `eslint` and `@eslint/js`. See [Installing dev dependencies](./commands.md#installing-dev-dependencies).
+- **The `images:` section now rejects unknown keys instead of ignoring them.** A typo such as `qualty: 95` used to be indistinguishable from the default and produced the wrong output without reporting anything. Validation covers the five top-level keys and the three keys inside each `files[]` entry, reports every problem in one pass with the entry index, and generates nothing when it fails. See [Unknown keys are an error](./app-assets/2-multi-density-images.md#unknown-keys-are-an-error).
+- **The generated `images:` block now explains where the output sizes come from.** Comments above the section state that sources in `purgetss/images/` are 4× masters, with the numbers, that there is no `width` key because the source's own pixels decide it, and that SVGs are pinned in `files`. The `quality` comment also names the formats it does not reach: PNG uses `compressionLevel: 9` and GIF takes no quality parameter, so the value applies to webp, jpeg, avif and tiff only.
+
 ## v7.16.2
 
 - **Custom-font modules now include every processed font family.** `build-fonts --module` exports each TTF/OTF PostScript name through `families`, including projects that contain ordinary text fonts without an icon CSS map.

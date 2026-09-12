@@ -71,18 +71,19 @@ What it does:
 
 ### Unreleased
 
+### v7.17.1
+
+- **The notification icon is now named `notificationicon.png`.** `firebase.cloudmessaging` resolves that exact name, so data messages find the icon without any manifest wiring; under the old `ic_stat_notify` name they fell back to the opaque launcher icon and the status bar showed a white blob. Projects that wired `@drawable/ic_stat_notify` by hand update one `meta-data` line and delete the five stale files.
+
+### v7.17.0
+
+- **`--dependencies` scaffolds an ESLint setup that runs.** The template is `eslint.config.mjs`, a flat config for ESLint 9 that declares the Titanium and Alloy globals and ignores generated code. `eslint-config-axway` and `eslint-plugin-alloy` are no longer installed: neither works under ESLint 9.
+- **The `images:` section rejects unknown keys.** A typo like `qualty: 95` is now an error naming the offending key and the entry index, instead of silently falling back to the default.
+- **The generated `images:` block documents the 4× convention.** The comments state where the output sizes come from, why there is no `width` key, and which formats `quality` actually reaches.
+
 ### v7.16.2
 
 - **Custom-font modules expose every processed family.** `build-fonts --module` maps each TTF/OTF to the exact PostScript name Titanium expects, even when the project contains no icon CSS.
 - **Classic color commands avoid unrelated empty source folders.** `shades` updates only `purgetss/config.cjs`, while `color-module` writes the CommonJS file under `Resources/lib/` without initializing brand, font, image, or Alloy scaffolding.
 
-### v7.16.1
-
-- **Titanium Classic video production assets were added**, together with clearer PurgeTSS diagnostics when an automatic Alloy purge fails.
-
-### v7.16.0
-
-- **Round non-icon artwork without pre-masking app icons.** `brand.artworkCornerRadius`, piece overrides, and six one-run flags cover the 28 legacy splash PNGs, Feature Graphic, and LaunchLogo. Store/launcher icons stay square for platform masking, and existing projects retain byte-compatible output at the `0%` default.
-- **`appicon.padding` now has a matching CLI flag.** The canonical config exposes its `10%` default and `--appicon-padding` handles temporary changes.
-
-→ See the [full changelog](./changelog.md) for older releases (v7.15.0 and earlier).
+→ See the [full changelog](./changelog.md) for older releases (v7.16.1 and earlier).
