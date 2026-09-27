@@ -98,7 +98,7 @@ const label = Ti.UI.createLabel({
 
 ### Renaming the class
 
-To use a shorter or different class name, rename the font file. For example:
+By default the class name comes from the font's PostScript name, so renaming the file changes nothing. To name the class after the file, rename it and run `build-fonts` with `--font-class-from-filename` (`-f`). For example:
 
 `./purgetss/fonts/`
 ```bash
@@ -111,7 +111,7 @@ purgetss
       └─ Script-SemiBold.ttf
 ```
 
-Running `build-fonts` produces:
+Running `purgetss build-fonts -f` produces:
 
 `./purgetss/styles/fonts.tss`
 ```css

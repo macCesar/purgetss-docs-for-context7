@@ -4,6 +4,13 @@ All notable changes to PurgeTSS. For the canonical, full-detail log see [the pro
 
 ## Unreleased
 
+## v7.18.0
+
+- **Platform and device modifiers stack.** `ios:tablet:bg-red-500` (in either order) now generates `[platform=ios formFactor=tablet]`. Alloy reads only the last bracket of a selector, so `tablet:` on an iOS-only class used to lose its platform condition. A modifier that contradicts the class, such as `android:status-bar-dark`, leaves a comment in `app.tss` instead of a selector that never applies. See [Combining a platform and a device](./customization/6-platform-and-device-modifiers.md#combining-a-platform-and-a-device).
+- **Font Awesome Pro and Beta work again.** `purgetss build` no longer stops with `ENOENT`, and `icon-library --module` / `--styles` generate `fontawesome.js` and `fontawesome.tss` instead of printing a placeholder.
+- **Stricter flags.** `icon-library --vendor` accepts `materialsymbols` and rejects unknown values before copying anything. `images --width` accepts 1 to 1024, the largest value whose `xxxhdpi` output fits the 4096px cap. See [the `icon-library` command](./commands.md#icon-library-command).
+- **Removed:** the `*-keyboard-type-appearance*` classes (they assigned an appearance constant to `keyboardType`; use `keyboard-appearance-*`), `snap-magnet` (never read by the animation module), and `init --all` (never implemented). `(Npx)` [arbitrary values](./customization/5-arbitrary-values.md) are accepted again: `w-(100px)` means explicit pixels, not a redundant unit.
+
 ## v7.17.1
 
 - **The `notification-icon` piece now writes `notificationicon.png` instead of `ic_stat_notify.png`.** `ic_stat_notify` follows the Android convention for status-bar drawables, but in Titanium this piece feeds `firebase.cloudmessaging`, and that module hardcodes the name: `TiFirebaseMessagingService.showNotification()` calls `getResource("notificationicon")` and falls back to the opaque `appicon` when the drawable is missing, which the status bar renders as a white blob. That lookup is the only path a data message has — the `default_notification_icon` meta-data is the configurable one and covers notification messages alone. The snippet printed after a run now points at `@drawable/notificationicon`. Projects that wired `@drawable/ic_stat_notify` by hand need to update that one line and delete the five stale files. See [FCM notification icon](./app-assets/1-app-icons-and-branding.md#fcm-notification-icon).

@@ -160,6 +160,7 @@ The `create` command generates a new Alloy project with PurgeTSS already set up.
 ### Options
 - Use `-f, --force` to overwrite an existing project.
 - Use `-d, --dependencies` to install ESLint and Tailwind CSS.
+- Use `-m, --module` to copy `purgetss.ui.js` into `./app/lib/`.
 - Use `-v, --vendor [fa,mi,ms,f7]` to copy the selected fonts into your project and add the CommonJS module in `./app/lib/`. See the [`icon-library` command](#icon-library-command) for available fonts.
 
 If a project with the same name already exists, the command will prompt you to confirm whether you want to overwrite it.
@@ -488,7 +489,7 @@ Output format
 
 Sizing
 
-- `--width <n>`: pin Android `mdpi` (= iPhone `@1x`) to `<n>` pixels wide. Larger scales derive as ×1.5, ×2, ×3, ×4 from that base; height stays proportional to the source's aspect ratio. Accepts integers in `[1, 8192]`. Use it for SVG sources from vector editors with disproportionate viewBoxes, such as Affinity or Illustrator. Without it, every scale derives from the source's natural pixel size as a 4× master, which can produce unexpected output when the viewBox does not match the intended display size.
+- `--width <n>`: pin Android `mdpi` (= iPhone `@1x`) to `<n>` pixels wide. Larger scales derive as ×1.5, ×2, ×3, ×4 from that base; height stays proportional to the source's aspect ratio. Accepts integers in `[1, 1024]`. Use it for SVG sources from vector editors with disproportionate viewBoxes, such as Affinity or Illustrator. Without it, every scale derives from the source's natural pixel size as a 4× master, which can produce unexpected output when the viewBox does not match the intended display size.
 
 Transformations
 
@@ -610,7 +611,9 @@ To copy specific font vendors, use any of the following arguments:
 Available names and aliases:
 - fa, fontawesome = Font Awesome Icons
 - mi, materialicons = Material Icons
-- ms, materialsymbol = Material Symbols
+- ms, materialsymbol, materialsymbols = Material Symbols
+
+Any other value stops the command before it copies anything and lists the valid names.
 - f7, framework7 = Framework7 Icons
 
 ### CommonJS module
@@ -709,6 +712,7 @@ Saving works in Alloy and Classic. In Classic, `config.cjs` is a development-tim
 - `-n, --name`: Specifies the name of the color.
 - `-q, --quotes`: Retains double quotes in the `config.cjs` file.
 - `-r, --random`: Generates shades from a random color.
+- `-o, --override`: Places the new shades in `theme.colors`, replacing the default colors, instead of `theme.extend.colors`.
 - `-s, --single`: Generates a single color definition.
 - `-t, --tailwind`: Logs the generated shades with a `tailwind.config.js` compatible structure.
 - `-l, --log`: Logs the generated shades instead of saving them.
@@ -1115,6 +1119,11 @@ The `build` command generates `utilities.tss` from `config.cjs`. Run it after yo
 
 When `purgetss` runs (manually or via `watch`), it checks for changes in `config.cjs` and regenerates `utilities.tss` when needed.
 
+Use `--glossary` to also write one Markdown file per property, listing its generated classes, to `./purgetss/glossary/`.
+```bash
+> purgetss build --glossary
+```
+
 
 ## `watch` command
 
@@ -1133,8 +1142,8 @@ The command will install a task in the `alloy.jmk` file to enable this behavior:
 
 ```javascript
 task('pre:compile', function(event, logger) {
-  require('child_process').execSync('purgetss', logger.warn('::PurgeTSS:: Auto-Purging ' + event.dir.project));
-});
+  logger.warn('::PurgeTSS:: Auto-Purging ' + event.dir.project); try { require('child_process').execSync('purgetss', { stdio: 'inherit' }); } catch (error) { logger.error('::PurgeTSS:: Auto-Purge failed. Run `purgetss` from the project root to see the cause.'); throw error; }
+})
 ```
 
 > ℹ️ **INFO**
@@ -1150,6 +1159,14 @@ To deactivate it, use `--off`.
 
 # alias:
 > purgetss w -o
+```
+
+To remove the hook from `alloy.jmk` entirely, use `--delete`.
+```bash
+> purgetss watch --delete
+
+# alias:
+> purgetss w -d
 ```
 
 
@@ -1206,7 +1223,7 @@ The `update` command upgrades PurgeTSS to the latest version.
 > purgetss u
 ```
 
-Runs `npm install -g purgetss@latest`.
+Runs `npm update -g purgetss`.
 
 
 ## `sudo-update` command

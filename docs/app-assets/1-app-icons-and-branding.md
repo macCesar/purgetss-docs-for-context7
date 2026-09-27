@@ -261,11 +261,9 @@ A key `brand:` does not define stops the run before a single file is written, at
 Unknown key(s) in the brand: section of purgetss/config.cjs:
   • brand.adaptive.paddig
 
-  Top-level keys: background, confirmOverwrites, logo, monochromeLogo
-  Piece blocks:   icon, dark, tinted, iosSplash, launchLogo, marketplace, featureGraphic,
-                  adaptive, legacyIcon, appicon, androidSplash, splashIcon,
-                  notificationIcon, ninePatch
-  Inside a piece: logo, padding, background, enabled
+  Top-level keys: background, artworkCornerRadius, splashCornerRadius, confirmOverwrites, optimize, logo, monochromeLogo
+  Piece blocks:   icon, dark, tinted, iosSplash, launchLogo, marketplace, featureGraphic, adaptive, legacyIcon, appicon, androidSplash, splashIcon, notificationIcon, ninePatch
+  Inside a piece: logo, padding, cornerRadius, background, enabled
 
   Check the spelling. Nothing was written.
 ```
@@ -649,7 +647,7 @@ The `--bg-color` flag (or `brand.background` in config) controls the background 
 
 Any piece can opt out with its own `background`. That is what `dark: { background: null }` does in the default config, which keeps `DefaultIcon-Dark.png` transparent per Apple HIG.
 
-If you never pass the flag, background stays `#FFFFFF`. `iTunesConnect.png` and `MarketplaceArtwork.png` keep their alpha channel to match Titanium's default; `MarketplaceArtworkFeature.png` is always flattened for Google Play.
+If you never pass the flag, background stays `#FFFFFF`. `iTunesConnect.png`, `MarketplaceArtwork.png`, and `MarketplaceArtworkFeature.png` are always flattened onto the background.
 
 ### Matching the launch background
 

@@ -94,28 +94,31 @@ Classic projects do not need `config.cjs`. Use the semantic name directly in Tit
 
 ### Nesting rules
 
-You can nest one level deep using an object with `DEFAULT`:
+Objects can nest at any depth. Each level adds a segment to the class name, and a `DEFAULT` key produces the class for the level itself:
 
 ```js
-// Correct: generates bg-surface and bg-surface-high
+// Generates bg-surface, bg-surface-high, and bg-surface-high-top
 surface: {
   DEFAULT: 'surfaceColor',
-  high: 'surfaceHighColor'
+  high: {
+    DEFAULT: 'surfaceHighColor',
+    top: 'surfaceHighTopColor'
+  }
 }
 ```
 
-> 🛑 **DANGER**
+> 🚨 **WARNING**
 >
-> Common error: nested objects without DEFAULT
+> Without DEFAULT there is no base class
 > ```js
-> // Wrong: generates [object Object] instead of a color
+> // Generates bg-surface-regular and bg-surface-high, but no bg-surface
 > surface: {
 >   regular: 'surfaceColor',
 >   high: 'surfaceHighColor'
 > }
 > ```
 > 
-> If you nest without a `DEFAULT` key and use the base class (`bg-surface`), PurgeTSS will serialize the object as `[object Object]`. Always include `DEFAULT` for the base variant, or use a flat structure.
+> Add a `DEFAULT` key if you want the bare `bg-surface` class.
 
 
 ### Flat structure alternative
@@ -175,7 +178,7 @@ Light/Dark switching still works because Titanium handles the lookup like any ot
 > Native rebuild required for new alpha entries
 > `semantic.colors.json` is read at native build time, so the first time a new opacity variant is auto-derived, the running app will not see it until the next full Titanium build. For example, if you have never used `bg-surface/65` before, that new key needs a native rebuild. Later runs reuse the existing entry.
 > 
-> In practice: run `purgetss build` once after introducing a new opacity class, then start your usual Liveview / `appc run` cycle. The Liveview hot-reload alone does not refresh `semantic.colors.json` for the running app.
+> In practice: run `purgetss build` once after introducing a new opacity class, then start your usual Liveview / `ti build` cycle. The Liveview hot-reload alone does not refresh `semantic.colors.json` for the running app.
 
 
 Re-runs are idempotent. Keys are reused, not duplicated. If you manually edit a derived key with different values, the next build halts with a `Conflict` error instead of overwriting your changes.

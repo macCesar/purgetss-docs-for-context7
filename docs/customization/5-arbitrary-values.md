@@ -13,7 +13,7 @@ When you need a one-off value that is not in the defaults, use arbitrary values 
 
 Before purging, PurgeTSS scans class names from XML views and JS controllers for common authoring mistakes. When it finds one, it stops with a structured `Class Syntax Error` block that includes the file, line, offending content, and a concrete `Fix:` suggestion. If there are multiple errors, PurgeTSS reports them in the same run so you can fix them together.
 
-Five patterns are detected:
+Four patterns are detected:
 
 | Pattern                       | Wrong        | Right        | Reason                                                    |
 | ----------------------------- | ------------ | ------------ | --------------------------------------------------------- |
@@ -21,7 +21,6 @@ Five patterns are detected:
 | Square brackets               | `top-[10px]` | `top-(10px)` | PurgeTSS uses parentheses for arbitrary values            |
 | Empty parentheses             | `wh-()`      | `wh-(10)`    | Add a value                                               |
 | Whitespace inside parentheses | `wh-( 200 )` | `wh-(200)`   | No spaces between `(` and the value                       |
-| Redundant `px` unit           | `top-(10px)` | `top-(10)`   | PurgeTSS treats unit-less arbitrary values as pixels      |
 
 Generic unknown classes are not flagged by this validator. Typos, custom utilities that are not declared yet, and vendor classes not enabled in `config.cjs` still flow into the `// Unused or unsupported classes` comment block in `app.tss`, as before. The validator only catches narrow, actionable mistakes so it does not add noise while you are still sketching out class names.
 

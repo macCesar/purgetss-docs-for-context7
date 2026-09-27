@@ -75,6 +75,6 @@ These are the available utilities to control ["The Grid"](https://youtu.be/4-J4d
   - Use `grid-rows-{n}` to create grids with n equally sized rows.
 
 ### Row placement utilities
-  - `start`: Aligns an element to the start of a row.
-  - `end`: Aligns an element to the end of a row.
-  - `center`: Aligns an element to the center of a row.
+  - `items-start`: sets `top: 0`, pinning the element to the top of its parent.
+  - `items-end`: sets `bottom: 0`, pinning the element to the bottom of its parent.
+  - `items-center`: sets `width` and `height` to `Ti.UI.FILL`, so the element fills its parent and its own children are centered.

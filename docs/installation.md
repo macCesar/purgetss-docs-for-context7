@@ -193,7 +193,7 @@ To use the example files:
 ![iOS Screen - Example](images/sample-fixed.png)
 </div>
 
-More examples in the [Utilities TSS Sample App](https://github.com/macCesar/utilities.tss-sample-app).
+More examples in the [Utilities TSS Sample App](https://github.com/macCesar/purgetss-sample-app).
 
 > 🚨 **WARNING**
 >

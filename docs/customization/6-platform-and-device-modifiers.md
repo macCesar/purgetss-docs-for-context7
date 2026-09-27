@@ -49,3 +49,25 @@ You can set different background colors and font sizes per platform or device, a
 '.tablet:bg-green-100[formFactor=tablet]': { backgroundColor: '#dcfce7' }
 '.tablet:bg-green-500[formFactor=tablet]': { backgroundColor: '#22c55e' }
 ```
+
+## Combining a platform and a device
+
+Stack one platform modifier and one device modifier, in either order. Both conditions go in a single bracket, which is the form Alloy reads; with two brackets it keeps only the last one.
+
+```xml
+<View class="ios:tablet:bg-red-500 tablet:ios:bg-blue-500" />
+```
+
+`app.tss`
+```css
+'.ios:tablet:bg-red-500[platform=ios formFactor=tablet]': { backgroundColor: '#ef4444' }
+'.tablet:ios:bg-blue-500[formFactor=tablet platform=ios]': { backgroundColor: '#3b82f6' }
+```
+
+Some classes already carry a platform condition, such as the iOS-only `status-bar-*` family. A device modifier adds to it, and a contradicting platform modifier generates nothing:
+
+`app.tss`
+```css
+'.tablet:status-bar[platform=ios formFactor=tablet]': { statusBarStyle: Ti.UI.iOS.StatusBar.DEFAULT }
+// Conflicting modifiers, class not generated: '.android:status-bar-dark' (platform is already ios)
+```

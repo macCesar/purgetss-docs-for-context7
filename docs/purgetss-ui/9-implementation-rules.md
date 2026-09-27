@@ -68,7 +68,7 @@ The runtime passes all `drag` and `drop` properties to Titanium. It does not enf
 
 Calling `draggable()` with an array assigns `zIndex` from the array position before listeners are registered. `keepZIndex` does not prevent that initial assignment; it only prevents later promotion on touch start. `swap()` also restores stacking according to the draggable registry order rather than preserving arbitrary original values.
 
-Collision detection checks whether the center of the dragged view is inside another registered view's `rect`. On release, the last non-null hover target is used as a fallback if the final hit test returns `null`.
+Collision detection checks whether the center of the dragged view is inside another registered view's `rect`. On release, the last non-null hover target is used as a fallback if the final hit test returns `null`. Hover targets are only tracked while the view moves when `detectCollisions()` received a drag callback; without one there is no fallback.
 
 ## Android drag behavior
 

@@ -40,7 +40,7 @@ app/assets/
 ├── android/images/
 │   ├── res-mdpi/
 │   │   ├── my-hero-illustration.png
-│   │   └── buttons/primary.svg
+│   │   └── buttons/primary.png
 │   ├── res-hdpi/…
 │   ├── res-xhdpi/…
 │   ├── res-xxhdpi/…
@@ -50,9 +50,9 @@ app/assets/
     ├── my-hero-illustration@2x.png
     ├── my-hero-illustration@3x.png
     └── buttons/
-        ├── primary.svg                 (@1x)
-        ├── primary@2x.svg
-        └── primary@3x.svg
+        ├── primary.png                 (@1x)
+        ├── primary@2x.png
+        └── primary@3x.png
 ```
 
 Classic uses the same density layout under `Resources/`:
@@ -176,20 +176,20 @@ This is a hint, not an error. The legacy 4× behavior still runs in the same inv
 
 ### Validation
 
-`--width` accepts integers in `[1, 8192]`. Anything else exits immediately:
+`--width` accepts integers in `[1, 1024]`. Anything else exits before a file is written:
 
 ```bash
 > purgetss images logo.svg --width 0
-Invalid --width '0'. Must be an integer between 1 and 8192.
+Invalid --width '0'. Must be an integer between 1 and 1024.
 
-> purgetss images logo.svg --width 9000
-Invalid --width '9000'. Must be an integer between 1 and 8192.
+> purgetss images logo.svg --width 2000
+Invalid --width '2000'. Must be an integer between 1 and 1024.
 
 > purgetss images logo.svg --width abc
-Invalid --width 'NaN'. Must be an integer between 1 and 8192.
+Invalid --width 'NaN'. Must be an integer between 1 and 1024.
 ```
 
-The upper bound exists because `--width 8192` already produces an `xxxhdpi` output of 32 768 px wide. That is Sharp's render ceiling and far beyond what a normal Titanium app needs.
+The upper bound follows from the output cap: `xxxhdpi` renders at 4× the width, and no generated image may exceed 4096 px on either side.
 
 ## The `images:` config section
 
@@ -386,7 +386,7 @@ Keep `--format null` (the default) when you need to stay in the same format as t
 
 `--opacity <n>` multiplies the alpha channel of every generated density by `n/100`. Use it for placeholder or default images that render at reduced opacity, such as loading overlays or watermarks behind content.
 
-The transformation is applied before resize, so each density variant inherits the same proportional transparency:
+The transformation is applied to each density after it is resized, so every variant gets the same proportional transparency:
 
 ```bash
 > purgetss images logo.svg --opacity 50 --format png
@@ -424,7 +424,7 @@ For placeholders meant to layer over arbitrary backgrounds, prefer `--format png
 
 Each density's output canvas keeps the same dimensions it would have without `--padding`, but the rendered image takes only `(1 − 2 × 0.15) = 70%` of that canvas (centered). The remaining 30% of the canvas (15% on each side) is transparent.
 
-For a `mdpi` output of 256×256, the rendered image becomes a 179×179 block centered inside the 256×256 transparent canvas. For `xxxhdpi` at 1024×1024, it becomes 716×716 inside 1024×1024. The visual ratio is identical at every density.
+For a `mdpi` output of 256×256, the rendered image becomes a 180×180 block centered inside the 256×256 transparent canvas. For `xxxhdpi` at 1024×1024, it becomes 718×718 inside 1024×1024. Each border is rounded down to whole pixels, so the ratio matches across densities to within a pixel.
 
 ### Validation
 

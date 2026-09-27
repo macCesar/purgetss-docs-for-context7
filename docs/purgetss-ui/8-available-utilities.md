@@ -164,7 +164,12 @@ Default: no rotation.
 '.rotate-12': { rotate: 12 }
 '.rotate-45': { rotate: 45 }
 '.rotate-90': { rotate: 90 }
+'.rotate-135': { rotate: 135 }
 '.rotate-180': { rotate: 180 }
+'.rotate-225': { rotate: 225 }
+'.rotate-270': { rotate: 270 }
+'.rotate-315': { rotate: 315 }
+'.rotate-360': { rotate: 360 }
 
 /* Property(ies): rotate ( Negative values ) */
 /* Component(s): For the Animation Component */
@@ -176,7 +181,12 @@ Default: no rotation.
 '.-rotate-12': { rotate: -12 }
 '.-rotate-45': { rotate: -45 }
 '.-rotate-90': { rotate: -90 }
+'.-rotate-135': { rotate: -135 }
 '.-rotate-180': { rotate: -180 }
+'.-rotate-225': { rotate: -225 }
+'.-rotate-270': { rotate: -270 }
+'.-rotate-315': { rotate: -315 }
+'.-rotate-360': { rotate: -360 }
 ```
 
 ## scale
@@ -201,6 +211,7 @@ Default: `1`
 '.scale-110': { scale: 1.1 }
 '.scale-125': { scale: 1.25 }
 '.scale-150': { scale: 1.5 }
+'.scale-200': { scale: 2 }
 ```
 
 ## snap-back and snap-center
@@ -219,7 +230,7 @@ Control how draggable views behave when dropped. All are off by default; opt in 
 '.snap-center-false': { animationProperties: { snap: { center: false } } }
 ```
 
-`snap.magnet` is not read by the current runtime and is therefore not a supported behavior.
+Versions up to 7.17.1 also generated `snap-magnet`. The runtime never read it, so the class was removed.
 
 ## keep-z-index
 
@@ -275,6 +286,7 @@ Sets the View's scale to the specified value, then animates it back to 1.
 '.zoom-in-110': { animationProperties: { open: { scale: 1.1 }, complete: { scale: 1 } } }
 '.zoom-in-125': { animationProperties: { open: { scale: 1.25 }, complete: { scale: 1 } } }
 '.zoom-in-150': { animationProperties: { open: { scale: 1.5 }, complete: { scale: 1 } } }
+'.zoom-in-200': { animationProperties: { open: { scale: 2 }, complete: { scale: 1 } } }
 '.zoom-out-0': { animationProperties: { close: { scale: 0 }, complete: { scale: 1 } } }
 '.zoom-out-1': { animationProperties: { close: { scale: 0.01 }, complete: { scale: 1 } } }
 '.zoom-out-5': { animationProperties: { close: { scale: 0.05 }, complete: { scale: 1 } } }
@@ -289,6 +301,7 @@ Sets the View's scale to the specified value, then animates it back to 1.
 '.zoom-out-110': { animationProperties: { close: { scale: 1.1 }, complete: { scale: 1 } } }
 '.zoom-out-125': { animationProperties: { close: { scale: 1.25 }, complete: { scale: 1 } } }
 '.zoom-out-150': { animationProperties: { close: { scale: 1.5 }, complete: { scale: 1 } } }
+'.zoom-out-200': { animationProperties: { close: { scale: 2 }, complete: { scale: 1 } } }
 ```
 
 ## Titanium Classic equivalents

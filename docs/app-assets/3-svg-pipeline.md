@@ -34,7 +34,7 @@ The runtime trick: when a view requests `image="/foo.svg"` and Titanium cannot u
 
 ## What gets detected
 
-XML views: any node attribute ending in `.svg` is captured along with its `class=""` attribute:
+XML views: an `image` or `backgroundImage` attribute ending in `.svg` is captured along with the node's `class=""` attribute. Other attributes are not scanned:
 
 ```xml
 <ImageView class="w-32 h-auto" image="/images/logos/logo.svg" />
@@ -64,7 +64,7 @@ For each SVG reference, the cascade of classes is applied against `app.tss` in d
 | `class="w-(300)"`              | `width: 300` (arbitrary value)     | `widthDp = 300`                                                 |
 | `class="h-44"` (no `w-*`)      | `height: 176`                      | `heightDp = 176`; width derived from viewBox at generation time |
 | `class="w-32 h-auto"`          | `width: 128`, `height: Ti.UI.SIZE` | `widthDp = 128`; height derived from viewBox                    |
-| `class="w-full"` (non-numeric) | `width: Ti.UI.FILL`                | skipped with a warning; no usable dim                           |
+| `class="w-full"` (non-numeric) | `width: '100%'`                    | skipped with a warning; no usable dim                           |
 
 Auto-derived dimensions are not written to `config.cjs`. If you used `h-auto` (or no `h-*`), the height field does not appear in the `images.files` entry. The generator re-derives it from the SVG's `viewBox` every run. The same applies to width when only `h-*` is pinned. This keeps stale values out of config.
 
