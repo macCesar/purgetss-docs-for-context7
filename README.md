@@ -72,6 +72,11 @@ What it does:
 
 ### Unreleased
 
+### v7.20.0
+
+- Update Titanium Completions to SDK 14.0.0.GA: 63 new property entries and 356 recovered property descriptions.
+- Regenerate utility classes and the glossary, including 18 new property pages for boolean, color, split-view and layout settings.
+
 ### v7.19.0
 
 - Global `--profile <file.json>` saves timings, CPU, memory, phases and counters for commands, aliases and `--all`, including controlled failures and LiveView skips. See [Execution profiles and performance](./docs/performance.md).
@@ -86,8 +91,4 @@ What it does:
 - **Stricter flags.** `icon-library --vendor` accepts `materialsymbols` and rejects unknown values before copying anything. `images --width` accepts 1 to 1024, the largest value whose `xxxhdpi` output fits the 4096px cap. See [the `icon-library` command](./docs/commands.md#icon-library-command).
 - **Removed:** the `*-keyboard-type-appearance*` classes (they assigned an appearance constant to `keyboardType`; use `keyboard-appearance-*`), `snap-magnet` (never read by the animation module), and `init --all` (never implemented). `(Npx)` [arbitrary values](./docs/customization/5-arbitrary-values.md) are accepted again: `w-(100px)` means explicit pixels, not a redundant unit.
 
-### v7.17.1
-
-- **The notification icon is now named `notificationicon.png`.** `firebase.cloudmessaging` resolves that exact name, so data messages find the icon without any manifest wiring; under the old `ic_stat_notify` name they fell back to the opaque launcher icon and the status bar showed a white blob. Projects that wired `@drawable/ic_stat_notify` by hand update one `meta-data` line and delete the five stale files.
-
-→ See the [full changelog](./docs/changelog.md) for older releases (v7.17.0 and earlier).
+→ See the [full changelog](./docs/changelog.md) for older releases (v7.17.1 and earlier).
