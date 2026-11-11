@@ -110,4 +110,4 @@ Generated project outputs matched byte for byte; signature metadata was checked 
 
 Across image codecs, all 56 outputs matched in bytes, decoded pixels, dimensions and alpha, including the Sharp 0.35.3 to 0.35.5 update. The two-job image queue was accepted after its measured maximum RSS stayed within 20% of the reference. Image quality settings were retained.
 
-For the fixtures, methodology and reproduction commands, see the [optimization implementation report](https://github.com/macCesar/purgeTSS/blob/v7.19.0/docs/project/optimization.md).
+For the fixtures, methodology and reproduction commands, see the [optimization implementation report](https://github.com/macCesar/purgeTSS/blob/23fff5e04ee77175c4673d96ade6efcd438507e1/docs/project/optimization.md).
