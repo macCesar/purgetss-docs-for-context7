@@ -67,6 +67,19 @@ Titanium resolves a local CommonJS module path from the app's `Resources/` direc
 - `sudo-update`: Updates PurgeTSS using `sudo` to install npm modules if needed.
 
 
+## Global execution options
+
+Add `--profile <file.json>` to any command or alias to save JSON timings, CPU and memory measurements, phases and counters:
+
+```bash
+purgetss --profile purge-profile.json
+purgetss build --profile build-profile.json
+purgetss bf --module --profile fonts-profile.json
+purgetss --all --profile all-profile.json
+```
+
+`--all` runs `build`, `build-fonts` and the purge in sequence. Its profile records completed work and any skipped phases. `--debug` prints timings in the terminal; it does not write a profile by itself. See [Execution profiles and performance](./performance.md) for the JSON fields, LiveView skips and how to compare runs.
+
 ## `init` command
 
 The `init` command sets up PurgeTSS by creating `./purgetss/config.cjs` at the root of an existing Alloy project.
@@ -680,6 +693,8 @@ const title = Ti.UI.createLabel({
 
 For the full workflow with examples (Google Fonts, custom icon libraries, `--module` output, filename-based prefixes), see [Custom fonts](./customization/7-custom-fonts.md).
 
+Generated TSS, definitions and font modules keep their modification time when their bytes are unchanged. The log reports `file created!`, `file updated!`, or `unchanged (not written)`. Font-copy and CSS-processing messages describe work performed during the command; they do not mean every generated style file was rewritten. See [Generated-file messages](./performance.md#generated-file-messages).
+
 
 ## `shades` command
 
@@ -1108,7 +1123,7 @@ const label = Ti.UI.createLabel({
 
 ## `build` command
 
-The `build` command generates `utilities.tss` from `config.cjs`. Run it after you change `config.cjs`.
+The `build` command generates the complete `utilities.tss` catalog from `config.cjs`, the class definitions, and custom Font Awesome Pro/Beta styles and modules when installed. Run it after you change `config.cjs`.
 
 ```bash
 > purgetss build
@@ -1117,7 +1132,9 @@ The `build` command generates `utilities.tss` from `config.cjs`. Run it after yo
 > purgetss b
 ```
 
-When `purgetss` runs (manually or via `watch`), it checks for changes in `config.cjs` and regenerates `utilities.tss` when needed.
+When `purgetss` runs (manually or via `watch`), it checks a signature of the evaluated configuration and generator inputs and regenerates `utilities.tss` when needed. Changes made within the same second are detected. An existing project without signature metadata rebuilds once to establish it.
+
+An explicit `build` computes the catalog even if the result is identical. Files are written only when their bytes change, so `unchanged (not written)` preserves their modification time. See [Configuration signatures](./performance.md#configuration-signatures) and [Generated-file messages](./performance.md#generated-file-messages).
 
 Use `--glossary` to also write one Markdown file per property, listing its generated classes, to `./purgetss/glossary/`.
 ```bash

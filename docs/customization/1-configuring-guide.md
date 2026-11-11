@@ -10,6 +10,8 @@
 
 By default, PurgeTSS looks for `./purgetss/config.cjs`. That is where project-level customization lives.
 
+PurgeTSS evaluates this file on each invocation, including calculated values and environment-dependent configuration, and builds from an independent copy. A signature of the effective configuration and generator inputs detects changes even within the same second. See [Configuration signatures](../performance.md#configuration-signatures) for the metadata file, the initial rebuild and generated-file timestamps.
+
 ## Create the `config.cjs` file
 
 > ℹ️ **INFO**

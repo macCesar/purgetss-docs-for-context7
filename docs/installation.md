@@ -8,9 +8,9 @@ Install PurgeTSS globally on your machine with [NPM](https://www.npmjs.com/).
 
 > ⚠️ **CAUTION**
 >
-> Node.js 20+ required
+> Supported Node.js versions
 > 
-> PurgeTSS requires Node 20.0.0 or higher.
+> PurgeTSS 7.19.0 requires Node 20.12 or later in the 20.x branch, 22.13 or later in the 22.x branch, or 23.5 and later. The exact supported range is `^20.12.0 || ^22.13.0 || >=23.5.0`, matching the CLI dependencies.
 
 
 > ℹ️ **INFO**
@@ -71,6 +71,8 @@ purgetss
 - `fonts` folder
 
   Place icon, serif, sans-serif, or monospace font files here. See the [Custom fonts page](./customization/7-custom-fonts.md) for instructions.
+
+PurgeTSS also stores generator signature metadata in `purgetss/.cache/generator-signature.json`. It detects configuration and generator changes without relying on file dates. Add `purgetss/.cache/` to `.gitignore`; existing projects create the signature on their next generation. See [Execution profiles and performance](./performance.md#configuration-signatures).
 
 > ⚠️ **CAUTION**
 >

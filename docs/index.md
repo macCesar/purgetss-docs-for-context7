@@ -34,6 +34,7 @@ What it does:
 
 - [Installation](./installation.md)
 - [Commands](./commands.md)
+- [Execution profiles and performance](./performance.md)
 - App Assets
   - [App icons and branding](./app-assets/1-app-icons-and-branding.md)
   - [Multi-density images](./app-assets/2-multi-density-images.md)
@@ -71,6 +72,13 @@ What it does:
 
 ### Unreleased
 
+### v7.19.0
+
+- Global `--profile <file.json>` saves timings, CPU, memory, phases and counters for commands, aliases and `--all`, including controlled failures and LiveView skips. See [Execution profiles and performance](./performance.md).
+- Purges share XML/controller analysis within each run. Class and `apply` lookups use indexes, commands load on demand, and font/image generators reuse inputs while preserving output contracts and image quality. The [measured purge reductions](./performance.md#measured-results) ranged from 19.1% to 65.6% in the tested fixtures.
+- Configuration is evaluated per invocation. Generator signatures detect changes within the same second; generated text keeps its modification time when bytes are unchanged. Logs distinguish created, updated and unchanged files. The two-second LiveView guard and completed `app.tss` writes remain intact.
+- Supported Node versions are `^20.12.0 || ^22.13.0 || >=23.5.0`. Compatible dependency fixes include Sharp 0.35.5; test runners now propagate failures. See [Installation](./installation.md).
+
 ### v7.18.0
 
 - **Platform and device modifiers stack.** `ios:tablet:bg-red-500` (in either order) now generates `[platform=ios formFactor=tablet]`. Alloy reads only the last bracket of a selector, so `tablet:` on an iOS-only class used to lose its platform condition. A modifier that contradicts the class, such as `android:status-bar-dark`, leaves a comment in `app.tss` instead of a selector that never applies. See [Combining a platform and a device](./customization/6-platform-and-device-modifiers.md#combining-a-platform-and-a-device).
@@ -82,10 +90,4 @@ What it does:
 
 - **The notification icon is now named `notificationicon.png`.** `firebase.cloudmessaging` resolves that exact name, so data messages find the icon without any manifest wiring; under the old `ic_stat_notify` name they fell back to the opaque launcher icon and the status bar showed a white blob. Projects that wired `@drawable/ic_stat_notify` by hand update one `meta-data` line and delete the five stale files.
 
-### v7.17.0
-
-- **`--dependencies` scaffolds an ESLint setup that runs.** The template is `eslint.config.mjs`, a flat config for ESLint 9 that declares the Titanium and Alloy globals and ignores generated code. `eslint-config-axway` and `eslint-plugin-alloy` are no longer installed: neither works under ESLint 9.
-- **The `images:` section rejects unknown keys.** A typo like `qualty: 95` is now an error naming the offending key and the entry index, instead of silently falling back to the default.
-- **The generated `images:` block documents the 4× convention.** The comments state where the output sizes come from, why there is no `width` key, and which formats `quality` actually reaches.
-
-→ See the [full changelog](./changelog.md) for older releases (v7.16.2 and earlier).
+→ See the [full changelog](./changelog.md) for older releases (v7.17.0 and earlier).
