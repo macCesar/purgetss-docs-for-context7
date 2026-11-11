@@ -97,12 +97,14 @@ CSS and codepoint inputs are shared between paired TSS and JavaScript font gener
 
 During optimization validation, both variants ran on the same Mac with Node 22.23.2, directly in three real projects and a minimal fixture. Each variant had a separate initial run and five subsequent samples in alternating order. The table shows median process times for completed purges; LiveView skips were measured separately.
 
-| Project | Before | After | Reduction |
-| --- | ---: | ---: | ---: |
-| notiGAPE | 1140.2 ms | 471.9 ms | 58.6% |
-| Generador de Tablas | 680.5 ms | 448.8 ms | 34.1% |
-| EM Industrial | 1591.3 ms | 547.1 ms | 65.6% |
-| Minimal fixture | 480.3 ms | 388.4 ms | 19.1% |
+| Project | XML parses | JS parses | Before | After | Reduction |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Real project A | 70 | 54 | 1140.2 ms | 471.9 ms | 58.6% |
+| Real project B | 10 | 10 | 680.5 ms | 448.8 ms | 34.1% |
+| Real project C | 198 | 36 | 1591.3 ms | 547.1 ms | 65.6% |
+| Minimal fixture | 1 | 0 | 480.3 ms | 388.4 ms | 19.1% |
+
+XML and JS counts are parse operations per completed purge after optimization, included to give a reference for each workload. They do not measure class counts or overall application complexity.
 
 Generated project outputs matched byte for byte; signature metadata was checked separately. The minimal fixture's first call increased from 398.3 to 481.2 ms because it needed to establish the signature. The table describes subsequent runs. Results apply to the tested projects and machine; other projects may see different timings.
 
