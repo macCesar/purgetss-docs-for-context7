@@ -24,7 +24,7 @@ All notable changes to PurgeTSS. For the canonical, full-detail log see [the pro
 - Share CSS/codepoint inputs in the distribution build, await copies, and share image metadata and identical renders with a bounded queue. Preserve generated outputs and image quality.
 - Skip unchanged writes to generated text while retaining every completed `app.tss` write and its two-second LiveView guard.
 - Use Node filesystem APIs for creation/installation file operations. Remove the unused npm `path` dependency; align supported Node versions with installed dependencies (`^20.12.0 || ^22.13.0 || >=23.5.0`) and CI.
-- Apply compatible dependency fixes, including Sharp 0.35.5; retain incompatible `css`/`glob` upgrades for separate work. See [Execution profiles and performance](./performance.md) and the [implementation report](https://github.com/macCesar/purgeTSS/blob/23fff5e04ee77175c4673d96ade6efcd438507e1/docs/project/optimization.md) for the remaining advisories and validation.
+- Apply compatible dependency fixes, including Sharp 0.35.5; retain incompatible `css`/`glob` upgrades for separate work. See [Execution profiles and performance](./performance.md) and the [implementation report](https://github.com/macCesar/purgeTSS/blob/main/docs/project/optimization.md) for the remaining advisories and validation.
 
 ## v7.18.0
 
