@@ -809,20 +809,40 @@ You can customize any of the following properties by adding them to the `theme` 
 - separatorHeight
 - shadowRadius
 - shiftMode
-- statusBarHeight
 - targetImageHeight
 - targetImageWidth
 - timeout
 - titlePadding
 - top
-- uprightHeight
-- uprightWidth
 - verticalMargin
 - width
 - xOffset
 - yOffset
 - zIndex
 - zoomScale
+
+PurgeTSS 7.20.1 excludes properties marked `readOnly: true` in Completions regenerated through the corrected extractor. `statusBarHeight`, `uprightHeight` and `uprightWidth` appeared in the published 7.20.0 catalog but are read-only SDK measurements; read them from their owning SDK object rather than configuring setters in `theme`. Shared property names stay eligible when at least one type is writable, so verify the owning type before assigning them.
+
+### SplitWindow ratios and column bounds
+
+PurgeTSS 7.20.1 generates `primaryColumnWidthFraction` as a numeric ratio, and `minimumPrimaryColumnWidth` / `maximumPrimaryColumnWidth` as numeric widths in points. These utilities carry an iOS condition. They do not use percentage strings, `Ti.UI.FILL` or `Ti.UI.SIZE`.
+
+For example, `primary-col-w-fraction-1/2` sets `primaryColumnWidthFraction: 0.5`, and `minimum-primary-col-w-16` sets `minimumPrimaryColumnWidth: 64`. Customize these properties with Numbers:
+
+`purgetss/config.cjs`
+```javascript
+module.exports = {
+  theme: {
+    extend: {
+      primaryColumnWidthFraction: { custom: 0.35 },
+      minimumPrimaryColumnWidth: { custom: 280 },
+      maximumPrimaryColumnWidth: { custom: 420 }
+    }
+  }
+}
+```
+
+Ratios must be finite Numbers from 0 to 1. Column bounds must be finite nonnegative Numbers. Invalid custom values, including strings such as `'50%'` or `'auto'`, stop generation before replacing `utilities.tss`. These numeric corrections were introduced in 7.20.1.
 
 ### Custom rules and Ti Elements
 - Create your own custom rules and include Ti Elements with any number of attributes or conditional statements. See the [custom rules section](2-custom-rules.md) for details.

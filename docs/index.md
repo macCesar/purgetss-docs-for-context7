@@ -21,7 +21,7 @@
 
 What it does:
 
-- 23,300+ utility classes for colors, spacing, typography, layout, and more.
+- 23,400+ utility classes for colors, spacing, typography, layout, and more.
 - Parses XML files and writes an `app.tss` with only the classes you use.
 - Customizable through `config.cjs`, with arbitrary values for one-off sizes and colors.
 - Icon fonts for Buttons and Labels: Font Awesome, Material Icons, Material Symbols, and Framework7-Icons in Alloy and Classic projects.
@@ -72,6 +72,10 @@ What it does:
 
 ### Unreleased
 
+### v7.20.1
+
+- Generator corrections exclude read-only properties, emit numeric iOS SplitWindow ratios and bounds, resolve Font Awesome Pro/Beta families from installed font metadata, and reject inverted negatives in the formatter. See the [full changelog](./changelog.md#v7201).
+
 ### v7.20.0
 
 - Update Titanium Completions to SDK 14.0.0.GA: 63 new property entries and 356 recovered property descriptions.
@@ -84,11 +88,4 @@ What it does:
 - Configuration is evaluated per invocation. Generator signatures detect changes within the same second; generated text keeps its modification time when bytes are unchanged. Logs distinguish created, updated and unchanged files. The two-second LiveView guard and completed `app.tss` writes remain intact.
 - Supported Node versions are `^20.12.0 || ^22.13.0 || >=23.5.0`. Compatible dependency fixes include Sharp 0.35.5; test runners now propagate failures. See [Installation](./installation.md).
 
-### v7.18.0
-
-- **Platform and device modifiers stack.** `ios:tablet:bg-red-500` (in either order) now generates `[platform=ios formFactor=tablet]`. Alloy reads only the last bracket of a selector, so `tablet:` on an iOS-only class used to lose its platform condition. A modifier that contradicts the class, such as `android:status-bar-dark`, leaves a comment in `app.tss` instead of a selector that never applies. See [Combining a platform and a device](./customization/6-platform-and-device-modifiers.md#combining-a-platform-and-a-device).
-- **Font Awesome Pro and Beta work again.** `purgetss build` no longer stops with `ENOENT`, and `icon-library --module` / `--styles` generate `fontawesome.js` and `fontawesome.tss` instead of printing a placeholder.
-- **Stricter flags.** `icon-library --vendor` accepts `materialsymbols` and rejects unknown values before copying anything. `images --width` accepts 1 to 1024, the largest value whose `xxxhdpi` output fits the 4096px cap. See [the `icon-library` command](./commands.md#icon-library-command).
-- **Removed:** the `*-keyboard-type-appearance*` classes (they assigned an appearance constant to `keyboardType`; use `keyboard-appearance-*`), `snap-magnet` (never read by the animation module), and `init --all` (never implemented). `(Npx)` [arbitrary values](./customization/5-arbitrary-values.md) are accepted again: `w-(100px)` means explicit pixels, not a redundant unit.
-
-→ See the [full changelog](./changelog.md) for older releases (v7.17.1 and earlier).
+→ See the [full changelog](./changelog.md) for older releases (v7.18.0 and earlier).

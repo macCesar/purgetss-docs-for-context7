@@ -94,7 +94,7 @@ module.exports = {
 '.close-button': { color: '#374151', textColor: '#374151', width: 48, height: 48, font: { fontFamily: 'FontAwesome7Free-Solid' }, text: '\uf057', title: '\uf057' }
 ```
 
-The same lookup runs for `mi-*` (Material Icons), `ms-*` (Material Symbols), and `f7-*` (Framework7) classes. If the project has its own `purgetss/styles/fontawesome.tss` (for example, FontAwesome Pro or Beta), that file takes precedence over the bundled default, the same order that applies when the icon class appears directly in XML.
+The same lookup runs for `mi-*` (Material Icons), `ms-*` (Material Symbols), and `f7-*` (Framework7) classes. From 7.20.1, each icon selector is resolved from `purgetss/styles/fonts.tss`, then the project's `purgetss/styles/fontawesome.tss` (for example, Font Awesome Pro/Beta), then the bundled catalogs. A missing selector falls through to the next source, matching direct XML/controller purging; a custom definition takes precedence without emitting a duplicate bundled selector. See [CSS formats and selector priority](./7-custom-fonts.md#css-formats-and-selector-priority).
 
 ## Use arbitrary values
 

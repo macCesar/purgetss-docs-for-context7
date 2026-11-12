@@ -255,13 +255,58 @@ To use this file:
 ![iOS Screen - Icon Fonts](../images/font-example-file-material-symbols.png)
 </div>
 
+## Maintaining bundled Font Awesome Free
+
+PurgeTSS 7.20.1 generates Free font families from the desktop fonts' internal PostScript metadata, using the same names in TSS, JavaScript aliases and copied files. Application users receive these bundled files with `purgetss icon-library --vendor=fa`; they do not need to download OTFs or install the npm icon package separately.
+
+When updating Font Awesome **inside the PurgeTSS source repository**:
+
+1. Install the desired `@fortawesome/fontawesome-free` version. Its CSS supplies the icon definitions.
+2. Download the matching Free desktop fonts and replace the previous set in `src/fonts/` with exactly one Solid, Regular and Brands OTF. This remains a manual step; the npm package's webfonts are not the source for these desktop font copies.
+3. Run the targeted distribution builders:
+
+```bash
+npm run build:fa
+npm run build:fa-js
+npm run build:fonts
+```
+
+These builders validate the source fonts against the installed npm version. Missing faces, duplicate faces, unreadable version metadata or a version mismatch stop the affected builder before it replaces its Free outputs. Font-family names and copied filenames are derived from the fonts; both Free header templates receive the installed package version automatically. You no longer edit `free-template.js.cjs`, `free-template.tss` or the Free family names when updating the library. Keep the manual OTFs aligned with the npm dependency.
+
+The bundled copies retain the existing `.ttf` filename convention; copying does not convert the OTF format. Obsolete generated Free filenames are removed from the distribution's font folder when family names change.
+
+## Maintaining Framework7 and Material headers
+
+In PurgeTSS 7.20.1, these distribution builders also generate both TSS and JavaScript headers automatically:
+
+| Library | Header version source | Icon definitions |
+| --- | --- | --- |
+| Framework7 Icons | Installed `framework7-icons/package.json` | SVG names from that package, rendered as ligatures |
+| Material Icons | Version metadata of each bundled font variant | Files in `lib/templates/materialicons/*.codepoints` |
+| Material Symbols | Version metadata of each bundled font variant | Files in `lib/templates/materialsymbols/*.codepoints` |
+
+This is a contributor workflow inside the PurgeTSS repository. For Framework7, update the npm dependency. For Material Icons/Symbols, continue replacing the desktop fonts in `assets/fonts/` and their matching `.codepoints` files manually, using the same upstream revision for each pair. Their icon classes are not generated from CSS.
+
+```bash
+npm run build:framework7
+npm run build:framework7-js
+npm run build:material
+npm run build:material-js
+npm run build:symbols
+npm run build:symbols-js
+```
+
+Run only the pair for the library you updated, or use the normal full distribution build. You no longer edit version numbers or update dates in these header templates. Missing package versions or missing/unreadable font version metadata stop the affected builders.
+
+Material variants can carry different internal versions; some fonts store an ISO timestamp instead of a release number. The generated headers report those values as **bundled font versions**, preserving their meaning. They do not invent a single Material release version, date the update with the build day, or establish that the separately maintained codepoints match the fonts. Class generation and public family aliases are preserved.
+
 ## Customizing Font Awesome
 
 If you have a [Font Awesome Pro account](https://fontawesome.com/pro) or want to try the Beta, PurgeTSS can generate a custom `./purgetss/styles/fontawesome.tss` with the Pro or Beta classes.
 
 ### Font Awesome Pro
 
-After setting the [@fortawesome scope](https://fontawesome.com/how-to-use/on-the-web/setup/using-package-managers#installing-pro) with your token, install it in your project's root folder with `npm init` and `npm install --save-dev @fortawesome/fontawesome-pro` (current version 7.1.0).
+After setting the [@fortawesome scope](https://fontawesome.com/how-to-use/on-the-web/setup/using-package-managers#installing-pro) with your token, install it in your project's root folder with `npm init` and `npm install --save-dev @fortawesome/fontawesome-pro`. Version 7.1.0 was used for the original example; check the version installed in your project.
 
 To generate a new `purgetss/styles/fontawesome.tss`, run `purgetss build`. It also copies the Pro font files into `./app/assets/fonts` if needed.
 
@@ -289,6 +334,12 @@ purgetss
 ```
 
 Then run `purgetss build` to generate your custom `fontawesome.tss` file and test the new icons.
+
+### Pro/Beta font-family compatibility
+
+In published PurgeTSS 7.20.0, the Pro/Beta reset templates select `FontAwesome6Pro-*`, while generated font filenames use `FontAwesome7Pro-*` or `FontAwesome7Beta-*`. A filename does not establish the font's internal PostScript name. Compare the installed font metadata with `fontFamily` in `purgetss/styles/fontawesome.tss` and the generated JavaScript module when diagnosing missing glyphs. Regeneration can replace edits to generated files.
+
+PurgeTSS 7.20.1 reads each installed TTF's PostScript name and uses it consistently for TSS, module families and aliases, and copied filenames. Missing optional faces are omitted. The alternate Pro installation under `app/lib/node_modules/@fortawesome/fontawesome-pro` also generates its JavaScript module. These corrections do not establish device rendering compatibility with every Pro/Beta package; check the actual glyphs on your target platform. The duotone limitation above still applies.
 
 ## Recreating removed icon libraries
 

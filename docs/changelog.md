@@ -4,6 +4,17 @@ All notable changes to PurgeTSS. For the canonical, full-detail log see [the pro
 
 ## Unreleased
 
+## v7.20.1
+
+### Fixed
+- Resolve icon selectors per class from `fonts.tss`, project Font Awesome Pro/Beta and bundled catalogs, consistently in direct purging and `apply`, without duplicate selectors or comment-based catalog suppression. `build-fonts` reads modern `--fa` and legacy `content` CSS, including aliases and supplementary Unicode. See [CSS formats and selector priority](./customization/7-custom-fonts.md#css-formats-and-selector-priority).
+- Generate Framework7 header versions from the installed npm package and Material Icons/Symbols headers from each bundled font metadata record, preserving codepoint/ligature generation. See [maintaining Framework7 and Material headers](./customization/8-icon-fonts-libraries.md#maintaining-framework7-and-material-headers).
+- Generate bundled Font Awesome Free families and copied filenames from desktop font metadata, and version headers from the installed npm package. Validate manually supplied OTFs against that version before writing Free outputs. See [maintaining bundled Font Awesome Free](./customization/8-icon-fonts-libraries.md#maintaining-bundled-font-awesome-free).
+- Exclude properties marked `readOnly: true` from utility and glossary generation using Completions regenerated through the corrected extractor, preserving descriptions. Shared names remain eligible when at least one SDK type is writable. See [customizable properties](./customization/1-configuring-guide.md#list-of-customizable-properties).
+- Generate numeric iOS SplitWindow ratios and column bounds; reject invalid custom numeric values before replacing utilities. See [SplitWindow ratios and column bounds](./customization/1-configuring-guide.md#splitwindow-ratios-and-column-bounds).
+- Resolve Font Awesome Pro/Beta families and copied filenames from installed TTF PostScript metadata, omit missing optional faces and generate the module from the alternate Pro installation path. See [font-family compatibility](./customization/8-icon-fonts-libraries.md#probeta-font-family-compatibility).
+- Reject inverted negatives such as `top-(-10)` inside the arbitrary-value formatter as well as CLI pre-validation; retain `-top-(10)`. See [class syntax pre-validation](./customization/5-arbitrary-values.md#class-syntax-pre-validation).
+
 ## v7.20.0
 
 ### Added

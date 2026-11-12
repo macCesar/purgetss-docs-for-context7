@@ -24,6 +24,8 @@ Four patterns are detected:
 
 Generic unknown classes are not flagged by this validator. Typos, custom utilities that are not declared yet, and vendor classes not enabled in `config.cjs` still flow into the `// Unused or unsupported classes` comment block in `app.tss`, as before. The validator only catches narrow, actionable mistakes so it does not add noise while you are still sketching out class names.
 
+The supported negative syntax is `-top-(10)`. PurgeTSS 7.20.1 also rejects `top-(-10)` inside the arbitrary-value formatter itself, in addition to the existing CLI pre-validation. This does not introduce a second negative syntax or change the supported form.
+
 ## Color properties
 
 You can set arbitrary color values with `hex`, `rgb`, or `rgba` values, either in XML files or in `config.cjs`.
