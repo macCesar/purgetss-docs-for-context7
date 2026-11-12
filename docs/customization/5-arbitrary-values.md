@@ -30,18 +30,35 @@ The supported negative syntax is `-top-(10)`. PurgeTSS 7.20.1 also rejects `top-
 
 You can set arbitrary color values with `hex`, `rgb`, or `rgba` values, either in XML files or in `config.cjs`.
 
+PurgeTSS 7.20.2 restores RGB/RGBA classes with nested parentheses, such as `bg-(rgb(100,200,50))` and `text-(rgba(10,20,30,0.5))`. A parser regression in 7.8.0 rejected these forms through 7.20.1. They now work again in XML, controller-extracted classes, platform modifiers, and [`apply`](./3-the-apply-directive.md#use-arbitrary-values).
+
+Keep parentheses balanced and class names free of spaces. Malformed values and inverted negatives remain unsupported; use `-top-(10)` for a negative position.
+
+`RGB and RGBA colors (7.20.2+)`
+```xml
+<Label class="bg-(rgb(100,200,50)) text-(rgba(10,20,30,0.5))" text="Colors" />
+```
+
+`Generated color classes`
+```css
+'.bg-(rgb(100,200,50))': { backgroundColor: 'rgb(100,200,50)' }
+'.text-(rgba(10,20,30,0.5))': { color: 'rgba(10,20,30,0.5)', textColor: 'rgba(10,20,30,0.5)' }
+```
+
+For gradient utilities, keep hexadecimal colors as shown below: prefixes such as `from-` and `bg-from-` use a hexadecimal transparency helper.
+
 `Arbitrary values for color properties`
 ```xml
 <Alloy>
   <Window class="from-(#4C61E4) to-(#804C61E4)">
-    <Label class="w-(250) bg-(rgba(100,200,50)) text-(#4C61E4) text-(15) rounded-4 h-8 text-center" text="Green Label" />
+    <Label class="w-(250) bg-(rgb(100,200,50)) text-(#4C61E4) text-(15) rounded-4 h-8 text-center" text="Green Label" />
   </Window>
 </Alloy>
 ```
 
 `Generated classes`
 ```css
-// PurgeTSS v7.10.2
+// PurgeTSS v7.20.2
 // Created by César Estrada
 // https://purgetss.com
 
@@ -54,7 +71,7 @@ You can set arbitrary color values with `hex`, `rgb`, or `rgba` values, either i
 '.text-center': { textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER }
 
 /* Arbitrary Values */
-'.bg-(rgba(100,200,50))': { backgroundColor: 'rgba(100,200,50)' }
+'.bg-(rgb(100,200,50))': { backgroundColor: 'rgb(100,200,50)' }
 '.from-(#4C61E4)': { backgroundGradient: { colors: [ '#004C61E4', '#4C61E4' ] } }
 '.text-(#4C61E4)': { color: '#4C61E4', textColor: '#4C61E4' }
 '.text-(15)': { font: { fontSize: 15 } }

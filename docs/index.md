@@ -72,6 +72,10 @@ What it does:
 
 ### Unreleased
 
+### v7.20.2
+
+- Restore arbitrary RGB/RGBA color classes, broken since 7.8.0, with balanced nested parentheses. Malformed values and inverted negatives remain unsupported. Property deduplication in `apply` preserves color commas and quoted strings. See [arbitrary color values](./customization/5-arbitrary-values.md#color-properties) and the [full changelog](./changelog.md#v7202).
+
 ### v7.20.1
 
 - Generator corrections exclude read-only properties, emit numeric iOS SplitWindow ratios and bounds, resolve Font Awesome Pro/Beta families from installed font metadata, and reject inverted negatives in the formatter. See the [full changelog](./changelog.md#v7201).
@@ -81,11 +85,4 @@ What it does:
 - Update Titanium Completions to SDK 14.0.0.GA: 63 new property entries and 356 recovered property descriptions.
 - Regenerate utility classes and the glossary, including 18 new property pages for boolean, color, split-view and layout settings.
 
-### v7.19.0
-
-- Global `--profile <file.json>` saves timings, CPU, memory, phases and counters for commands, aliases and `--all`, including controlled failures and LiveView skips. See [Execution profiles and performance](./performance.md).
-- Purges share XML/controller analysis within each run. Class and `apply` lookups use indexes, commands load on demand, and font/image generators reuse inputs while preserving output contracts and image quality. The [measured purge reductions](./performance.md#measured-results) ranged from 19.1% to 65.6% in the tested fixtures.
-- Configuration is evaluated per invocation. Generator signatures detect changes within the same second; generated text keeps its modification time when bytes are unchanged. Logs distinguish created, updated and unchanged files. The two-second LiveView guard and completed `app.tss` writes remain intact.
-- Supported Node versions are `^20.12.0 || ^22.13.0 || >=23.5.0`. Compatible dependency fixes include Sharp 0.35.5; test runners now propagate failures. See [Installation](./installation.md).
-
-→ See the [full changelog](./changelog.md) for older releases (v7.18.0 and earlier).
+→ See the [full changelog](./changelog.md) for older releases (v7.19.0 and earlier).

@@ -119,6 +119,24 @@ theme: {
 // ...
 ```
 
+Since 7.20.2, RGB/RGBA arbitrary colors work inside `apply` again. When applied properties replace defaults, deduplication preserves commas inside color functions and quoted strings, including escaped quotes.
+
+`./purgetss/config.cjs`
+```javascript
+module.exports = {
+  theme: {
+    '.color-panel': {
+      apply: 'bg-(rgba(10,20,30,0.5)) border-(rgb(100,200,50))'
+    }
+  }
+}
+```
+
+`./purgetss/styles/utilities.tss`
+```css
+'.color-panel': { backgroundColor: 'rgba(10,20,30,0.5)', borderColor: 'rgb(100,200,50)' }
+```
+
 ## Use newly defined classes in `config.cjs`
 
 In this example, `corporate` color classes are defined first, then reused inside `apply` with `bg-corporate-500`, `text-corporate-100`, and `border-corporate-200`.

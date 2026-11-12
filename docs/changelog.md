@@ -4,6 +4,12 @@ All notable changes to PurgeTSS. For the canonical, full-detail log see [the pro
 
 ## Unreleased
 
+## v7.20.2
+
+### Fixed
+- Restore arbitrary RGB/RGBA colors such as `bg-(rgb(100,200,50))` and `text-(rgba(10,20,30,0.5))`, regressed in 7.8.0 when the parser rejected nested parentheses. Accept balanced parentheses while continuing to reject malformed values and inverted negatives. See [arbitrary color values](./customization/5-arbitrary-values.md#color-properties).
+- Preserve color commas and quoted strings when deduplicating properties in `apply` directives. See [arbitrary values in `apply`](./customization/3-the-apply-directive.md#use-arbitrary-values).
+
 ## v7.20.1
 
 ### Fixed
